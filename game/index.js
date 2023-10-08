@@ -20,6 +20,10 @@ var playerWeapon = {
     width: 24,
     height: 24
 }
+
+var patrolman = [];
+
+
 // The status of the arrow keys
 var keys = {
     right: false,
@@ -66,7 +70,58 @@ function createplat(){
     );
 }
 
+function Createpatrolman(){
+    patrolman.push(
+        {
+            x: 212,
+            y: 128,
+            origin_x: 170,
+            origin_y: 128,
+            height: 32,
+            width: 32,
+            direction: true,
+            animStep:0,
+            animTimer:0,
+            path: [
+                256, 192
+            ],
+            step:0,
+            speed: 1
+        }
+    )
+
+}
+
 function loop() {
+
+    patrolman.forEach(function(patrolman) {
+
+        
+        
+    
+        if (patrolman.x < patrolman.path[patrolman.step]){
+            patrolman.x += patrolman.speed;
+            patrolman.direction = true;
+            
+        }else {
+            patrolman.x -= patrolman.speed;
+            patrolman.direction = false;
+        }
+        if(patrolman.x === patrolman.path[patrolman.step]){
+            patrolman.step++;
+            if(patrolman.step >= patrolman.path.length){
+                patrolman.step = 0;
+
+            }
+
+        }
+        console.log(patrolman.x,patrolman.step)
+}
+    )  
+
+
+
+
     // If the player is not jumping apply the effect of friction
     if(player.jump === false) {
         player.x_v *= friction;
@@ -127,10 +182,15 @@ function loop() {
     player.y = predictedY;
     player.x = predictedX;
 
+
+
     // Rendering the canvas, the player and the platforms
     render.rendercanvas(platforms);
     render.renderplayer(player,playerWeapon,keys);
+    render.renderenemy(patrolman);
+
 }
+
 
 // Attack key listener
 function keydown(event) {
@@ -179,6 +239,7 @@ window.addEventListener("keydown", keydown)
 window.addEventListener("keyup", keyup)
 // Creating the platform
 createplat();
+Createpatrolman();
 // Calling loop every 25 milliseconds to update the frame
 setInterval(loop,25);
 

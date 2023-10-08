@@ -8,6 +8,7 @@ class Render {
     backgroundIMAGE = new Image();
     counter = 0;
     timer = 0;
+    enemiesSPRITE = new Image();
 
     constructor() {
         this.canvas = document.getElementById("canvas");
@@ -17,7 +18,7 @@ class Render {
         this.playerSPRITE.src = this.siteURL+"Sprites/PlayerSheet.png";
         this.playerWeaponSPRITE.src = this.siteURL+"Sprites/PlayerWeaponSheet.png";
         this.backgroundIMAGE.src = this.siteURL+"Sprites/BG.png"
-
+        this.enemiesSPRITE.src = this.siteURL+"Sprites/patrolman.png"
     }
 
     // Function to render the canvas
@@ -99,6 +100,42 @@ class Render {
             player.width,
             player.height
         );
+    }
+
+    renderenemy(enemies) {
+        for (const enemy of enemies) {
+            let spriteDirectionOffset;
+            if (enemy.direction) {
+                spriteDirectionOffset = 0;
+            } else {
+                spriteDirectionOffset = 32;
+            }
+            enemy.animTimer++;
+            if(enemy.animTimer===4){
+                enemy.animTimer = 0;
+                enemy.animStep++;
+                if(enemy.animStep === 4){
+                    enemy.animStep = 0;
+                }
+            }
+
+
+
+
+            // Vous pouvez ajouter d'autres logiques pour l'animation de l'ennemi ici
+
+            this.ctx.drawImage(
+                this.enemiesSPRITE,  // Image de l'ennemi
+                spriteDirectionOffset,  // Sprite sheet offset x
+                enemy.width*enemy.animStep,  // Sprite sheet offset y
+                32, // Sprite sheet w
+                32, // Sprite sheet h
+                enemy.x - enemy.width,
+                enemy.y - enemy.height,
+                enemy.width,
+                enemy.height
+            );
+        }
     }
 }
 
