@@ -23,15 +23,29 @@ class Render {
     }
 
     // Function to render the canvas
-    rendercanvas(platforms){
+    rendercanvas(platforms, collisionBlocks){
         //ctx.fillStyle = "#F0F8FF";
         this.ctx.fillStyle = "#EBEBEB";
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         //this.ctx.drawImage(this.backgroundIMAGE,0,0, this.ctx.canvas.width, this.ctx.canvas.height)
+
+        for (const collisionBlock of collisionBlocks){
+            if (collisionBlock.collisionSide === 0){
+                this.ctx.fillStyle = "rgba(255,0,0,0.50)";
+            } else if (collisionBlock.collisionSide === 1){
+                this.ctx.fillStyle = "rgba(0,255,0,0.50)";
+            } else  if (collisionBlock.collisionSide === 2){
+                this.ctx.fillStyle = "rgba(0,0,255,0.50)";
+            } else  if (collisionBlock.collisionSide === 3){
+                this.ctx.fillStyle = "rgba(255,255,0,0.50)";
+            }
+            this.ctx.fillRect(collisionBlock.x, collisionBlock.y, collisionBlock.width, collisionBlock.height)
+        }
+
         for (const platform of platforms) {
-            /*this.ctx.fillStyle = "#242424";
-            this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height)*/
-            this.ctx.drawImage(
+            this.ctx.fillStyle = "#242424";
+            this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height)
+            /*this.ctx.drawImage(
                 this.decorSPRITE,
                 0,  //sprite sheet offset x
                 16, //sprite sheet offset y
@@ -41,7 +55,7 @@ class Render {
                 platform.y,
                 platform.width,
                 platform.height
-            );
+            );*/
             /**
              * this.ctx.drawImage(
              *                 this.decorSPRITE,
@@ -114,6 +128,9 @@ class Render {
             this.timer = 0;
         }
 
+        this.ctx.fillStyle = "#432243"
+        this.ctx.fillRect(player.x - player.width, player.y - player.height, player.width, player.height)
+
         this.ctx.drawImage(
             this.playerSPRITE,
             spriteDirectionOffset,  //sprite sheet offset x
@@ -143,6 +160,8 @@ class Render {
                     patrolman.animStep = 0;
                 }
             }
+            this.ctx.fillStyle = "#432243"
+            this.ctx.fillRect(patrolman.x - patrolman.width,patrolman.y - patrolman.height,patrolman.width,patrolman.height)
             this.ctx.drawImage(
                 this.patrolmenSPRITE,  // Sprite
                 spriteDirectionOffset,  // Sprite sheet offset x
