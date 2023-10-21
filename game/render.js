@@ -2,10 +2,7 @@ class Render {
     canvas;
     ctx;
     siteURL = "http://localhost/";
-    playerSPRITE = new Image();
-    playerWeaponSPRITE = new Image();
     backgroundIMAGE = new Image();
-    decorSPRITE = new Image();
     patrolmenSPRITE = new Image();
     counter = 0;
     timer = 0;
@@ -15,10 +12,7 @@ class Render {
         this.ctx = this.canvas.getContext("2d");
         this.ctx.canvas.height = 720; // 720
         this.ctx.canvas.width = 1520; // 1280
-        this.playerSPRITE.src = this.siteURL+"Sprites/PlayerSheet.png";
-        this.playerWeaponSPRITE.src = this.siteURL+"Sprites/PlayerWeaponSheet.png";
         this.backgroundIMAGE.src = this.siteURL+"Sprites/BG.png";
-        this.decorSPRITE.src = this.siteURL+"Sprites/DecorSheet.png";
         this.patrolmenSPRITE.src = this.siteURL+"Sprites/Patrolmen.png";
     }
 
@@ -27,48 +21,15 @@ class Render {
         //ctx.fillStyle = "#F0F8FF";
         this.ctx.fillStyle = "#EBEBEB";
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        //this.ctx.drawImage(this.backgroundIMAGE,0,0, this.ctx.canvas.width, this.ctx.canvas.height)
-
+       
         for (const collisionBlock of collisionBlocks){
-            if (collisionBlock.collisionSide === 0){
-                this.ctx.fillStyle = "rgba(255,0,0,0.50)";
-            } else if (collisionBlock.collisionSide === 1){
-                this.ctx.fillStyle = "rgba(0,255,0,0.50)";
-            } else  if (collisionBlock.collisionSide === 2){
-                this.ctx.fillStyle = "rgba(0,0,255,0.50)";
-            } else  if (collisionBlock.collisionSide === 3){
-                this.ctx.fillStyle = "rgba(255,255,0,0.50)";
-            }
-            this.ctx.fillRect(collisionBlock.x, collisionBlock.y, collisionBlock.width, collisionBlock.height)
+            collisionBlock.debug = true;
+            collisionBlock.render(this.ctx);
         }
 
         for (const platform of platforms) {
-            this.ctx.fillStyle = "#242424";
-            this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height)
-            /*this.ctx.drawImage(
-                this.decorSPRITE,
-                0,  //sprite sheet offset x
-                16, //sprite sheet offset y
-                96, //sprite sheet w
-                16, //sprite sheet h
-                platform.x,
-                platform.y,
-                platform.width,
-                platform.height
-            );*/
-            /**
-             * this.ctx.drawImage(
-             *                 this.decorSPRITE,
-             *                 96,  //sprite sheet offset x
-             *                 0,  //sprite sheet offset y
-             *                 96, //sprite sheet w
-             *                 32, //sprite sheet h
-             *                 platform.x,
-             *                 platform.y-16,
-             *                 platform.width,
-             *                 platform.height*2
-             *             );
-             */
+            platform.debug = true;
+            platform.render(this.ctx);
         }
     }
 
@@ -107,17 +68,7 @@ class Render {
         } else if(keys.attack) {
             // attack
             animationOffset = player.width*6;
-            this.ctx.drawImage(
-                this.playerWeaponSPRITE,
-                spriteDirectionOffset,  //sprite sheet offset x
-                0,  //sprite sheet offset y
-                32, //sprite sheet w
-                32, //sprite sheet h
-                player.x - (spriteDirectionOffset*2),
-                player.y - player.height,
-                player.width,
-                player.height
-            );
+            player.weapon.render(this.ctx,player,spriteDirectionOffset);
             this.counter++;
             if (this.counter === 4) {
                 keys.attack = false;
@@ -128,20 +79,8 @@ class Render {
             this.timer = 0;
         }
 
-        this.ctx.fillStyle = "#432243"
-        this.ctx.fillRect(player.x - player.width, player.y - player.height, player.width, player.height)
-
-        this.ctx.drawImage(
-            this.playerSPRITE,
-            spriteDirectionOffset,  //sprite sheet offset x
-            animationOffset,  //sprite sheet offset y
-            32, //sprite sheet w
-            32, //sprite sheet h
-            player.x - player.width,
-            player.y - player.height,
-            player.width,
-            player.height
-        );
+        player.debug = true;
+        player.render(this.ctx,spriteDirectionOffset,animationOffset);
     }
 
     renderpatrolmen(patrolmen) {

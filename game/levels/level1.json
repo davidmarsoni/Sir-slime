@@ -1,0 +1,165 @@
+[
+    {
+        "name": "level1"
+    },
+    {
+        "author": "mathias"
+    },
+    {
+        "player": {
+            "x": 64,
+            "y": 450,
+            "x_v": 0,
+            "y_v": 0,
+            "origin_x": 64,
+            "origin_y": 450,
+            "jump": true,
+            "height": 32,
+            "width": 32,
+            "texturepath": "Sprites/PlayerSheet.png"
+        }
+    },
+    {
+        "playerWeapon": {
+            "damage": 1,
+            "range": 1,
+            "attackSpeed": 1,
+            "height": 32,
+            "width": 32,
+            "texturepath": "Sprites/PlayerWeaponSheet.png"
+        }
+    },
+    {
+        "platform": {
+            "x": 225,
+            "y": 450,
+            "width": 96,
+            "height": 16,
+            "spriteSheetOffsetX" : 0,
+            "spriteSheetOffsetY" : 16,
+            "spriteSheetWidth" : 96,
+            "spriteSheetHeight" : 16,
+            "texturepath": "Sprites/DecorSheet.png"
+        }
+    },
+    {
+        "platform": {
+            "x": 425,
+            "y": 450,
+            "width": 96,
+            "height": 16,
+            "spriteSheetOffsetX" : 0,
+            "spriteSheetOffsetY" : 16,
+            "spriteSheetWidth" : 96,
+            "spriteSheetHeight" : 16,
+            "texturepath": "Sprites/DecorSheet.png"
+        }
+    },
+    {
+        "platform": {
+            "x": 875,
+            "y": 450,
+            "width": 96,
+            "height": 16,
+            "spriteSheetOffsetX" : 0,
+            "spriteSheetOffsetY" : 16,
+            "spriteSheetWidth" : 96,
+            "spriteSheetHeight" : 16,
+            "texturepath": "Sprites/DecorSheet.png"
+        }
+    },
+    {
+        "platform": {
+            "x": 1050,
+            "y": 375,
+            "width": 96,
+            "height": 16,
+            "spriteSheetOffsetX" : 0,
+            "spriteSheetOffsetY" : 16,
+            "spriteSheetWidth" : 96,
+            "spriteSheetHeight" : 16,
+            "texturepath": "Sprites/DecorSheet.png"
+        }
+    },
+    {
+        "platform": {
+            "x": 875,
+            "y": 325,
+            "width": 96,
+            "height": 16,
+            "spriteSheetOffsetX" : 0,
+            "spriteSheetOffsetY" : 16,
+            "spriteSheetWidth" : 96,
+            "spriteSheetHeight" : 16,
+            "texturepath": "Sprites/DecorSheet.png"
+        }
+    },
+    {
+        "platform": {
+            "x": 1050,
+            "y": 250,
+            "width": 96,
+            "height": 16,
+            "spriteSheetOffsetX" : 0,
+            "spriteSheetOffsetY" : 16,
+            "spriteSheetWidth" : 96,
+            "spriteSheetHeight" : 16,
+            "texturepath": "Sprites/DecorSheet.png"
+        }
+    },
+    {
+        "patrolman": {
+            "x": 650,
+            "y": 501,
+            "origin_x": 650,
+            "origin_y": 450,
+            "height": 32,
+            "width": 32,
+            "direction": true,
+            "animStep": 0,
+            "animTimer": 0,
+            "path": [
+                632,
+                825
+            ],
+            "step": 0,
+            "speed": 1
+        }
+    },
+    {
+        "colisionBlock": {
+            "x": 0,
+            "y": 500,
+            "width": 175,
+            "height": 800,
+            "collisionSide": 0
+        }
+    },
+    {
+        "colisionBlock": {
+            "x": 600,
+            "y": 500,
+            "width": 225,
+            "height": 800,
+            "collisionSide": 0
+        }
+    },
+    {
+        "colisionBlock": {
+            "x": 1200,
+            "y": 200,
+            "width": 500,
+            "height": 800,
+            "collisionSide": 0
+        }
+    },
+    {
+        "colisionBlock": {
+            "x": 1400,
+            "y": 0,
+            "width": 200,
+            "height": 100,
+            "collisionSide": 3
+        }
+    }
+]

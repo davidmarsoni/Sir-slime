@@ -1,26 +1,22 @@
 // https://www.educative.io/answers/how-to-make-a-simple-platformer-using-javascript
 import Render from "./render.js";
+// import levelManager
+import {loadLevelFromJSON, saveLevelToJSON } from "./LevelManager.js";
+//import classes
+import Player from "./classes/Player.js";
+import Weapon from "./classes/Weapon.js";
+import Platform from "./classes/Platform.js";
+import CollisionBlock from "./classes/CollisionBlock.js";
 
+//create the render object
 const render = new Render();
 
+//variables
+var gameOn = false;
+
 // The player character
-var player = {
-    x: 64,
-    y: 450,
-    x_v: 0,
-    y_v: 0,
-    origin_x: 64,
-    origin_y: 450,
-    jump : true,
-    height: 32,
-    width: 32,
-};
-var playerWeapon = {
-    x: 0,
-    y: -30,
-    width: 24,
-    height: 24
-}
+var player = [];
+var playerWeapon = [];
 // The status of the arrow keys
 var keys = {
     right: false,
@@ -132,8 +128,13 @@ function createpatrolman(){
         }
     )
 }
+function loop(){
+    if(gameOn){
+        update();
+    }
+}
 
-function loop() {
+function update() {
     // If the player is not jumping apply the effect of friction
     if(player.jump === false) {
         player.x_v *= friction;
@@ -320,6 +321,46 @@ function loop() {
 
 // Attack key listener
 function keydown(event) {
+    //=============================
+    // temporary key listener
+    //key p
+    if(event.keyCode === 80) {
+        gameOn = !gameOn;
+        console.log(gameOn);
+    }
+    //key a
+    if(event.keyCode === 65) {
+        gameOn = false;
+        // ask for level name
+        var levelName = prompt("Please enter the level name", "level0");
+        // find if the level exists
+        var levelList = [];
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', './levels/');
+        xhr.onload = function() {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(xhr.responseText, 'text/html');
+            const links = htmlDoc.getElementsByTagName('a');
+            for (let i = 0; i < links.length; i++) {
+                const fileName = links[i].getAttribute('href');
+                if (fileName.endsWith('.json')) {
+                    const levelName = fileName.slice(0, -5);
+                    levelList.push(levelName);
+                }
+            }
+            // if the level doesn't exist announce it and end the function
+            if (!levelList.includes(levelName)) {
+                alert("This level doesn't exist");
+                return;
+            }
+            console.log("level exists");
+            loadLevel('./levels/' + levelName + '.json');
+        };
+        xhr.send();
+        
+    }
+    //=============================
+
     // left shift key
     if(event.keyCode === 16) {
         keys.attack = true;
@@ -357,13 +398,73 @@ function keyup(event) {
     }
 }
 
-//drawtile();
-// enable keyboard input
+//use to make a quick level save but have many problems
+//saveLevelToJSON("level1", "mathias",player, platforms, patrolmen,collisionBlocks);
+
+// Set functions section
+// TODO: setfunction for the ennemies
+function setObjects(objectsArray) {
+    let platformObject = [];
+    let collisionBlockObject = [];
+    
+    for (let i = 0; i < objectsArray.length; i++) {
+        const element = objectsArray[i];
+        if(element.platform){
+            const platform = new Platform(element.platform.x,element.platform.y,element.platform.width,element.platform.height,element.platform.texturepath,element.platform.spriteSheetOffsetX,element.platform.spriteSheetOffsetY,element.platform.spriteSheetWidth,element.platform.spriteSheetHeight);
+            platformObject.push(platform);
+        }
+        if(element.colisionBlock){
+            const collisionBlock = new CollisionBlock(element.colisionBlock.x,element.colisionBlock.y,element.colisionBlock.width,element.colisionBlock.height,element.colisionBlock.collisionSide);
+            collisionBlockObject.push(collisionBlock);
+        }
+        
+    }
+    platforms = platformObject;
+    collisionBlocks = collisionBlockObject;
+}
+function setPatrolmen(patrolmenArray) {
+    patrolmen = [];
+    patrolmen.push(...patrolmenArray);
+}
+function setPlayer(player_info) {
+    let playerObject = player_info[0].player;
+    let playerWeaponObject = player_info[1].playerWeapon;
+    let weapon = new Weapon(playerWeaponObject.width,playerWeaponObject.height,playerWeaponObject.texturepath,playerWeaponObject.damage,playerWeaponObject.range,playerWeaponObject.attackSpeed);
+    player = new Player(playerObject.x, playerObject.y, playerObject.width, playerObject.height, playerObject.texturepath, weapon, playerObject.health, playerObject.maxHealth, playerObject.speed);
+}
+
+function loadLevel(levelpath,debug = false) {
+    loadLevelFromJSON(levelpath,debug)
+      .then(([Information,player_info,objects,ennemies]) => {
+        var levelName = Information[0].name;
+        var author = Information[1].author;
+        document.title = levelName+" by "+author;
+        var platforms = [];
+        var patrolmen = [];
+        for(let i = 0; i < ennemies.length; i++){
+            const propertyNameFull = Object.keys(ennemies[i])[0];
+            const propertyName = propertyNameFull.replace(/[^a-zA-Z0-9 ]/g, '');
+            if(ennemies[i].patrolman){
+                patrolmen.push(ennemies[i].patrolman);  
+            }
+        }
+        
+        setObjects(objects);
+        setPatrolmen(patrolmen);
+        setPlayer(player_info);
+        
+        gameOn = true;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    
+}
+
+
 window.addEventListener("keydown", keydown)
 window.addEventListener("keyup", keyup)
-createplat();
-createcollisionBlocks();
-createpatrolman();
-// Calling loop every 25 milliseconds to update the frame
-setInterval(loop,25);
 
+
+setInterval(loop,25);
+loadLevel("./levels/level1.json",false);
