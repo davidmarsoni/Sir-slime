@@ -6,6 +6,7 @@ class Render {
     patrolmenSPRITE = new Image();
     counter = 0;
     timer = 0;
+    hitAnimationCounter = 0;
 
     constructor() {
         this.canvas = document.getElementById("canvas");
@@ -44,6 +45,23 @@ class Render {
             spriteDirectionOffset = 0;
         }
 
+        
+
+        let hitSpriteOffset = 0;
+
+        if (player.isHit) {
+            // Gérez l'animation du joueur touché ici
+            hitSpriteOffset = player.width * 2; // Utilisez le deuxième sprite pour le joueur touché
+            // Utilisez un compteur pour alterner entre les images
+            if (this.hitAnimationCounter % 20 < 10) {
+                hitSpriteOffset = 0; // Utilisez le premier sprite pour la première image
+            }
+            this.hitAnimationCounter++;
+        }
+        else{
+            this.hitAnimationCounter = 0;
+        }
+
         // animation
         let animationOffset = 0;
         if (player.jump){
@@ -80,7 +98,7 @@ class Render {
         }
 
         player.debug = true;
-        player.render(this.ctx,spriteDirectionOffset,animationOffset);
+        player.render(this.ctx,spriteDirectionOffset + hitSpriteOffset,animationOffset);
     }
 
     renderpatrolmen(patrolmen) {
@@ -99,19 +117,8 @@ class Render {
                     patrolman.animStep = 0;
                 }
             }
-            this.ctx.fillStyle = "#432243"
-            this.ctx.fillRect(patrolman.x - patrolman.width,patrolman.y - patrolman.height,patrolman.width,patrolman.height)
-            this.ctx.drawImage(
-                this.patrolmenSPRITE,  // Sprite
-                spriteDirectionOffset,  // Sprite sheet offset x
-                patrolman.width*patrolman.animStep,  // Sprite sheet offset y
-                32, // Sprite sheet w
-                32, // Sprite sheet h
-                patrolman.x - patrolman.width,
-                patrolman.y - patrolman.height,
-                patrolman.width,
-                patrolman.height
-            );
+            patrolman.debug = true;
+            patrolman.render(this.ctx,spriteDirectionOffset);
         }
     }
 }

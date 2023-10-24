@@ -12,7 +12,9 @@ class Player extends Entity{
     #origin_y = 64;
     #jump = true;
     #spriteSheetWidth = 32;
-    #spriteSheetHeight = 32;0
+    #spriteSheetHeight = 32;
+    #isHit = false;
+    #counting = 0;
 
     constructor(x, y, width, height, texturepath, weapon, health, maxHealth, speed) {
         super(x, y, width, height, texturepath);
@@ -22,12 +24,29 @@ class Player extends Entity{
         this.#speed = speed;
     }
 
+
     get weapon() {
         return this.#weapon;
     }
 
+    get counting() {
+        return this.#counting;
+    }
+
+    set counting(value) {
+        this.#counting = value;
+    }
+
     set weapon(value) {
         this.#weapon = value;
+    }
+
+    get isHit() {
+        return this.#isHit;
+    }
+
+    set isHit(value) {
+        this.#isHit = value;
     }
 
     get health() {

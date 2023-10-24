@@ -7,6 +7,7 @@ import Player from "./classes/Player.js";
 import Weapon from "./classes/Weapon.js";
 import Platform from "./classes/Platform.js";
 import CollisionBlock from "./classes/CollisionBlock.js";
+import Patrolmen from "./classes/Patrolmen.js";
 
 //create the render object
 const render = new Render();
@@ -133,6 +134,8 @@ function loop(){
         update();
     }
 }
+
+
 
 function update() {
     // If the player is not jumping apply the effect of friction
@@ -311,6 +314,24 @@ function update() {
             }
 
         }
+        
+    }
+
+    for (const patrolman of patrolmen) {
+        patrolman.checkPatrolmanCollision(player);
+    }
+
+    if(player.isHit){
+
+        
+        player.counting++;
+
+        if(player.counting === 120){
+            player.counting = 0;
+            player.isHit = false;
+        }
+        
+        
     }
 
     // Rendering the canvas, the player and the platforms
@@ -424,7 +445,10 @@ function setObjects(objectsArray) {
 }
 function setPatrolmen(patrolmenArray) {
     patrolmen = [];
-    patrolmen.push(...patrolmenArray);
+    for(let i = 0; i < patrolmenArray.length; i++){
+        const patrolman = new Patrolmen(patrolmenArray[i].x,patrolmenArray[i].y,patrolmenArray[i].width,patrolmenArray[i].height,patrolmenArray[i].texturepath,patrolmenArray[i].origin_x,patrolmenArray[i].origin_y,patrolmenArray[i].direction,patrolmenArray[i].animStep,patrolmenArray[i].animTimer,patrolmenArray[i].path,patrolmenArray[i].speed,patrolmenArray[i].step);
+        patrolmen.push(patrolman);
+    }
 }
 function setPlayer(player_info) {
     let playerObject = player_info[0].player;
