@@ -19,8 +19,22 @@ class Platform extends Object{
                 this.height
             );
         } else{
-            ctx.fillStyle = 'black';
+            ctx.fillStyle = 'rgba(0,0,0,0.25)';
             ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+    }
+
+    collide(player){
+        // ]platform.x;platform.x+platform.width[
+        if(player.predictedX > this.x && player.predictedX - player.width < this.x + this.width) {
+            // Predictive Y collision
+            // [platform.y+3;platform.y+1] -> 1. tolerance for clip (define if goes through) | 2. hitbox
+            if (player.y <= this.y+3 && player.predictedY >= this.y+1) {
+                // If the player was above the platform and now is within it vertically
+                player.predictedY = this.y+1;
+                player.y_v = 0;
+                player.jump = false;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-import GameObject from './GameObject.js';
+import GameObject from "./GameObject.js";
+
 class Object extends GameObject{
     #spriteSheetOffsetX
     #spriteSheetOffsetY
