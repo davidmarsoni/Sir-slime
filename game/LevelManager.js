@@ -92,7 +92,7 @@ export function saveLevelToJSON(levelName, levelAuthor,player,...elements) {
     }
     for(let i = 0; i < elements[2].length; i++){
         jsonData.push({
-            colisionBlock: elements[2][i]
+            collisionBlock: elements[2][i]
         });
     }
     //TODO : add the other objects in this code juste to create a JSON file rapidly

@@ -6,6 +6,15 @@
         "author": "mathias"
     },
     {
+        "passageWay": {
+            "x": 1450,
+            "y": 250,
+            "width": 150,
+            "height": 125,
+            "nextLevel": "level2"
+        }
+    },
+    {
         "player": {
             "x": 64,
             "y": 450,
@@ -31,21 +40,8 @@
     },
     {
         "platform": {
-            "x": 225,
-            "y": 450,
-            "width": 96,
-            "height": 16,
-            "spriteSheetOffsetX" : 0,
-            "spriteSheetOffsetY" : 16,
-            "spriteSheetWidth" : 96,
-            "spriteSheetHeight" : 16,
-            "texturepath": "Sprites/DecorSheet.png"
-        }
-    },
-    {
-        "platform": {
-            "x": 425,
-            "y": 450,
+            "x": 350,
+            "y": 475,
             "width": 96,
             "height": 16,
             "spriteSheetOffsetX" : 0,
@@ -82,32 +78,6 @@
         }
     },
     {
-        "platform": {
-            "x": 875,
-            "y": 325,
-            "width": 96,
-            "height": 16,
-            "spriteSheetOffsetX" : 0,
-            "spriteSheetOffsetY" : 16,
-            "spriteSheetWidth" : 96,
-            "spriteSheetHeight" : 16,
-            "texturepath": "Sprites/DecorSheet.png"
-        }
-    },
-    {
-        "platform": {
-            "x": 1050,
-            "y": 250,
-            "width": 96,
-            "height": 16,
-            "spriteSheetOffsetX" : 0,
-            "spriteSheetOffsetY" : 16,
-            "spriteSheetWidth" : 96,
-            "spriteSheetHeight" : 16,
-            "texturepath": "Sprites/DecorSheet.png"
-        }
-    },
-    {
         "patrolman": {
             "x": 650,
             "y": 501,
@@ -119,48 +89,39 @@
             "animStep": 0,
             "animTimer": 0,
             "path": [
-                632,
-                825
+                607,
+                800
             ],
             "step": 0,
             "speed": 1,
-            "texturepath": "Sprites/Patrolmen.png"
+            "texturepath": "Sprites/Patrolman.png"
         }
     },
     {
-        "colisionBlock": {
+        "collisionBlock": {
             "x": 0,
             "y": 500,
-            "width": 175,
-            "height": 800,
+            "width": 225,
+            "height": 300,
             "collisionSide": 0
         }
     },
     {
-        "colisionBlock": {
-            "x": 600,
+        "collisionBlock": {
+            "x": 575,
             "y": 500,
             "width": 225,
-            "height": 800,
+            "height": 300,
             "collisionSide": 0
         }
     },
     {
-        "colisionBlock": {
-            "x": 1200,
-            "y": 200,
+        "collisionBlock": {
+            "x": 1250,
+            "y": 375,
             "width": 500,
             "height": 800,
             "collisionSide": 0
-        }
-    },
-    {
-        "colisionBlock": {
-            "x": 1400,
-            "y": 0,
-            "width": 200,
-            "height": 100,
-            "collisionSide": 3
         }
     }
 ]
