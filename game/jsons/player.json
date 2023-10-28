@@ -1,0 +1,28 @@
+[
+{
+    "Player": {
+        "x": 64,
+        "y": 450,
+        "x_v": 0,
+        "y_v": 0,
+        "origin_x": 64,
+        "origin_y": 450,
+        "jump": true,
+        "height": 32,
+        "width": 32,
+        "maxHealth": 100,
+        "lifes": 3,
+        "texturepath": "Sprites/PlayerSheet.png"
+    }
+},
+{
+    "PlayerWeapon": {
+        "damage": 1,
+        "range": 1,
+        "attackSpeed": 1,
+        "height": 32,
+        "width": 32,
+        "texturepath": "Sprites/PlayerWeaponSheet.png"
+    }
+}
+]

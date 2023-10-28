@@ -2,9 +2,10 @@ import Entity from "./Entity.js";
 import Weapon from "./Weapon.js";
 
 class Player extends Entity{
-    #weapon = new Weapon();
-    #health = 0;
+    #weapon = [];
     #maxHealth = 0;
+    #currenthealth = 0;
+    #lifes = 0;
     #speed = 0;
     #x_v = 0;
     #y_v = 0;
@@ -21,13 +22,14 @@ class Player extends Entity{
     #preventMovement = false;
     #preventMovementTimer = 15;
 
-    constructor(x, y, width, height, texturepath, origin_x, origin_y, weapon, health, maxHealth, speed) {
+    constructor(x, y, width, height, texturepath, origin_x, origin_y, weapon, lifes,maxHealth, speed) {
         super(x, y, width, height, texturepath);
         this.#origin_x = origin_x;
         this.#origin_y = origin_y;
         this.#weapon = weapon;
-        this.#health = health;
+        this.#lifes = lifes;
         this.#maxHealth = maxHealth;
+        this.#currenthealth = maxHealth;
         this.#speed = speed;
     }
 
@@ -51,12 +53,54 @@ class Player extends Entity{
         this.#weapon = value;
     }
 
-    get health() {
-        return this.#health;
+    get currenthealth() {
+        return this.#currenthealth;
     }
 
-    set health(value) {
-        this.#health = value;
+    takeDamage(value) {
+        if(value > 0){
+            if(this.#currenthealth - value > 0){
+                this.#currenthealth -= value;
+            }else{
+                this.dead();
+            }
+        }
+    }
+
+    get lifes() {
+        return this.#lifes;
+    }
+
+    dead(){
+        this.#lifes -= 1;
+        if(this.#lifes > 0){
+            this.respawn();
+        }
+    }
+
+    isDead(){
+        return this.#currenthealth <= 0;
+    }
+
+    respawn(){
+        this.#currenthealth = this.#maxHealth;
+        this.x = this.#origin_x;
+        this.y = this.#origin_y;
+        this.predictedX = this.#origin_x;
+        this.predictedY = this.#origin_y;
+        this.y_v = 0;
+        this.x_v = 0;
+    }
+
+    ifLifeRemains(){
+        return this.#lifes > 0;
+    }
+
+    addLifes(value) {
+        if(value > 0)
+        {
+            this.#lifes += value;
+        }
     }
 
     get maxHealth() {
@@ -175,9 +219,9 @@ class Player extends Entity{
         // src https://codehs.com/tutorial/andy/Programming_Sprites_in_JavaScript
         // was for the original idea of animation, but we adapted it.
         if (this.debug) {
-            ctx.fillStyle = "rgba(0,243,255,0.25)";
+            ctx.fillStyle = "rgba(0,255,255,1)";
             ctx.fillRect(this.x - this.width, this.y - this.height, this.width, this.height)
-            ctx.fillStyle = "rgba(255,236,0,0.25)";
+            ctx.fillStyle = "rgba(255,255,0,1)";
             ctx.fillRect(this.x - this.width + this.width / 4, this.y - this.height, this.width - this.width / 2, this.height)
         }
 
@@ -249,7 +293,9 @@ class Player extends Entity{
     }
 
 
-    hit(){
+    hit(damage = 1){
+        this.takeDamage(damage);
+        this.debug ? console.log(this.#currenthealth) : null;
         if(!this.isHit){
             this.#invicivibilityTimer = 0;
             this.isHit = true;
@@ -257,14 +303,14 @@ class Player extends Entity{
         }
         this.#preventMovement = true;
         this.#preventMovementTimer = 0;
-        console.log("hit")
+        this.debug ? console.log("hit") : null;
     }
 
     invicibilityFrames(){
         this.#invicivibilityTimer++;
         if(this.#invicivibilityTimer === 120){
             this.isHit = false;
-            console.log("invicibility over")
+            this.debug ? console.log("invicibility over") : null;
         }
     }
 

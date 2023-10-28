@@ -1,21 +1,22 @@
 [
   {
-    "name": "level2"
+    "Name": "level2"
   },
   {
-    "author": "mathias"
+    "Author": "mathias"
   },
   {
-    "passageWay": {
+    "PassageWay": {
       "x": 1100,
       "y": 0,
       "width": 100,
       "height": 75,
-      "nextLevel": "level1"
+      "passageWayTo": "level2"
+      
     }
   },
   {
-    "player": {
+    "Player": {
       "x": 0,
       "y": 200,
       "x_v": 5,
@@ -29,7 +30,7 @@
     }
   },
   {
-    "playerWeapon": {
+    "PlayerWeapon": {
       "damage": 1,
       "range": 1,
       "attackSpeed": 1,
@@ -39,7 +40,7 @@
     }
   },
   {
-    "platform": {
+    "Platform": {
       "x": 375,
       "y": 625,
       "width": 96,
@@ -52,7 +53,7 @@
     }
   },
   {
-    "platform": {
+    "Platform": {
       "x": 712,
       "y": 525,
       "width": 96,
@@ -65,7 +66,7 @@
     }
   },
   {
-    "platform": {
+    "Platform": {
       "x": 612,
       "y": 450,
       "width": 96,
@@ -78,7 +79,7 @@
     }
   },
   {
-    "platform": {
+    "Platform": {
       "x": 712,
       "y": 375,
       "width": 96,
@@ -91,7 +92,7 @@
     }
   },
   {
-    "platform": {
+    "Platform": {
       "x": 1200,
       "y": 425,
       "width": 96,
@@ -104,7 +105,7 @@
     }
   },
   {
-    "platform": {
+    "Platform": {
       "x": 1300,
       "y": 275,
       "width": 96,
@@ -117,7 +118,7 @@
     }
   },
   {
-    "platform": {
+    "Platform": {
       "x": 1100,
       "y": 175,
       "width": 96,
@@ -130,7 +131,7 @@
     }
   },
   {
-    "patrolman": {
+    "Patrolman": {
       "x": 880,
       "y": 401,
       "origin_x": 880,
@@ -150,7 +151,7 @@
     }
   },
   {
-    "collisionBlock": {
+    "CollisionBlock": {
       "x": 0,
       "y": 200,
       "width": 175,
@@ -159,7 +160,7 @@
     }
   },
   {
-    "collisionBlock": {
+    "CollisionBlock": {
       "x": 525,
       "y": 600,
       "width": 150,
@@ -168,7 +169,7 @@
     }
   },
   {
-    "collisionBlock": {
+    "CollisionBlock": {
       "x": 850,
       "y": 400,
       "width": 200,
@@ -177,7 +178,7 @@
     }
   },
   {
-    "collisionBlock": {
+    "CollisionBlock": {
       "x": 1050,
       "y": 250,
       "width": 200,
@@ -186,7 +187,7 @@
     }
   },
   {
-    "collisionBlock": {
+    "CollisionBlock": {
       "x": 0,
       "y": 0,
       "width": 1100,
@@ -195,7 +196,7 @@
     }
   },
   {
-    "collisionBlock": {
+    "CollisionBlock": {
       "x": 1200,
       "y": 0,
       "width": 350,
@@ -204,7 +205,7 @@
     }
   },
   {
-    "collisionBlock": {
+    "CollisionBlock": {
       "x": 300,
       "y": 100,
       "width": 750,
@@ -213,7 +214,7 @@
     }
   },
   {
-    "collisionBlock": {
+    "CollisionBlock": {
       "x": 1450,
       "y": 100,
       "width": 100,
@@ -222,7 +223,7 @@
     }
   },
   {
-    "collisionBlock": {
+    "CollisionBlock": {
       "x": 1400,
       "y": 350,
       "width": 50,

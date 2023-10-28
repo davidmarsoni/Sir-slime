@@ -8,8 +8,8 @@ class Patrolman extends Entity{
     #path = [];
     #speed = 1;
     #step = 0;
-
-    constructor(x, y, width, height, texturepath, origin_x, origin_y, direction, animStep, animTimer, path, speed, step) {
+    #damage = 0;
+    constructor(x, y, width, height, texturepath, origin_x, origin_y, direction, animStep, animTimer, path, speed, step,damage) {
         super(x, y, width, height, texturepath);
         this.#origin_x = origin_x;
         this.#origin_y = origin_y;
@@ -19,6 +19,7 @@ class Patrolman extends Entity{
         this.#path = path;
         this.#speed = speed;
         this.#step = step;
+        this.#damage = damage;
     }
 
     get step() {
@@ -85,6 +86,14 @@ class Patrolman extends Entity{
         this.#origin_x = value;
     }
 
+    get damage() {
+        return this.#damage;
+    }
+
+    set damage(value) {
+        this.#damage = value;
+    }
+
     getTrampleBoxLeft(){
         return this.x - this.width + this.width/4;
     }
@@ -135,56 +144,56 @@ class Patrolman extends Entity{
     }
 
     collide(player) {
-      // Calculate the sides of the player and patrolman
-      const playerLeft = player.predictedX;
-      const playerRight = player.predictedX + player.width;
-      const playerTop = player.predictedY;
-      const playerBottom = player.predictedY + player.height;
-  
-      const patrolmanLeft = this.x;
-      const patrolmanRight = this.x + this.width;
-      const patrolmanTop = this.y;
-      const patrolmanBottom = this.y + this.height;
+        // Calculate the sides of the player and patrolman
+        const playerLeft = player.predictedX;
+        const playerRight = player.predictedX + player.width;
+        const playerTop = player.predictedY;
+        const playerBottom = player.predictedY + player.height;
+    
+        const patrolmanLeft = this.x;
+        const patrolmanRight = this.x + this.width;
+        const patrolmanTop = this.y;
+        const patrolmanBottom = this.y + this.height;
 
-      // Check if the player and patrolman are colliding
-      if (
-          playerRight >= patrolmanLeft &&
-          playerLeft <= patrolmanRight &&
-          playerBottom >= patrolmanTop &&
-          playerTop <= patrolmanBottom
-      ) {
-          console.log("collision");
-          if (player.y <= this.y+3
-              && player.predictedY <= this.y
-              && (
-                  player.getTrampleBoxLeft(true) <= this.getTrampleBoxRight()
-                  || player.getTrampleBoxRight(true) >= this.getTrampleBoxLeft()
-              ) && player.y_v > 0
-          ) {
-              console.log("trample");
-              // Destroy the enemy
-          }
-          // Push the player left
-          else if(player.x <= this.x){
-              console.log("left")
-              player.x_v = -5;
-              player.y_v = -3;
-              player.predictedX = this.x - this.width + player.x_v;
-              player.jump = true;
-              player.hit();
-          }
-          // Push the player right
-          else if(player.x >= this.x){
-              console.log("right")
-              player.x_v = 5;
-              player.y_v = -3;
-              player.predictedX = this.x + player.width + player.x_v;
-              player.jump = true;
-              player.hit();
-          } else {
-              console.log("an error in collision was made, oops !!");
-          }
-      }
+        // Check if the player and patrolman are colliding
+        if (
+            playerRight >= patrolmanLeft &&
+            playerLeft <= patrolmanRight &&
+            playerBottom >= patrolmanTop &&
+            playerTop <= patrolmanBottom
+        ) {
+            this.debug ? console.log("collision") : null;
+            if (player.y <= this.y+3
+                && player.predictedY <= this.y
+                && (
+                    player.getTrampleBoxLeft(true) <= this.getTrampleBoxRight()
+                    || player.getTrampleBoxRight(true) >= this.getTrampleBoxLeft()
+                ) && player.y_v > 0
+            ) {
+                this.debug ? console.log("trample") : null;
+                // Destroy the enemy
+            }
+            // Push the player left
+            else if(player.x <= this.x){
+                this.debug ? console.log("left") : null;
+                player.x_v = -5;
+                player.y_v = -3;
+                player.predictedX = this.x - this.width + player.x_v;
+                player.jump = true;
+                player.hit(this.damage);
+            }
+            // Push the player right
+            else if(player.x >= this.x){
+                this.debug ? console.log("right") : null;
+                player.x_v = 5;
+                player.y_v = -3;
+                player.predictedX = this.x + player.width + player.x_v;
+                player.jump = true;
+                player.hit(this.damage);
+            } else {
+                this.debug ? console.log("an error in collision was made, oops !!") : null;
+            }
+        }
     }
 
     // move the patrolman

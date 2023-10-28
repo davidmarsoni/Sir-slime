@@ -1,25 +1,20 @@
 // https://www.educative.io/answers/how-to-make-a-simple-platformer-using-javascript
-import Render from "./render.js";
-// import levelManager
-import {loadLevelFromJSON, saveLevelToJSON } from "./LevelManager.js";
-//import classes
-import Player from "./classes/Player.js";
-import Weapon from "./classes/Weapon.js";
-import PassageWay from "./classes/PassageWay.js";
-import Platform from "./classes/Platform.js";
-import CollisionBlock from "./classes/CollisionBlock.js";
-import Patrolman from "./classes/Patrolman.js";
+
+import Loader from "./classes/management/Loader.js";
+import Render from "./classes/management/render.js";
+
 
 //create the render object
 const render = new Render();
+const loader = new Loader();
 
-//letiables
+// The game state
 let gameOn = false;
 let currentLevel = "level1";
 
 // The player character
 let player;
-let playerWeapon = [];
+
 // The status of the arrow keys
 let keys = {
     right: false,
@@ -86,23 +81,17 @@ function update() {
         patrolman.collide(player);
     }
 
-    if (player.predictedX - player.width < 0) {
-        player.predictedX = player.width;
-    }
-    if (player.predictedX > 1520) {
-        player.predictedX = 1520;
-    }
-    if (player.predictedY - player.height < 0) {
-        player.predictedY = player.height;
+    // Death by falling
+    if (player.predictedY > 1200) {
+        player.dead();
     }
 
-    // Death - TEMPORARY
-    if (player.predictedY > 1200) {
-        player.predictedY = player.origin_y;
-        player.predictedX = player.origin_x;
-        player.y_v = 0;
-        player.x_v = 0;
-        player.jump = true;
+    // game over if no life remains
+    if(!player.ifLifeRemains()){
+        gameOn = false;
+        alert("Game Over the level1 will be reloaded");
+        loader.reset();
+        loadLevel("level1");
     }
 
     // Apply the final position to the character
@@ -120,66 +109,76 @@ function update() {
 
     for (const passageWay of passageWays){
         if(passageWay.collide(player)){
-            loadLevel("levels/" + passageWay.passageWayTo + ".json");
+            console.log("passage way to : " + passageWay.passageWayTo);
+            loadLevel(passageWay.passageWayTo,true);
             currentLevel = passageWay.passageWayTo;
-            console.log(currentLevel);
             break;
         }
     }
 
-    // Rendering the canvas, the player and the platforms
-    render.renderCanvas(platforms, collisionBlocks, passageWays);
+    // Rendering the canvas, objects, entities, player
+    render.renderCanvas(loader.backgroundImage);
+    render.renderObjects(platforms, collisionBlocks, passageWays);
     render.renderEntities(patrolmen);
-    render.renderPlayer(player,playerWeapon,keys);
+    render.renderPlayer(player,keys);
+    
 }
 
 // Attack key listener
 function keydown(event) {
     //=============================
     // temporary key listener
-    // key p
+    // key p (pause)
     if(event.keyCode === 80) {
         gameOn = !gameOn;
-        console.log(gameOn);
     }
-    //key a ( and f to reload level)
-    if(event.keyCode === 65 || event.keyCode === 70) {
-        gameOn = false;
-        if (event.keyCode === 65) {
-            // ask for level name
-            let levelName = prompt("Please enter the level name", "level0");
-            // set the current level to the new level
-            currentLevel = levelName;
-            // find if the level exists
-            let levelList = [];
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', './levels/');
-            xhr.onload = function () {
-                const parser = new DOMParser();
-                const htmlDoc = parser.parseFromString(xhr.responseText, 'text/html');
-                const links = htmlDoc.getElementsByTagName('a');
-                for (let i = 0; i < links.length; i++) {
-                    const fileName = links[i].getAttribute('href');
-                    if (fileName.endsWith('.json')) {
-                        const levelName = fileName.slice(0, -5);
-                        levelList.push(levelName);
-                    }
-                }
-                // if the level doesn't exist announce it and end the function
-                if (!levelList.includes(levelName)) {
-                    alert("This level doesn't exist");
-                    return;
-                }
-                console.log("level exists");
+    //key a (ask for level name)
+    if(event.keyCode === 65 ) {
+       
+        // ask for level name
+        let levelName = prompt("Please enter the level name", "level1");
+        loader.findFile("./levels/",levelName,".json").then((result)=>{
+            if(result){
+                alert("level exists");
+                loadLevel(levelName,false);
+            }else{
+                alert("level doesn't exist");
             }
-        }
-        loadLevel('./levels/' + currentLevel + '.json');
-        xhr.send();
+        });   
+    }
+    //key f (force load level)
+    if(event.keyCode === 70) {
+        gameOn = false;
+        console.log("force load level");
+        loadLevel(currentLevel,true);
+        console.log("current level : " + currentLevel);
+    }
+    //key o print the level in png (o = output)
+    if (event.keyCode === 79) {
+        // Get the canvas element
+        const canvas = document.querySelector('canvas');
+
+        // Convert the canvas to a data URL
+        const dataURL = canvas.toDataURL('image/png');
+
+        // Create a new Image object with the data URL as its source
+        const image = new Image();
+        image.src = dataURL;
+
+        // Create a new <a> element with the download attribute set to the desired filename
+        const link = document.createElement('a');
+        link.download = 'level.png';
+
+        // Set the href attribute of the <a> element to the data URL
+        link.href = dataURL;
+
+        // Simulate a click on the <a> element to download the file
+        link.click();
     }
     //=============================
 
     // left shift key
-    if(event.keyCode === 16) {
+    if(event.keyCode === 16 ) {
         keys.attack = true;
     }
     // direction keys
@@ -219,83 +218,30 @@ function keyup(event) {
 //use to make a quick level save but have many problems
 //saveLevelToJSON("level1", "mathias",player, platforms, patrolmen,collisionBlocks);
 
-// Set functions section
-// TODO: setfunction for the ennemies
-function setObjects(objectsArray) {
-    let platformObject = [];
-    let collisionBlockObject = [];
-    let passageWayObject = [];
-    
-    for (let i = 0; i < objectsArray.length; i++) {
-        const element = objectsArray[i];
-        if(element.passageWay){
-            const passageWay = new PassageWay(element.passageWay.x,element.passageWay.y,element.passageWay.width,element.passageWay.height,element.passageWay.nextLevel);
-            passageWayObject.push(passageWay);
-        } else if(element.platform){
-            const platform = new Platform(element.platform.x,element.platform.y,element.platform.width,element.platform.height,element.platform.texturepath,element.platform.spriteSheetOffsetX,element.platform.spriteSheetOffsetY,element.platform.spriteSheetWidth,element.platform.spriteSheetHeight);
-            platformObject.push(platform);
-        } else if(element.collisionBlock){
-            const collisionBlock = new CollisionBlock(element.collisionBlock.x,element.collisionBlock.y,element.collisionBlock.width,element.collisionBlock.height,element.collisionBlock.collisionSide);
-            collisionBlockObject.push(collisionBlock);
-        }
-        
-    }
-    passageWays = passageWayObject;
-    platforms = platformObject;
-    collisionBlocks = collisionBlockObject;
-}
-function setPatrolmen(patrolmenArray) {
-    patrolmen = [];
-    for(let i = 0; i < patrolmenArray.length; i++){
-        const patrolman = new Patrolman(patrolmenArray[i].x,patrolmenArray[i].y,patrolmenArray[i].width,patrolmenArray[i].height,patrolmenArray[i].texturepath,patrolmenArray[i].origin_x,patrolmenArray[i].origin_y,patrolmenArray[i].direction,patrolmenArray[i].animStep,patrolmenArray[i].animTimer,patrolmenArray[i].path,patrolmenArray[i].speed,patrolmenArray[i].step);
-        patrolmen.push(patrolman);
-    }
-}
-function setPlayer(player_info) {
-    let playerObject = player_info[0].player;
-    let playerWeaponObject = player_info[1].playerWeapon;
-    let weapon = new Weapon(playerWeaponObject.width,playerWeaponObject.height,playerWeaponObject.texturepath,playerWeaponObject.damage,playerWeaponObject.range,playerWeaponObject.attackSpeed);
-    if (player == null) {
-        player = new Player(playerObject.x, playerObject.y, playerObject.width, playerObject.height, playerObject.texturepath, playerObject.origin_x, playerObject.origin_y, weapon, playerObject.health, playerObject.maxHealth, playerObject.speed);
-    } else {
-        player.update(playerObject.x, playerObject.y, playerObject.origin_x, playerObject.origin_y)
-    }
-    player.x_v = playerObject.x_v;
-    player.y_v = playerObject.y_v;
-
-}
 
 function loadLevel(levelpath,debug = false) {
-    loadLevelFromJSON(levelpath,debug)
-      .then(([Information,player_info,objects,ennemies]) => {
-        let levelName = Information[0].name;
-        let author = Information[1].author;
-        document.title = levelName+" by "+author;
-        let platforms = [];
-        let patrolmen = [];
-        for(let i = 0; i < ennemies.length; i++){
-            const propertyNameFull = Object.keys(ennemies[i])[0];
-            const propertyName = propertyNameFull.replace(/[^a-zA-Z0-9 ]/g, '');
-            if(ennemies[i].patrolman){
-                patrolmen.push(ennemies[i].patrolman);  
-            }
+    gameOn = false;
+    loader.load(levelpath,debug).then((result)=>{
+        if(result){
+            currentLevel = loader.levelname;
+            player = loader.player;
+            patrolmen = loader.patrolmen;
+            platforms = loader.platforms;
+            collisionBlocks = loader.collisionBlocks;
+            passageWays = loader.passageWays;
+            gameOn = true;
+            document.title = loader.levelName + " by " + loader.levelAuthor;
+            currentLevel = loader.levelName;
+        }else{
+            console.error(loader.errors);
         }
-        
-        setObjects(objects);
-        setPatrolmen(patrolmen);
-        setPlayer(player_info);
-        
-        gameOn = true;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    });
+   
     
 }
-
 
 window.addEventListener("keydown", keydown)
 window.addEventListener("keyup", keyup)
-
 setInterval(loop,25);
-loadLevel("./levels/level1.json",false);
+loadLevel(currentLevel,false);
+

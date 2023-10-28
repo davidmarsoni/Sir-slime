@@ -3,6 +3,7 @@ class Render {
     ctx;
     siteURL = "http://localhost/";
     backgroundIMAGE = new Image();
+    loadBackgroundFailed = false;
     counter = 0;
     timer = 0;
 
@@ -11,15 +12,18 @@ class Render {
         this.ctx = this.canvas.getContext("2d");
         this.ctx.canvas.height = 720; // 720
         this.ctx.canvas.width = 1520; // 1280
-        this.backgroundIMAGE.src = this.siteURL+"Sprites/BG.png";
     }
-
-    // Function to render the canvas
-    renderCanvas(platforms, collisionBlocks, passageWays){
-        //ctx.fillStyle = "#F0F8FF";
-        //this.ctx.fillStyle = "#EBEBEB";
-        //this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        this.ctx.drawImage(this.backgroundIMAGE, 0,0)
+    
+    renderCanvas(backgroundImage){
+        //test the type of the backgroundImage
+        if (backgroundImage != null){
+            this.ctx.drawImage(backgroundImage, 0,0, this.ctx.canvas.width, this.ctx.canvas.height)  
+        } else {
+            this.ctx.fillStyle ="rgba(240,240,240,1)";
+            this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        }    
+    }
+    renderObjects(platforms, collisionBlocks, passageWays){
        
         for (const collisionBlock of collisionBlocks){
             collisionBlock.debug = true;
@@ -38,7 +42,7 @@ class Render {
     }
 
     // Function to render the player
-    renderPlayer(player, playerWeapon, keys){
+    renderPlayer(player, keys){
         player.debug = true;
         player.render(this.ctx, keys);
     }
