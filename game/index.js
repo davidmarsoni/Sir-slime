@@ -239,8 +239,6 @@ function loadLevel(levelpath,debug = false) {
             document.title = loader.levelName + " by " + loader.levelAuthor;
             currentLevel = loader.levelName;
             bats = loader.bats;
-            console.log(bats);
-            console.log(patrolmen);
         }else{
             console.error(loader.errors);
         }

@@ -299,13 +299,10 @@ class Loader{
                         element[Patrolman.name].speed,
                         element[Patrolman.name].damage
                     );
-
-            
                     patrolmanObject.push(patrolman);
                 }
 
                 if(element[Bat.name]){
-                    console.log(element[Bat.name].triggerZone);
                     const bat = new Bat(
                         element[Bat.name].x,
                         element[Bat.name].y,
@@ -327,7 +324,6 @@ class Loader{
         //set the global variable
         this.#patrolmen = patrolmanObject;
         this.#bats = batObject;
-        console.log(this.#bats);
     }
 
     /**
