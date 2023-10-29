@@ -134,6 +134,34 @@
       "texturepath": "Sprites/Patrolman.png"
     }
   },
+    {
+      "Bat": {
+          "x": 500,
+          "y": 332,
+          "height": 32,
+          "width": 32,
+          "origin_x": 64,
+          "origin_y": 450,
+          "speed":3,
+          "damage":12,
+          "triggerZone" : 300,
+          "texturepath": "Sprites/Bats.png"
+      }
+  },
+  {
+    "Bat": {
+        "x": 450,
+        "y": 332,
+        "height": 32,
+        "width": 32,
+        "origin_x": 64,
+        "origin_y": 450,
+        "speed":3,
+        "damage":12,
+        "triggerZone" : 300,
+        "texturepath": "Sprites/Bats.png"
+    }
+},
   {
     "CollisionBlock": {
       "x": 0,

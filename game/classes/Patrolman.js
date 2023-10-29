@@ -11,16 +11,12 @@ class Patrolman extends Entity{
     #damage = 0;
     #isAlive = true;
 
-    constructor(x, y, width, height, texturepath, origin_x, origin_y, direction, animStep, animTimer, path, speed, step,damage) {
+    constructor(x, y, width, height, texturepath, origin_x, origin_y, path, speed,damage) {
         super(x, y, width, height, texturepath);
         this.#origin_x = origin_x;
         this.#origin_y = origin_y;
-        this.#direction = direction;
-        this.#animStep = animStep;
-        this.#animTimer = animTimer;
         this.#path = path;
         this.#speed = speed;
-        this.#step = step;
         this.#damage = damage;
     }
 

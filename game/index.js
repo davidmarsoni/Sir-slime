@@ -3,6 +3,7 @@
 import Loader from "./classes/management/Loader.js";
 import Render from "./classes/management/render.js";
 
+
 //create the render object
 const render = new Render();
 const loader = new Loader();
@@ -29,6 +30,7 @@ let friction = 0.7;
 let passageWays = [];
 let platforms = [];
 let patrolmen = [];
+let bats = [];
 let collisionBlocks = [];
 
 function loop(){
@@ -79,6 +81,11 @@ function update() {
         patrolman.collide(player);
     }
 
+    for (const bat of bats){
+        bat.move(player);
+        bat.collide(player);
+    }
+
     // Death by falling
     if (player.predictedY > 1200) {
         player.dead();
@@ -115,8 +122,9 @@ function update() {
 
     // Rendering the canvas, objects, entities, player
     render.renderCanvas(loader.backgroundImage);
+    //console.log(bats);
     render.renderObjects(platforms, collisionBlocks, passageWays);
-    render.renderEntities(patrolmen);
+    render.renderEntities(patrolmen, bats);
     render.renderPlayer(player,keys);
     render.renderScorboard(loader);
     
@@ -230,6 +238,9 @@ function loadLevel(levelpath,debug = false) {
             gameOn = true;
             document.title = loader.levelName + " by " + loader.levelAuthor;
             currentLevel = loader.levelName;
+            bats = loader.bats;
+            console.log(bats);
+            console.log(patrolmen);
         }else{
             console.error(loader.errors);
         }

@@ -5,6 +5,7 @@ import Platform from "../Platform.js";
 import CollisionBlock from "../CollisionBlock.js";
 import Patrolman from "../Patrolman.js";
 import PassageWay from "../PassageWay.js";
+import Bat from "../Bat.js";
 
 /**
  * This class is used to load a level from a json file
@@ -22,6 +23,7 @@ class Loader{
     #collisionBlocks = [];
     #passageWays = [];
     #backgroundImage = null;
+    #bats = [];
   
     get levelName() {
         return this.#levelName;
@@ -58,6 +60,11 @@ class Loader{
     get passageWays() {
         return this.#passageWays;
     }
+
+    get bats() {
+        return this.#bats;
+    }
+
 
     /**
      * This function is used to get the errors list of the last loading
@@ -272,8 +279,10 @@ class Loader{
      * @param {*} ennemiesArray a list of ennemies in the level
      */
     setEnnemies(ennemiesArray) {
+        
         // create the temporary object
         let patrolmanObject = [];
+        let batObject = [];
         try {
             for (let i = 0; i < ennemiesArray.length; i++) {
                 const element = ennemiesArray[i];
@@ -286,15 +295,30 @@ class Loader{
                         element[Patrolman.name].texturepath,
                         element[Patrolman.name].origin_x,
                         element[Patrolman.name].origin_y,
-                        element[Patrolman.name].direction,
-                        element[Patrolman.name].animStep,
-                        element[Patrolman.name].animTimer,
                         element[Patrolman.name].path,
                         element[Patrolman.name].speed,
-                        element[Patrolman.name].step,
                         element[Patrolman.name].damage
                     );
+
+            
                     patrolmanObject.push(patrolman);
+                }
+
+                if(element[Bat.name]){
+                    console.log(element[Bat.name].triggerZone);
+                    const bat = new Bat(
+                        element[Bat.name].x,
+                        element[Bat.name].y,
+                        element[Bat.name].width,
+                        element[Bat.name].height,
+                        element[Bat.name].texturepath,
+                        element[Bat.name].origin_x,
+                        element[Bat.name].origin_y,
+                        element[Bat.name].speed,
+                        element[Bat.name].damage,
+                        element[Bat.name].triggerZone
+                    );
+                    batObject.push(bat);
                 }
             }
         } catch (e) {
@@ -302,6 +326,8 @@ class Loader{
         }
         //set the global variable
         this.#patrolmen = patrolmanObject;
+        this.#bats = batObject;
+        console.log(this.#bats);
     }
 
     /**
@@ -378,6 +404,11 @@ class Loader{
                 numberOfEnnemies++;
             }
         });
+        this.#bats.forEach(bat => {
+            if(bat.isAlive == true){
+                numberOfEnnemies++;
+            }
+        });
         
         return numberOfEnnemies;
     }
@@ -403,6 +434,7 @@ class Loader{
         this.#collisionBlocks = [];
         this.#passageWays = [];
         this.#backgroundImage = null;
+        this.#bats = [];
     }
 }
 

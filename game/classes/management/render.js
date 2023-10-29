@@ -47,10 +47,14 @@ class Render {
         player.render(this.ctx, keys);
     }
 
-    renderEntities(patrolmen) {
+    renderEntities(patrolmen, bats) {
         for (const patrolman of patrolmen) {
             patrolman.debug = true;
             patrolman.render(this.ctx);
+        }
+        for (const bat of bats){
+            bat.debug = true;
+            bat.render(this.ctx);
         }
     }
     renderScorboard(loader){
@@ -80,7 +84,7 @@ class Render {
         }
         this.ctx.fillStyle = "rgba(255,255,255,1)";
         let remainingEnemies = loader.numberOfEnnemies; //TODO: get the remaining enemies
-        this.ctx.fillText("ennmies : "+remainingEnemies , x, y+60);
+        this.ctx.fillText("Ennemies : "+remainingEnemies , x, y+60);
         this.ctx.fillText("-------------", x, y+80);
         this.ctx.fillText("Position: x:" + loader.player.x +" y:"+loader.player.y , x, y+100);
         // help part 
