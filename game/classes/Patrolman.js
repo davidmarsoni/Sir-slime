@@ -9,6 +9,8 @@ class Patrolman extends Entity{
     #speed = 1;
     #step = 0;
     #damage = 0;
+    #isAlive = true;
+
     constructor(x, y, width, height, texturepath, origin_x, origin_y, direction, animStep, animTimer, path, speed, step,damage) {
         super(x, y, width, height, texturepath);
         this.#origin_x = origin_x;
@@ -92,6 +94,14 @@ class Patrolman extends Entity{
 
     set damage(value) {
         this.#damage = value;
+    }
+
+    get isAlive() {
+        return this.#isAlive;
+    }
+
+    set isAlive(value) {$
+        this.#isAlive = value;
     }
 
     getTrampleBoxLeft(){

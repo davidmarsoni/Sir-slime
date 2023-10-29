@@ -11,7 +11,7 @@
         "height": 32,
         "width": 32,
         "maxHealth": 100,
-        "lifes": 3,
+        "lives": 5,
         "texturepath": "Sprites/PlayerSheet.png"
     }
 },

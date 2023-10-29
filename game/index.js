@@ -3,7 +3,6 @@
 import Loader from "./classes/management/Loader.js";
 import Render from "./classes/management/render.js";
 
-
 //create the render object
 const render = new Render();
 const loader = new Loader();
@@ -25,7 +24,6 @@ let keys = {
 // The friction and gravity to show realistic movements
 let gravity = 0.6;
 let friction = 0.7;
-let goalAchieved = false;
 
 // The objects
 let passageWays = [];
@@ -94,7 +92,6 @@ function update() {
         loadLevel("level1");
     }
 
-    // Apply the final position to the character
     player.y = player.predictedY;
     player.x = player.predictedX;
 
@@ -110,8 +107,8 @@ function update() {
     for (const passageWay of passageWays){
         if(passageWay.collide(player)){
             console.log("passage way to : " + passageWay.passageWayTo);
-            loadLevel(passageWay.passageWayTo,true);
-            currentLevel = passageWay.passageWayTo;
+            loadLevel(passageWay.passageWayTo);
+            //currentLevel = passageWay.passageWayTo;
             break;
         }
     }
@@ -121,6 +118,7 @@ function update() {
     render.renderObjects(platforms, collisionBlocks, passageWays);
     render.renderEntities(patrolmen);
     render.renderPlayer(player,keys);
+    render.renderScorboard(loader);
     
 }
 
@@ -139,7 +137,6 @@ function keydown(event) {
         let levelName = prompt("Please enter the level name", "level1");
         loader.findFile("./levels/",levelName,".json").then((result)=>{
             if(result){
-                alert("level exists");
                 loadLevel(levelName,false);
             }else{
                 alert("level doesn't exist");
@@ -150,6 +147,7 @@ function keydown(event) {
     if(event.keyCode === 70) {
         gameOn = false;
         console.log("force load level");
+        loader.reset();
         loadLevel(currentLevel,true);
         console.log("current level : " + currentLevel);
     }

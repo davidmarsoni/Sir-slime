@@ -4,7 +4,6 @@
  * That way if we want to add a new object to the game we just have to add it to the list
  * and not modify the LoaderManager.js file
  */
-
 import Player from "../Player.js";
 import Weapon from "../Weapon.js";
 import Platform from "../Platform.js";

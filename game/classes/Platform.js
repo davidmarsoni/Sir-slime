@@ -6,18 +6,22 @@ class Platform extends Object{
     }
 
     render(ctx){
+        if(!this.textureLoaded && !this.debug){
+            this.debug = true;
+        }
+        
         if(!this.debug){
-            ctx.drawImage(
-                this.texture,  //sprite
-                this.spriteSheetOffsetX,  //sprite sheet offset x
-                this.spriteSheetOffsetY, //sprite sheet offset y
-                this.spriteSheetWidth, //sprite sheet w
-                this.spriteSheetHeight, //sprite sheet h
-                this.x,
-                this.y,
-                this.width,
-                this.height
-            );
+                ctx.drawImage(
+                    this.texture,  //sprite
+                    this.spriteSheetOffsetX,  //sprite sheet offset x
+                    this.spriteSheetOffsetY, //sprite sheet offset y
+                    this.spriteSheetWidth, //sprite sheet w
+                    this.spriteSheetHeight, //sprite sheet h
+                    this.x,
+                    this.y,
+                    this.width,
+                    this.height
+                );
         } else{
             ctx.fillStyle = 'rgba(0,0,0,0.25)';
             ctx.fillRect(this.x, this.y, this.width, this.height);

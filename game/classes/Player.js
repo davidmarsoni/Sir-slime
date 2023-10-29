@@ -5,7 +5,7 @@ class Player extends Entity{
     #weapon = [];
     #maxHealth = 0;
     #currenthealth = 0;
-    #lifes = 0;
+    #lives = 0;
     #speed = 0;
     #x_v = 0;
     #y_v = 0;
@@ -22,12 +22,12 @@ class Player extends Entity{
     #preventMovement = false;
     #preventMovementTimer = 15;
 
-    constructor(x, y, width, height, texturepath, origin_x, origin_y, weapon, lifes,maxHealth, speed) {
+    constructor(x, y, width, height, texturepath, origin_x, origin_y, weapon, lives,maxHealth, speed) {
         super(x, y, width, height, texturepath);
         this.#origin_x = origin_x;
         this.#origin_y = origin_y;
         this.#weapon = weapon;
-        this.#lifes = lifes;
+        this.#lives = lives;
         this.#maxHealth = maxHealth;
         this.#currenthealth = maxHealth;
         this.#speed = speed;
@@ -67,13 +67,13 @@ class Player extends Entity{
         }
     }
 
-    get lifes() {
-        return this.#lifes;
+    get lives() {
+        return this.#lives;
     }
 
     dead(){
-        this.#lifes -= 1;
-        if(this.#lifes > 0){
+        this.#lives -= 1;
+        if(this.#lives > 0){
             this.respawn();
         }
     }
@@ -90,16 +90,18 @@ class Player extends Entity{
         this.predictedY = this.#origin_y;
         this.y_v = 0;
         this.x_v = 0;
+
+        this.debug ? console.log("respawn number of life left : "+this.lifes) : null;
     }
 
     ifLifeRemains(){
-        return this.#lifes > 0;
+        return this.#lives > 0;
     }
 
     addLifes(value) {
         if(value > 0)
         {
-            this.#lifes += value;
+            this.#lives += value;
         }
     }
 
@@ -273,7 +275,7 @@ class Player extends Entity{
             this.counter = 0;
             this.timer = 0;
         }
-
+        
         ctx.drawImage(
             this.texture,
             spriteDirectionOffset + hitSpriteOffset,  //sprite sheet offset x
