@@ -10,21 +10,25 @@ class Platform extends Object{
             this.debug = true;
         }
         
-        if(!this.debug){
-                ctx.drawImage(
-                    this.texture,  //sprite
-                    this.spriteSheetOffsetX,  //sprite sheet offset x
-                    this.spriteSheetOffsetY, //sprite sheet offset y
-                    this.spriteSheetWidth, //sprite sheet w
-                    this.spriteSheetHeight, //sprite sheet h
-                    this.x,
-                    this.y,
-                    this.width,
-                    this.height
-                );
-        } else{
+        if(this.textureLoaded){
+            ctx.drawImage(
+                this.texture,  //sprite
+                this.spriteSheetOffsetX,  //sprite sheet offset x
+                this.spriteSheetOffsetY, //sprite sheet offset y
+                this.spriteSheetWidth, //sprite sheet w
+                this.spriteSheetHeight, //sprite sheet h
+                this.x,
+                this.y,
+                this.width,
+                this.height
+            );
+        }
+        if(this.debug){
             ctx.fillStyle = 'rgba(0,0,0,0.25)';
             ctx.fillRect(this.x, this.y, this.width, this.height);
+
+            ctx.fillStyle = 'rgba(0,0,0,1)';
+            ctx.fillRect(this.x, this.y, 8, 8);
         }
     }
 

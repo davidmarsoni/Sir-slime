@@ -29,6 +29,9 @@ class PassageWay extends GameObjectLogic {
         if(this.debug){
             ctx.fillStyle = 'rgba(185,255,245,0.75)';
             ctx.fillRect(this.x, this.y, this.width, this.height);
+
+            ctx.fillStyle = 'rgba(0,0,0,1)';
+            ctx.fillRect(this.x, this.y, 8, 8);
         }
     }
 }

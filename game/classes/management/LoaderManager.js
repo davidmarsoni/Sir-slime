@@ -1,4 +1,4 @@
-import {Information_list,player_list,startScreen_list,objects_list,ennemies_list} from "./constant.js";
+import {Information_list,player_list,objects_list,ennemies_list,startScreen_list} from "./constant.js";
 
 /**
  * This function loads a level from a JSON file
@@ -73,6 +73,8 @@ export function loadPlayerFromJSON(jsonFile,debug=false) {
         });
     });
 }
+
+
 
 export function saveLevelToJSON(levelName, levelAuthor,player,...elements) {
     const jsonData = [];

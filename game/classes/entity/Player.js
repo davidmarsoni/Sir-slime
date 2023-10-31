@@ -1,38 +1,59 @@
 import Entity from "./Entity.js";
-import Weapon from "./Weapon.js";
 
 class Player extends Entity{
-    #weapon = [];
+    // life variables
     #maxHealth = 0;
     #currenthealth = 0;
     #lives = 0;
-    #speed = 0;
-    #x_v = 0;
-    #y_v = 0;
-    #origin_x = 64;
-    #origin_y = 64;
-    #jump = true;
-    #spriteSheetWidth = 32;
-    #spriteSheetHeight = 32;
-    #predictedX = 0;
-    #predictedY = 0;
     #isHit = false;
     #invicivibilityTimer = 120;
+
+    //mouvement variables
+    #x_v = 0;
+    #y_v = 0;
+    #jump = true;
+    #predictedX = 0;
+    #predictedY = 0;
+
+    //origin variables
+    #origin_x = 64;
+    #origin_y = 64;
+
+    //image variables
+    #spriteSheetWidth = 32;
+    #spriteSheetHeight = 32;
+   
+    
+    //technical variables
     #hitAnimationCounter = 0;
     #preventMovement = false;
     #preventMovementTimer = 15;
 
-    constructor(x, y, width, height, texturepath, origin_x, origin_y, weapon, lives,maxHealth, speed) {
-        super(x, y, width, height, texturepath);
+    //statistic variables
+    #score = 0;
+    #numberOfEnnemieskilled = 0;
+    #numberOfHeartsCollected = 0;
+    #numberOfCoinsCollected = 0;
+    #numberOfDeaths = 0;
+    #numberOfLevelCompleted = 0;
+    #totalDamageTaken = 0;
+
+    constructor(x, y, width, height, texturepath, origin_x, origin_y, lives,maxHealth, speed, damage) {
+        super(x, y, width, height, texturepath, speed, damage);
         this.#origin_x = origin_x;
         this.#origin_y = origin_y;
-        this.#weapon = weapon;
         this.#lives = lives;
         this.#maxHealth = maxHealth;
         this.#currenthealth = maxHealth;
-        this.#speed = speed;
     }
 
+    /**
+     * Update the player position beetwen 2 level
+     * @param {*} x new x position
+     * @param {*} y new y position
+     * @param {*} origin_x new origin x position
+     * @param {*} origin_y new origin y position
+     */
     update(x, y, origin_x, origin_y) {
         this.x = x;
         this.y = y;
@@ -45,64 +66,12 @@ class Player extends Entity{
 
     }
 
-    get weapon() {
-        return this.#weapon;
-    }
-
-    set weapon(value) {
-        this.#weapon = value;
-    }
-
+    // #region getters and setters
     get currenthealth() {
         return this.#currenthealth;
     }
-
-    takeDamage(value) {
-        if(value > 0){
-            if(this.#currenthealth - value > 0){
-                this.#currenthealth -= value;
-            }else{
-                this.dead();
-            }
-        }
-    }
-
-    get lives() {
-        return this.#lives;
-    }
-
-    dead(){
-        this.#lives -= 1;
-        if(this.#lives > 0){
-            this.respawn();
-        }
-    }
-
-    isDead(){
-        return this.#currenthealth <= 0;
-    }
-
-    respawn(){
-        this.#currenthealth = this.#maxHealth;
-        this.x = this.#origin_x;
-        this.y = this.#origin_y;
-        this.predictedX = this.#origin_x;
-        this.predictedY = this.#origin_y;
-        this.y_v = 0;
-        this.x_v = 0;
-
-        this.debug ? console.log("respawn number of life left : "+this.lifes) : null;
-    }
-
-    ifLifeRemains(){
-        return this.#lives > 0;
-    }
-
-    addLifes(value) {
-        if(value > 0)
-        {
-            this.#lives += value;
-        }
+    set currenthealth(value) {
+        this.#currenthealth = value;
     }
 
     get maxHealth() {
@@ -113,12 +82,16 @@ class Player extends Entity{
         this.#maxHealth = value;
     }
 
-    get speed() {
-        return this.#speed;
+    get lives() {
+        return this.#lives;
     }
 
-    set speed(value) {
-        this.#speed = value;
+    get score() {
+        return this.#score;
+    }
+
+    set score(value) {
+        this.#score = value;
     }
 
     get x_v() {
@@ -199,8 +172,109 @@ class Player extends Entity{
 
     get preventMovement() {
         return this.#preventMovement;
+    } 
+
+    set lives(value) {
+        this.#lives += value;
     }
 
+    get numberOfEnnemieskilled() {
+        return this.#numberOfEnnemieskilled;
+    }
+
+    get numberOfHeartsCollected() {
+        return this.#numberOfHeartsCollected;
+    }
+
+    get numberOfCoinsCollected() {
+        return this.#numberOfCoinsCollected;
+    }
+
+    get numberOfDeaths() {
+        return this.#numberOfDeaths;
+    }
+
+    get numberOfLevelCompleted() {
+        return this.#numberOfLevelCompleted;
+    }
+
+    get totalDamageTaken() {
+        return this.#totalDamageTaken;
+    }
+    
+    // #endregion
+
+    // #region statistic methods
+    addEnnemykilled() {
+        this.#numberOfEnnemieskilled++;
+    }
+
+    addHeartCollected() {
+        this.#numberOfHeartsCollected++;
+    }
+
+    addCoinCollected() {
+        this.#numberOfCoinsCollected++;
+    }
+
+    addDeath() {
+        this.#numberOfDeaths++;
+    }
+
+    addLevelCompleted() {
+        this.#numberOfLevelCompleted++;
+    }
+
+    addDamageTaken(value) {
+        this.#totalDamageTaken += value;
+    }
+    // #endregion
+
+    // #region life methods
+
+    takeDamage(value) {
+        if(value > 0){
+            this.addDamageTaken(value);
+            if(this.#currenthealth - value > 0){
+                this.#currenthealth -= value;
+            }else{
+                this.dead();
+            }
+        }
+    }
+
+    dead(){
+        this.#lives -= 1;
+        this.addDeath();
+        if(this.#lives > 0){
+            this.respawn();
+        }
+    }
+
+    isDead(){
+        return this.#currenthealth <= 0;
+    }
+
+    respawn(){
+        this.#currenthealth = this.#maxHealth;
+        this.x = this.#origin_x;
+        this.y = this.#origin_y;
+        this.predictedX = this.#origin_x;
+        this.predictedY = this.#origin_y;
+        this.y_v = 0;
+        this.x_v = 0;
+
+        this.debug ? console.log("respawn number of life left : "+this.lives) : null;
+    }
+
+    ifLifeRemains(){
+        return this.#lives > 0;
+    }
+
+
+    // #endregion
+
+    // #region collision methods
     getTrampleBoxLeft(predicted = false){
         if (predicted){
             return this.predictedX - this.width + this.width/4
@@ -216,14 +290,15 @@ class Player extends Entity{
             return this.x - this.width/4
         }
     }
+    // #endregion
 
     render(ctx,keys) {
         // src https://codehs.com/tutorial/andy/Programming_Sprites_in_JavaScript
         // was for the original idea of animation, but we adapted it.
         if (this.debug) {
-            ctx.fillStyle = "rgba(0,255,255,1)";
+            ctx.fillStyle = "rgba(0,255,255,0.5)";
             ctx.fillRect(this.x - this.width, this.y - this.height, this.width, this.height)
-            ctx.fillStyle = "rgba(255,255,0,1)";
+            ctx.fillStyle = "rgba(255,255,0,0.5)";
             ctx.fillRect(this.x - this.width + this.width / 4, this.y - this.height, this.width - this.width / 2, this.height)
         }
 
@@ -297,7 +372,7 @@ class Player extends Entity{
 
     hit(damage = 1){
         this.takeDamage(damage);
-        this.debug ? console.log(this.#currenthealth) : null;
+        this.debug ? console.log("current helth of the player: " +this.#currenthealth) : null;
         if(!this.isHit){
             this.#invicivibilityTimer = 0;
             this.isHit = true;

@@ -4,6 +4,10 @@
   },
   {
     "Author": "mathias"
+  },{
+    "Background": {
+        "path": "images/level2.png"
+    }
   },
   {
     "PassageWay": {
@@ -130,7 +134,7 @@
       ],
       "step": 0,
       "speed": 1.25,
-      "damage": 10,
+      "damage": 1,
       "texturepath": "Sprites/Patrolman.png"
     }
   },
@@ -142,8 +146,8 @@
           "width": 32,
           "origin_x": 64,
           "origin_y": 450,
-          "speed":3,
-          "damage":12,
+          "speed":2.5,
+          "damage":1,
           "triggerZone" : 300,
           "texturepath": "Sprites/Bats.png"
       }
@@ -156,8 +160,8 @@
         "width": 32,
         "origin_x": 64,
         "origin_y": 450,
-        "speed":3,
-        "damage":12,
+        "speed":2.6,
+        "damage":1,
         "triggerZone" : 300,
         "texturepath": "Sprites/Bats.png"
     }
@@ -252,4 +256,6 @@
       "collisionSide": 3
     }
   }
+  ,{"Coin":{"x":1416,"y":325,"width":16,"height":16,"value":10,"spriteSheetOffsetX":1,"texturepath":"Sprites/Collectible.png"}}
+  
 ]

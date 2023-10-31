@@ -1,23 +1,18 @@
-import Entity from "./Entity.js";
-class Bat extends Entity{
+import Enemy from "./Enemy.js";
+class Bat extends Enemy{
     #origin_x = 64;
     #origin_y = 64;
     #direction = true;
     #animStep = 1;
     #animTimer = 0;
     #isIdle = true;
-    #speed = 0;
-    #damage = 0;
-    #isAlive = true;
     #triggerZone = 0;
 
 
 constructor(x, y, width, height, texturepath, origin_x, origin_y,speed,damage,triggerZone) {
-    super(x, y, width, height, texturepath);
+    super(x, y, width, height, texturepath, speed, damage);
     this.#origin_x = origin_x;
     this.#origin_y = origin_y;
-    this.#speed  = speed;
-    this.#damage = damage;
     this.#triggerZone = triggerZone;
 }
 
@@ -69,30 +64,6 @@ set isIdle(value) {
     this.#isIdle = value;
 }
 
-get speed() {
-    return this.#speed;
-}
-
-set speed(value) {
-    this.#speed = value;
-}
-
-get damage() {
-    return this.#damage;
-}
-
-set damage(value) {
-    this.#damage = value;
-}
-
-get isAlive() {
-    return this.#isAlive;
-}
-
-set isAlive(value) {
-    this.#isAlive = value;
-}
-
 get triggerZone() {
     return this.#triggerZone;
 }
@@ -105,6 +76,8 @@ set triggerZone(value) {
 
 render(ctx) {
     if(this.debug){
+        ctx.fillStyle = "rgba(100,100,100,0.15)"
+        ctx.fillRect(this.x - this.#triggerZone+this.width,this.y - this.#triggerZone+this.height,this.triggerZone*2-this.width*2,this.triggerZone*2-this.height*2)
         ctx.fillStyle = "rgba(67,34,67,0.25)"
         ctx.fillRect(this.x - this.width,this.y - this.height,this.width,this.height)
         ctx.fillStyle = "rgba(169,208,72,0.25)"
@@ -139,8 +112,8 @@ render(ctx) {
         this.texture,  // Sprite
         spriteDirectionOffset,  // Sprite sheet offset x
         this.width*this.animStep,  // Sprite sheet offset y
-        32, // Sprite sheet w
-        32, // Sprite sheet h
+        this.width, // Sprite sheet w
+        this.height, // Sprite sheet h
         this.x - this.width,
         this.y - this.height,
         this.width,
@@ -213,8 +186,6 @@ collide(player){
             player.predictedX = this.x + player.width + player.x_v;
             player.jump = true;
             player.hit(this.damage);
-        } else {
-            console.log("an error in collision was made, oops !!");
         }
     }
     }

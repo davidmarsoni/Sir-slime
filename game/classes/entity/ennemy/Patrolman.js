@@ -1,23 +1,20 @@
-import Entity from "./Entity.js";
-class Patrolman extends Entity{
+import Enemy from "./Enemy.js";
+class Patrolman extends Enemy{
     #origin_x = 64;
     #origin_y = 64;
     #direction = true;
     #animStep = 0;
     #animTimer = 0;
     #path = [];
-    #speed = 1;
     #step = 0;
-    #damage = 0;
-    #isAlive = true;
+
+
 
     constructor(x, y, width, height, texturepath, origin_x, origin_y, path, speed,damage) {
-        super(x, y, width, height, texturepath);
+        super(x, y, width, height, texturepath, speed, damage);
         this.#origin_x = origin_x;
         this.#origin_y = origin_y;
         this.#path = path;
-        this.#speed = speed;
-        this.#damage = damage;
     }
 
     get step() {
@@ -26,14 +23,6 @@ class Patrolman extends Entity{
 
     set step(value) {
         this.#step = value;
-    }
-
-    get speed() {
-        return this.#speed;
-    }
-
-    set speed(value) {
-        this.#speed = value;
     }
 
     get path() {
@@ -84,22 +73,6 @@ class Patrolman extends Entity{
         this.#origin_x = value;
     }
 
-    get damage() {
-        return this.#damage;
-    }
-
-    set damage(value) {
-        this.#damage = value;
-    }
-
-    get isAlive() {
-        return this.#isAlive;
-    }
-
-    set isAlive(value) {$
-        this.#isAlive = value;
-    }
-
     getTrampleBoxLeft(){
         return this.x - this.width + this.width/4;
     }
@@ -135,8 +108,8 @@ class Patrolman extends Entity{
         this.texture,  // Sprite
         spriteDirectionOffset,  // Sprite sheet offset x
         this.width*this.animStep,  // Sprite sheet offset y
-        32, // Sprite sheet w
-        32, // Sprite sheet h
+        this.width, // Sprite sheet w
+        this.height, // Sprite sheet h
         this.x - this.width,
         this.y - this.height,
         this.width,
@@ -196,9 +169,7 @@ class Patrolman extends Entity{
                 player.predictedX = this.x + player.width + player.x_v;
                 player.jump = true;
                 player.hit(this.damage);
-            } else {
-                this.debug ? console.log("an error in collision was made, oops !!") : null;
-            }
+            } 
         }
     }
 

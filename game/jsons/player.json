@@ -10,19 +10,11 @@
         "jump": true,
         "height": 32,
         "width": 32,
-        "maxHealth": 100,
+        "maxHealth": 6,
         "lives": 5,
-        "texturepath": "Sprites/PlayerSheet.png"
-    }
-},
-{
-    "PlayerWeapon": {
         "damage": 1,
-        "range": 1,
-        "attackSpeed": 1,
-        "height": 32,
-        "width": 32,
-        "texturepath": "Sprites/PlayerWeaponSheet.png"
+        "speed": 5,
+        "texturepath": "Sprites/PlayerSheet.png"
     }
 }
 ]

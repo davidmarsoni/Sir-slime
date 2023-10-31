@@ -26,6 +26,9 @@ class CollisionBlock extends GameObjectLogic{
                 ctx.fillStyle = "rgba(255,255,0,0.50)";
             }
             ctx.fillRect(this.x, this.y, this.width, this.height);
+
+            ctx.fillStyle = "rgba(0,0,0,1)";
+            ctx.fillRect(this.x, this.y, 8, 8);
         }
     }
     

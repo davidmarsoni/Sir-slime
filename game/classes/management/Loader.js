@@ -1,18 +1,21 @@
 import {loadLevelFromJSON,loadPlayerFromJSON,loadStartScreenFromJSON} from "./LoaderManager.js";
-import Player from "../Player.js";
-import Weapon from "../Weapon.js";
+import Player from "../entity/Player.js";
 import Platform from "../Platform.js";
 import CollisionBlock from "../CollisionBlock.js";
-import Patrolman from "../Patrolman.js";
+import Patrolman from "../entity/ennemy/Patrolman.js";
 import PassageWay from "../PassageWay.js";
-import Bat from "../Bat.js";
+import Bat from "../entity/ennemy/Bat.js";
+import Collectable from "../collacteables/Collectible.js";
+import Coin from "../collacteables/Coin.js";
+import Heart from "../collacteables/Heart.js";
 
 /**
  * This class is used to load a level from a json file
  * It contains all the data of the loaded level and the player
  */
 class Loader{
-    //game variable
+
+    //for the game
     #errors = [];
     #levelName;
     #levelAuthor;
@@ -23,16 +26,16 @@ class Loader{
     #platforms = [];
     #collisionBlocks = [];
     #passageWays = [];
+    #collacteables = [];
     #backgroundImage = null;
     #bats = [];
+
+    //for the startScreen
+       
+    #backgroundStartScreen;
+    #backgroundStartScreenImage;
+
   
-    //startScreen Variables
-    #startScreenBackground;
-    #startScreenBackgroundImage;
-
-
-
-     //game getters
     get levelName() {
         return this.#levelName;
     }
@@ -51,6 +54,10 @@ class Loader{
 
     get player() {
         return this.#player;
+    }
+
+    set player(value) {
+        this.#player = value;
     }
 
     get patrolmen() {
@@ -73,6 +80,9 @@ class Loader{
         return this.#bats;
     }
 
+    get collacteables() {
+        return this.#collacteables;
+    }
 
     /**
      * This function is used to get the errors list of the last loading
@@ -88,11 +98,12 @@ class Loader{
         return this.#backgroundImage;
     }
 
-     //startGame getters
+    //startGame getters
 
-     get startScreenBackgroundImage(){
-        return this.#startScreenBackgroundImage;
-     }
+    get backgroundStartScreenImage(){
+    return this.#backgroundStartScreenImage
+    }
+
 
     /**
      * This function is used to load a level from a json file
@@ -128,7 +139,7 @@ class Loader{
                         } else {
                             debug ? console.log("player is not empty") : null;
                             this.updatePlayer(player_info_level);
-                            this.errors.size != 0 ||  debug ? console.log(this.errors) : null;
+                            this.errors.size != 0 && debug ? console.log(this.errors) : null;
                             resolve(true);
                         }
                     });
@@ -152,7 +163,7 @@ class Loader{
                 if (result) {
                     loadStartScreenFromJSON(StartScreenFolder + fileName + StartScreenExtension, debug).then((startScreen_info) => {
                         this.setStartScreenInfo(startScreen_info);
-                        this.errors.size != 0 || debug ? console.log(this.errors) : null;
+                        this.errors.size != 0 && debug ? console.log(this.errors) : null;
                     resolve(true);
                     });
                 } else {
@@ -210,23 +221,7 @@ class Loader{
      */
      setPlayer(player_info) {
         let playerObject = player_info[0][Player.name];
-        //let playerWeaponObject = player_info[1][Player.name+Weapon.name];
         let playertmp;
-        let weapon;
-        /* deprecated for now because the player can't have a weapon for now
-        try {
-           
-            #weapon = new Weapon(
-                playerWeaponObject.width,
-                playerWeaponObject.height,
-                playerWeaponObject.texturepath,
-                playerWeaponObject.damage,
-                playerWeaponObject.range,
-                playerWeaponObject.attackSpeed
-            );
-        } catch (e) {
-            this.errors.push("The import of the weapon failed | " + e.message );
-        }*/
         try {
             playertmp = new Player(
                 playerObject.x, 
@@ -236,10 +231,10 @@ class Loader{
                 playerObject.texturepath, 
                 playerObject.origin_x,
                 playerObject.origin_y,
-                weapon,
                 playerObject.lives,
                 playerObject.maxHealth,
-                playerObject.speed
+                playerObject.speed,
+                playerObject.damage
             );
             this.#player = playertmp;
         } catch (e) {
@@ -255,6 +250,7 @@ class Loader{
         let platformObject = [];
         let collisionBlockObject = [];
         let passageWaysObject = [];
+        let collacteableObject = [];
 
         try {
             for (let i = 0; i < objectsArray.length; i++) {
@@ -293,15 +289,42 @@ class Loader{
                         );
                     passageWaysObject.push(passageWay);
                 }
+                if(element[Coin.name]){
+                    const collacteable = new Coin(
+                        element[Coin.name].x,
+                        element[Coin.name].y,
+                        element[Coin.name].width,
+                        element[Coin.name].height,
+                        element[Coin.name].texturepath,
+                        element[Coin.name].value,
+                        element[Coin.name].spriteSheetOffsetX
+                        );
+                    collacteableObject.push(collacteable);
+                }
+                if(element[Heart.name]){
+                    const collacteable = new Heart(
+                        element[Heart.name].x,
+                        element[Heart.name].y,
+                        element[Heart.name].width,
+                        element[Heart.name].height,
+                        element[Heart.name].texturepath,
+                        element[Heart.name].value,
+                        element[Heart.name].spriteSheetOffsetX
+                        );
+                    collacteableObject.push(collacteable);
+                }
+
             }
         } catch (e) {
             this.#errors.push("The import of the objects failed | " + e.message);
         }
 
+        
         //set the global variables
         this.#platforms = platformObject;
         this.#collisionBlocks = collisionBlockObject;
         this.#passageWays = passageWaysObject;
+        this.#collacteables = collacteableObject;
 
         //check if there is at least one platform and one collision block in the level
         if(this.platforms.length == 0){
@@ -362,20 +385,18 @@ class Loader{
         this.#patrolmen = patrolmanObject;
         this.#bats = batObject;
     }
+
     setStartScreenInfo(startScreenArray){
-        console.log("Notre code Json marche !");
-        console.log(startScreenArray);
         try {
-            this.#startScreenBackground = startScreenArray[0]["Background"];
+            this.#backgroundStartScreen = startScreenArray[0]["Background"];
             this.loadBackground();
         } catch (e) {
             this.#errors.push("The import of the background failed | " + e.message);
         }
-        console.log(this.#startScreenBackground);
-
-        this.loadStartScreenBackground();
+        this.loadBackgroundStartScreen();
 
     }
+
     /**
      * This function is used to load the background image only one time when the level is loaded
      */
@@ -398,26 +419,24 @@ class Loader{
         }
     }
 
-    loadStartScreenBackground(){
+    loadBackgroundStartScreen(){
         try {
-            this.#startScreenBackgroundImage = new Image();
-            if(this.#startScreenBackground.path != null)
+            this.#backgroundStartScreenImage = new Image();
+            if(this.#backgroundStartScreen.path != null)
             {
-                this.#startScreenBackgroundImage.src = this.#startScreenBackground.path;
+                this.#backgroundStartScreenImage.src = this.#backgroundStartScreen.path;
             }else{
-                this.#startScreenBackgroundImage = null;
+                this.#backgroundStartScreenImage = null;
             }
-            this.#startScreenBackgroundImage.onerror = () => {
-                this.#startScreenBackgroundImage = null;
+            this.#backgroundStartScreenImage.onerror = () => {
+                this.#backgroundStartScreenImage = null;
                 this.#errors.push("The background image could not be found");
             };
         } catch (e) {
-            this.#startScreenBackgroundImage = null;
+            this.#backgroundStartScreenImage = null;
             this.#errors.push("The import of the background image failed | " + e.message);
         }
-        console.log(this.#startScreenBackgroundImage);
     }
-
 
     /**
      * This function is used to find a file in a folder

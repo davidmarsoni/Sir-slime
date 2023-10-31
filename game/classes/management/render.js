@@ -6,27 +6,24 @@ class Render {
     loadBackgroundFailed = false;
     counter = 0;
     timer = 0;
+    debug = false;
 
-    constructor() {
+    constructor(debug = false) {
+        this.debug = debug;
         this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.ctx.canvas.height = 720; // 720
-        this.ctx.canvas.width = 1520; // 1280
+        this.ctx.canvas.height = 720; 
+        this.ctx.canvas.width = 1520; 
     }
-    
+    render(loader,quickObjectCreation,keys){
+        this.renderCanvas(loader.backgroundImage);
+        this.renderObjects(loader.platforms, loader.collisionBlocks, loader.passageWays, loader.collacteables);
+        this.renderPlayer(loader.player, keys);
+        this.renderEntities(loader.patrolmen, loader.bats);
+        this.renderScorboard(loader);
 
-    renderStart(backgroundImage){
-        console.log("Je suis dans mon render");
-
-
-
-        if (backgroundImage != null){
-            this.ctx.drawImage(backgroundImage, 0,0, this.ctx.canvas.width, this.ctx.canvas.height)  
-        } 
-
-        //this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        //this.ctx.fillStyle = "rgba(200,200,200)";
-
+        //render the quick object creation
+        quickObjectCreation.render(this.ctx);
     }
 
     renderCanvas(backgroundImage){
@@ -38,37 +35,42 @@ class Render {
             this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         }    
     }
-    renderObjects(platforms, collisionBlocks, passageWays){
+    renderObjects(platforms, collisionBlocks, passageWays, collacteables){
        
         for (const collisionBlock of collisionBlocks){
-            collisionBlock.debug = true;
+            collisionBlock.debug = this.debug;
             collisionBlock.render(this.ctx);
         }
 
         for (const platform of platforms) {
-            platform.debug = true;
+            platform.debug = this.debug;
             platform.render(this.ctx);
         }
 
         for (const passageWay of passageWays) {
-            passageWay.debug = true;
+            passageWay.debug = this.debug;
             passageWay.render(this.ctx);
         }
+        for (const collacteable of collacteables) {
+            collacteable.debug = this.debug;
+            collacteable.render(this.ctx);
+        }
+
     }
 
     // Function to render the player
     renderPlayer(player, keys){
-        player.debug = true;
+        player.debug = this.debug;
         player.render(this.ctx, keys);
     }
 
     renderEntities(patrolmen, bats) {
         for (const patrolman of patrolmen) {
-            patrolman.debug = true;
+            patrolman.debug = this.debug;
             patrolman.render(this.ctx);
         }
         for (const bat of bats){
-            bat.debug = true;
+            bat.debug = this.debug;
             bat.render(this.ctx);
         }
     }
@@ -76,7 +78,7 @@ class Render {
         //create a score board for the player
         this.ctx.fillStyle = "rgba(0,0,0,0.5)";
         let x = this.ctx.canvas.width-280;
-        let y = this.ctx.canvas.height-130;
+        let y = this.ctx.canvas.height-160;
         this.ctx.fillRect(x, y, this.ctx.canvas.width, this.ctx.canvas.height);
         this.ctx.fillStyle = "rgba(255,255,255,1)";
         this.ctx.font = "20px Consolas";
@@ -86,11 +88,11 @@ class Render {
         this.ctx.fillText("Health  : ",x, y+20);
         for (let i = 0; i < loader.player.maxHealth; i++){
             this.ctx.fillStyle = "rgba(160,160,160,1)";
-            this.ctx.fillRect(x+112+(i*1), y+10, 1, 10);
+            this.ctx.fillRect(x+112+(i*16), y+10, 16, 10);
         }
         for (let i = 0; i < loader.player.currenthealth; i++){
             this.ctx.fillStyle = "rgba(255,255,255,1)";
-            this.ctx.fillRect(x+112+(i*1), y+10, 1, 10);
+            this.ctx.fillRect(x+112+(i*16), y+10, 16, 10);
         }
         this.ctx.fillText("Lives   : ", x, y+40);
         for (let i = 0; i < loader.player.lives; i++){
@@ -98,16 +100,24 @@ class Render {
             this.ctx.fillRect(x+112+(i*20), y+30, 10, 10);
         }
         this.ctx.fillStyle = "rgba(255,255,255,1)";
+        this.ctx.fillText("Score   : "+loader.player.score, x, y+60);
         let remainingEnemies = loader.numberOfEnnemies; //TODO: get the remaining enemies
-        this.ctx.fillText("Ennemies : "+remainingEnemies , x, y+60);
-        this.ctx.fillText("-------------", x, y+80);
-        this.ctx.fillText("Position: x:" + loader.player.x +" y:"+loader.player.y , x, y+100);
+        this.ctx.fillText("Ennemies : "+remainingEnemies , x, y+80);
+        this.ctx.fillText("-------------", x, y+100);
+        this.ctx.fillText("Position: x:" + loader.player.x +" y:"+loader.player.y , x, y+120);
         // help part 
         this.ctx.fillStyle = "rgba(0,0,0,0.5)";
-        this.ctx.fillRect(0, 0, 580,  20);
+        this.ctx.fillRect(0, 0, 135,  20);
         this.ctx.fillStyle = "rgba(255,255,255,1)";
         this.ctx.font = "14px Consolas";
-        this.ctx.fillText("Help : a => change level, f => force reload, p => pause, o => level image", 5, 13);
+        this.ctx.fillText("key 'h' for help", 5, 13);
+    }
+
+    renderStart(backgroundImage){
+        
+        if (backgroundImage != null){
+            this.ctx.drawImage(backgroundImage, 0,0, this.ctx.canvas.width, this.ctx.canvas.height)  
+        } 
     }
 }
 

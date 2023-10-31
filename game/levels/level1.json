@@ -4,19 +4,19 @@
     },
     {
         "Author": "mathias"
-    },{
+    },
+    {
         "Background": {
-            "path": "images/Background.png"
+            "path": "images/level1.png"
         }
     },
     {
         "PassageWay": {
             "x": 1450,
-            "y": 250,
+            "y": 245,
             "width": 150,
             "height": 125,
             "passageWayTo": "level2"
-        
         }
     },
     {
@@ -32,11 +32,11 @@
             "x": 350,
             "y": 475,
             "width": 96,
-            "height": 16,
-            "spriteSheetOffsetX" : 0,
-            "spriteSheetOffsetY" : 16,
-            "spriteSheetWidth" : 96,
-            "spriteSheetHeight" : 16,
+            "height": 48,
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 48,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 48,
             "texturepath": "Sprites/DecorSheet.png"
         }
     },
@@ -45,11 +45,11 @@
             "x": 875,
             "y": 450,
             "width": 96,
-            "height": 16,
-            "spriteSheetOffsetX" : 0,
-            "spriteSheetOffsetY" : 16,
-            "spriteSheetWidth" : 96,
-            "spriteSheetHeight" : 16,
+            "height": 48,
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 96,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 48,
             "texturepath": "Sprites/DecorSheet.png"
         }
     },
@@ -58,11 +58,11 @@
             "x": 1050,
             "y": 375,
             "width": 96,
-            "height": 16,
-            "spriteSheetOffsetX" : 0,
-            "spriteSheetOffsetY" : 16,
-            "spriteSheetWidth" : 96,
-            "spriteSheetHeight" : 16,
+            "height": 48,
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 48,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 48,
             "texturepath": "Sprites/DecorSheet.png"
         }
     },
@@ -79,32 +79,39 @@
                 800
             ],
             "speed": 1,
-            "damage":12,
+            "damage": 2,
             "texturepath": "Sprites/Patrolman.png"
-
         }
     },
-
     {
         "Bat": {
-            "x": 1405,
-            "y": 300,
+            "x": 1474,
+            "y": 280,
             "height": 32,
             "width": 32,
             "origin_x": 64,
             "origin_y": 450,
-            "speed":3,
-            "damage":12,
-            "triggerZone" : 400,
+            "speed": 0,
+            "damage": 1,
+            "triggerZone": 200,
             "texturepath": "Sprites/Bats.png"
         }
-      },
+    },
     {
         "CollisionBlock": {
             "x": 0,
             "y": 500,
             "width": 225,
-            "height": 300,
+            "height": 80,
+            "collisionSide": 1
+        }
+    },
+    {
+        "CollisionBlock": {
+            "x": 0,
+            "y": 655,
+            "width": 225,
+            "height": 100,
             "collisionSide": 0
         }
     },
@@ -120,7 +127,7 @@
     {
         "CollisionBlock": {
             "x": 1250,
-            "y": 375,
+            "y": 369,
             "width": 500,
             "height": 800,
             "collisionSide": 0
@@ -131,8 +138,274 @@
             "x": -50,
             "y": 0,
             "width": 50,
-            "height": 500,
+            "height": 1000,
             "collisionSide": 1
+        }
+    },
+    {
+        "Coin": {
+            "x": 202,
+            "y": 474,
+            "width": 16,
+            "height": 16,
+            "value": 10,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 386,
+            "y": 394,
+            "width": 16,
+            "height": 16,
+            "value": 10,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 681,
+            "y": 466,
+            "width": 16,
+            "height": 16,
+            "value": 10,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 1090,
+            "y": 350,
+            "width": 16,
+            "height": 16,
+            "value": 10,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 1347,
+            "y": 342,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 1381,
+            "y": 342,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Platform": {
+            "x": 225,
+            "y": 655,
+            "width": 32,
+            "height": 16,
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 16,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 16,
+            "texturepath": "Sprites/none.png"
+        }
+    },
+    {
+        "Platform": {
+            "x": 225,
+            "y": 565,
+            "width": 32,
+            "height": 16,
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 16,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 16,
+            "texturepath": "Sprites/none.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 130,
+            "y": 630,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 110,
+            "y": 630,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 90,
+            "y": 630,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 50,
+            "y": 630,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 30,
+            "y": 630,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 10,
+            "y": 630,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 140,
+            "y": 610,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 120,
+            "y": 610,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 100,
+            "y": 610,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 60,
+            "y": 610,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 40,
+            "y": 610,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 20,
+            "y": 610,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 130,
+            "y": 590,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 110,
+            "y": 590,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 90,
+            "y": 590,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 50,
+            "y": 590,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 30,
+            "y": 590,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
+        }
+    },
+    {
+        "Coin": {
+            "x": 10,
+            "y": 590,
+            "width": 16,
+            "height": 16,
+            "value": 100,
+            "texturepath": "Sprites/Collectible.png"
         }
     }
 ]

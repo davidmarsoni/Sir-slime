@@ -1,14 +1,17 @@
-import GameObject from "./GameObject.js";
+import GameObject from "../GameObject.js";
 
 class Entity extends GameObject {
     #spriteDirectionOffset = 0;
     #animationOffset = 0;
     #spriteSheetWidth = 32;
     #spriteSheetHeight = 32;
+    #speed = 0;
+    #damage = 0;
 
-
-    constructor(x, y, width, height, texturepath) {
+    constructor(x, y, width, height, texturepath, speed, damage) {
         super(x, y, width, height, texturepath);
+        this.#speed = speed;
+        this.#damage = damage;
     }
 
     get spriteDirectionOffset() {
@@ -41,6 +44,22 @@ class Entity extends GameObject {
 
     set spriteSheetHeight(value) {
         this.#spriteSheetHeight = value;
+    }
+
+    get speed() {
+        return this.#speed;
+    }
+
+    set speed(value) {
+        this.#speed = value;
+    }
+
+    get damage() {
+        return this.#damage;
+    }
+
+    set damage(value) {
+        this.#damage = value;
     }
 
     // use the abstract method render() from the parent class
