@@ -14,6 +14,21 @@ class Render {
         this.ctx.canvas.width = 1520; // 1280
     }
     
+
+    renderStart(backgroundImage){
+        console.log("Je suis dans mon render");
+
+
+
+        if (backgroundImage != null){
+            this.ctx.drawImage(backgroundImage, 0,0, this.ctx.canvas.width, this.ctx.canvas.height)  
+        } 
+
+        //this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        //this.ctx.fillStyle = "rgba(200,200,200)";
+
+    }
+
     renderCanvas(backgroundImage){
         //test the type of the backgroundImage
         if (backgroundImage != null){

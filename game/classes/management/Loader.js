@@ -1,4 +1,4 @@
-import {loadLevelFromJSON,loadPlayerFromJSON} from "./LoaderManager.js";
+import {loadLevelFromJSON,loadPlayerFromJSON,loadStartScreenFromJSON} from "./LoaderManager.js";
 import Player from "../Player.js";
 import Weapon from "../Weapon.js";
 import Platform from "../Platform.js";
@@ -12,6 +12,7 @@ import Bat from "../Bat.js";
  * It contains all the data of the loaded level and the player
  */
 class Loader{
+    //game variable
     #errors = [];
     #levelName;
     #levelAuthor;
@@ -25,6 +26,13 @@ class Loader{
     #backgroundImage = null;
     #bats = [];
   
+    //startScreen Variables
+    #startScreenBackground;
+    #startScreenBackgroundImage;
+
+
+
+     //game getters
     get levelName() {
         return this.#levelName;
     }
@@ -80,13 +88,19 @@ class Loader{
         return this.#backgroundImage;
     }
 
+     //startGame getters
+
+     get startScreenBackgroundImage(){
+        return this.#startScreenBackgroundImage;
+     }
+
     /**
      * This function is used to load a level from a json file
      * @param {*} levelname name of the level to load
      * @param {*} debug if true the function will print debug information otherwise it will not
      * @returns true if the level was loaded correctly false otherwise
      */
-    load(levelname, debug = false) {
+    loadGame(levelname, debug = false) {
         this.clean();
         return new Promise((resolve) => {
             //set some constants for the function
@@ -120,6 +134,29 @@ class Loader{
                     });
                 } else {
                     this.#errors.push("The level " + levelname + levelExtension + " could not be found in the folder " + levelFolder + " or the folder does not exist");
+                    resolve(false);
+                }
+            });
+       })
+    }
+
+    loadStartScreen(fileName, debug = false) {
+        this.clean();
+        return new Promise((resolve) => {
+            //set some constants for the function
+            const StartScreenFolder = "./jsons/";
+            const StartScreenExtension = ".json";
+
+            //check if the level exists
+            this.findFile(StartScreenFolder, fileName, StartScreenExtension).then((result) => {
+                if (result) {
+                    loadStartScreenFromJSON(StartScreenFolder + fileName + StartScreenExtension, debug).then((startScreen_info) => {
+                        this.setStartScreenInfo(startScreen_info);
+                        this.errors.size != 0 || debug ? console.log(this.errors) : null;
+                    resolve(true);
+                    });
+                } else {
+                    this.#errors.push("The Start Screen " + fileName + StartScreenExtension + " could not be found in the folder " + StartScreenFolder + " or the folder does not exist");
                     resolve(false);
                 }
             });
@@ -325,7 +362,20 @@ class Loader{
         this.#patrolmen = patrolmanObject;
         this.#bats = batObject;
     }
+    setStartScreenInfo(startScreenArray){
+        console.log("Notre code Json marche !");
+        console.log(startScreenArray);
+        try {
+            this.#startScreenBackground = startScreenArray[0]["Background"];
+            this.loadBackground();
+        } catch (e) {
+            this.#errors.push("The import of the background failed | " + e.message);
+        }
+        console.log(this.#startScreenBackground);
 
+        this.loadStartScreenBackground();
+
+    }
     /**
      * This function is used to load the background image only one time when the level is loaded
      */
@@ -347,6 +397,27 @@ class Loader{
             this.#errors.push("The import of the background image failed | " + e.message);
         }
     }
+
+    loadStartScreenBackground(){
+        try {
+            this.#startScreenBackgroundImage = new Image();
+            if(this.#startScreenBackground.path != null)
+            {
+                this.#startScreenBackgroundImage.src = this.#startScreenBackground.path;
+            }else{
+                this.#startScreenBackgroundImage = null;
+            }
+            this.#startScreenBackgroundImage.onerror = () => {
+                this.#startScreenBackgroundImage = null;
+                this.#errors.push("The background image could not be found");
+            };
+        } catch (e) {
+            this.#startScreenBackgroundImage = null;
+            this.#errors.push("The import of the background image failed | " + e.message);
+        }
+        console.log(this.#startScreenBackgroundImage);
+    }
+
 
     /**
      * This function is used to find a file in a folder

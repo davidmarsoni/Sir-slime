@@ -1,4 +1,4 @@
-import {Information_list,player_list,objects_list,ennemies_list} from "./constant.js";
+import {Information_list,player_list,startScreen_list,objects_list,ennemies_list} from "./constant.js";
 
 /**
  * This function loads a level from a JSON file
@@ -74,8 +74,6 @@ export function loadPlayerFromJSON(jsonFile,debug=false) {
     });
 }
 
-
-
 export function saveLevelToJSON(levelName, levelAuthor,player,...elements) {
     const jsonData = [];
     jsonData.push({
@@ -115,6 +113,34 @@ export function saveLevelToJSON(levelName, levelAuthor,player,...elements) {
     console.log(a);
     a.download = levelName+".json";
     a.click();
+}
+
+export function loadStartScreenFromJSON(filename,debug = false){
+    // Load the level from a JSON file create a promise and return it
+    return new Promise((resolve) => {
+        //parse the data into a JSON object
+        loadFromJson(filename).then((data) =>{
+            const startScreen_data = JSON.parse(data);
+            //declare the 4 main categories
+            var startScreen_info = [];
+            
+            //get dynamically the data from the JSON file
+            for(let i = 0; i < startScreen_data.length; i++){
+                //get the name of the property
+                const propertyNameFull = Object.keys(startScreen_data[i])[0];
+                const propertyName = propertyNameFull.replace(/[^a-zA-Z0-9 ]/g, '');
+                //console.log(propertyName);
+                if(startScreen_list.includes(propertyName)){
+                    startScreen_info.push(startScreen_data[i]);
+                }
+            }
+            debug ? console.log(startScreen_info) : null;
+            //resolve the promise with the data
+            resolve(startScreen_info);
+          
+        });
+    });
+
 }
 
 function loadFromJson(jsonFile){

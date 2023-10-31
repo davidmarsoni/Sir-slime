@@ -10,6 +10,15 @@ const loader = new Loader();
 
 // The game state
 let gameOn = false;
+
+// game screen variables
+const GAME_ON = "game_on";
+const GAME_OFF = "game_off";
+const COMMAND = "command";
+const START = "start";
+let uiState = START;
+
+
 let currentLevel = "level1";
 
 // The player character
@@ -33,10 +42,31 @@ let patrolmen = [];
 let bats = [];
 let collisionBlocks = [];
 
+//here we start the game, I must change this for the start game, boucle pour animations, que le jeu tourne 
 function loop(){
-    if(gameOn){
+
+    switch(uiState){
+
+        case GAME_ON : "game_on"
+        update();
+        break;
+        case GAME_OFF : "game_off"
+        console.log("waiting to start")
+        break;
+        case COMMAND : "command"
+        break;
+        case START : "start"
+        start();
+        break;
+    }
+    /*if(gameOn){
         update();
     }
+    */
+}
+
+function start() {
+    render.renderStart(loader.startScreenBackgroundImage);
 }
 
 function update() {
@@ -128,16 +158,25 @@ function update() {
     render.renderPlayer(player,keys);
     render.renderScorboard(loader);
     
+
+    
 }
 
 // Attack key listener
-function keydown(event) {
+function keydownGame(event) {
     //=============================
     // temporary key listener
     // key p (pause)
     if(event.keyCode === 80) {
-        gameOn = !gameOn;
+        if(uiState == GAME_ON){
+            uiState = GAME_OFF;
+        }else if (uiState = GAME_OFF){
+            uiState = GAME_ON;
+        }
+        
     }
+    //quand je suis dans start, ça affiche dans le render que je suis dans le render 
+
     //key a (ask for level name)
     if(event.keyCode === 65 ) {
        
@@ -202,7 +241,7 @@ function keydown(event) {
         keys.right = true;
     }
 }
-function keyup(event) {
+function keyupGame(event) {
     // left shift key
     if(event.keyCode === 16) {
         keys.attack = false;
@@ -220,14 +259,36 @@ function keyup(event) {
         keys.right = false;
     }
 }
+function keyupStart(event){
+
+}
+
+function keydownStart(event) {
+/*
+    const GAME_ON = "game_on";
+const GAME_OFF = "game_off";
+const COMMAND = "command";
+const START = "start";
+let uiState = START;
+*/
+    //key = enter
+    if(event.keyCode === 13) {
+        uiState = GAME_OFF;
+        window.addEventListener("keydown", keydownGame)
+        window.addEventListener("keyup", keyupGame)
+        loadLevel(currentLevel,false);
+    }
+    
+
+}
 
 //use to make a quick level save but have many problems
 //saveLevelToJSON("level1", "mathias",player, platforms, patrolmen,collisionBlocks);
 
 
 function loadLevel(levelpath,debug = false) {
-    gameOn = false;
-    loader.load(levelpath,debug).then((result)=>{
+    uiState = GAME_OFF;
+    loader.loadGame(levelpath,debug).then((result)=>{
         if(result){
             currentLevel = loader.levelname;
             player = loader.player;
@@ -235,10 +296,11 @@ function loadLevel(levelpath,debug = false) {
             platforms = loader.platforms;
             collisionBlocks = loader.collisionBlocks;
             passageWays = loader.passageWays;
-            gameOn = true;
+            
             document.title = loader.levelName + " by " + loader.levelAuthor;
             currentLevel = loader.levelName;
             bats = loader.bats;
+            uiState = GAME_ON;
         }else{
             console.error(loader.errors);
         }
@@ -247,8 +309,9 @@ function loadLevel(levelpath,debug = false) {
     
 }
 
-window.addEventListener("keydown", keydown)
-window.addEventListener("keyup", keyup)
+window.addEventListener("keydown", keydownStart)
+window.addEventListener("keyup", keyupStart)
 setInterval(loop,25);
-loadLevel(currentLevel,false);
+
+loader.loadStartScreen("startScreen");
 

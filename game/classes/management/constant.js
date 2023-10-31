@@ -14,9 +14,10 @@ import Bat from "../Bat.js";
 
 
 // list of all the objects that can be in a level divided in 4 categories
+const startScreen_list = ["Background"];
 const Information_list = ["Name","Author","Background","Music"];
 const ennemies_list = [Patrolman.name,Bat.name];
 const player_list = [Player.name,Player.name+Weapon.name];
 const objects_list = [Platform.name,CollisionBlock.name,PassageWay.name];
 
-export {Information_list,ennemies_list,player_list,objects_list};
+export {Information_list,ennemies_list,player_list,objects_list,startScreen_list};
