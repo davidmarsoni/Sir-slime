@@ -7,6 +7,9 @@ class Heart extends Collectable{
             spriteSheetOffsetX = 7;
         }
         super(x, y, width, height, texturepath,spriteSheetOffsetX);
+        if(value === undefined || value === null || value === 0){
+            value = 1;
+        }
         this.#value = value;
     }
     get value() {

@@ -67,6 +67,16 @@ class Player extends Entity{
     }
 
     // #region getters and setters
+    get lives() {
+        return this.#lives;
+    }
+
+    set lives(value) {
+        this.#lives = value;
+        if(this.#lives > 8){
+            this.#lives = 8;
+        }
+    }
     get currenthealth() {
         return this.#currenthealth;
     }
@@ -80,10 +90,6 @@ class Player extends Entity{
 
     set maxHealth(value) {
         this.#maxHealth = value;
-    }
-
-    get lives() {
-        return this.#lives;
     }
 
     get score() {
@@ -174,10 +180,6 @@ class Player extends Entity{
         return this.#preventMovement;
     } 
 
-    set lives(value) {
-        this.#lives += value;
-    }
-
     get numberOfEnnemieskilled() {
         return this.#numberOfEnnemieskilled;
     }
@@ -228,6 +230,7 @@ class Player extends Entity{
     addDamageTaken(value) {
         this.#totalDamageTaken += value;
     }
+
     // #endregion
 
     // #region life methods

@@ -407,5 +407,9 @@
             "value": 100,
             "texturepath": "Sprites/Collectible.png"
         }
-    }
+    },
+    {"Platform":{"x":871,"y":291,"width":96,"height":16,"spriteSheetOffsetX":0,"spriteSheetOffsetY":0,"spriteSheetWidth":96,"spriteSheetHeight":16,"texturepath":"Sprites/none.png"}}
+    ,{"Platform":{"x":738,"y":218,"width":96,"height":16,"spriteSheetOffsetX":0,"spriteSheetOffsetY":0,"spriteSheetWidth":96,"spriteSheetHeight":16,"texturepath":"Sprites/none.png"}}
+    ,{"Platform":{"x":842,"y":162,"width":96,"height":16,"spriteSheetOffsetX":0,"spriteSheetOffsetY":0,"spriteSheetWidth":96,"spriteSheetHeight":16,"texturepath":"Sprites/none.png"}}
+    ,{"Heart":{"x":884,"y":80,"width":16,"height":16,"value":2,"texturepath":"Sprites/none.png"}}
 ]
