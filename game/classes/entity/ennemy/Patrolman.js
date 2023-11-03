@@ -1,5 +1,5 @@
-import Entity from "./Entity.js";
-class Patrolman extends Entity{
+import Enemy from "./Enemy.js";
+class Patrolman extends Enemy{
     #origin_x = 64;
     #origin_y = 64;
     #direction = true;
@@ -16,13 +16,11 @@ class Patrolman extends Entity{
     #default = [2, -2]
     #random = 0;
 
-    constructor(x, y, width, height, texturepath, origin_x, origin_y, path, speed,damage) {
-        super(x, y, width, height, texturepath);
+    constructor(x, y, width, height, texturepath, origin_x, origin_y, path,speed,damage) {
+        super(x, y, width, height, texturepath,speed,damage);
         this.#origin_x = origin_x;
         this.#origin_y = origin_y;
         this.#path = path;
-        this.#speed = speed;
-        this.#damage = damage;
     }
 
     get step() {
