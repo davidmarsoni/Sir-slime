@@ -1,0 +1,23 @@
+[
+{
+    "Player": {
+        "x": 64,
+        "y": 450,
+        "height": 32,
+        "width": 32,
+        "texturepath": "assets/sprites/PlayerSheet.png",
+        "x_v": 0,
+        "y_v": 0,
+        "origin_x": 64,
+        "origin_y": 450,
+        "maxLives": 3,
+        "maxPossibleLives": 99,
+        "maxHealth": 6,
+        "maxPossibleHealth": 16,
+        "damage": 1,
+        "speed": 5,
+        "walkSoundPath": "assets/sounds/player/walk.wav",
+        "deadSoundPath": "assets/sounds/player/dead.wav"
+    }
+}
+]

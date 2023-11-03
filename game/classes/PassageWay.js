@@ -6,6 +6,7 @@ class PassageWay extends GameObjectLogic {
     constructor(x, y, width, height, passageWayTo) {
         super(x, y, width, height);
         this.#passageWayTo = passageWayTo;
+        this.isAnimate = false;
     }
 
     get passageWayTo() {
@@ -26,6 +27,9 @@ class PassageWay extends GameObjectLogic {
     }
 
     render(ctx) {
+        if(this.isRendered === false){
+            return;
+        }
         if(this.debug){
             ctx.fillStyle = 'rgba(185,255,245,0.75)';
             ctx.fillRect(this.x, this.y, this.width, this.height);

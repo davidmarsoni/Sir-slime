@@ -8,7 +8,6 @@ class Patrolman extends Enemy{
     #path = [];
     #speed = 1;
     #step = 0;
-    #damage = 0;
     #isAlive = true;
     #x_v = 0
     #y_v = -4;
@@ -85,14 +84,6 @@ class Patrolman extends Enemy{
 
     set origin_x(value) {
         this.#origin_x = value;
-    }
-
-    get damage() {
-        return this.#damage;
-    }
-
-    set damage(value) {
-        this.#damage = value;
     }
 
     get isAlive() {
@@ -206,13 +197,11 @@ class Patrolman extends Enemy{
                 player.y_v = -7;
                 this.#random = Math.round(Math.random());
                 this.#x_v = this.#default[this.#random];
-
-
-                
+                console.log(500);
+                player.score += 500;
+                player.addEnemykilled();
+                player.addDamageDealt(1);
                 this.isAlive = false;
-                
-                
-                
             }
             // Push the player left
             else if(player.x <= this.x && this.isAlive === true){
@@ -240,8 +229,6 @@ class Patrolman extends Enemy{
     // move the patrolman
     move() {
         
-
-        
         if (this.x < this.path[this.step] && this.isAlive === true) {
             this.x += this.speed;
             this.direction = true;
@@ -264,16 +251,9 @@ class Patrolman extends Enemy{
 
             this.x = this.x + this.#x_v;
             this.y = this.y + this.#y_v;
-
-        
-
         }
-
     }
+}
 
-
-
-  }
-
-  export default Patrolman;
+export default Patrolman;
 

@@ -7,6 +7,7 @@ class Bat extends Enemy{
     #animTimer = 0;
     #isIdle = true;
     #triggerZone = 0;
+   
 
 
 constructor(x, y, width, height, texturepath, origin_x, origin_y,speed,damage,triggerZone) {
@@ -14,6 +15,7 @@ constructor(x, y, width, height, texturepath, origin_x, origin_y,speed,damage,tr
     this.#origin_x = origin_x;
     this.#origin_y = origin_y;
     this.#triggerZone = triggerZone;
+    this.hitSound = new Audio("assets/sounds/enemy/bat/hit.wav");
 }
 
 get animTimer() {
@@ -75,6 +77,10 @@ set triggerZone(value) {
 
 
 render(ctx) {
+    if(this.isRendered === false){
+        return;
+    }
+    
     if(this.debug){
         ctx.fillStyle = "rgba(100,100,100,0.15)"
         ctx.fillRect(this.x - this.#triggerZone+this.width,this.y - this.#triggerZone+this.height,this.triggerZone*2-this.width*2,this.triggerZone*2-this.height*2)
@@ -107,20 +113,23 @@ render(ctx) {
             }
         }
     }
-    
-      ctx.drawImage(
-        this.texture,  // Sprite
-        spriteDirectionOffset,  // Sprite sheet offset x
-        this.width*this.animStep,  // Sprite sheet offset y
-        this.width, // Sprite sheet w
-        this.height, // Sprite sheet h
-        this.x - this.width,
-        this.y - this.height,
-        this.width,
-        this.height
-      )
+    if(this.textureLoaded === true){
+        ctx.drawImage(
+            this.texture,  // Sprite
+            spriteDirectionOffset,  // Sprite sheet offset x
+            this.width*this.animStep,  // Sprite sheet offset y
+            this.width, // Sprite sheet w
+            this.height, // Sprite sheet h
+            this.x - this.width,
+            this.y - this.height,
+            this.width,
+            this.height
+        )
+    }else{
+        this.debug = true; 
+    }
 
-      if (this.debug) {
+    if (this.debug) {
         ctx.fillStyle = "#000";
         ctx.fillRect(this.x, this.y, -8, -8);
     }
@@ -171,20 +180,22 @@ collide(player){
         playerTop <= batBottom
     ){
         if(player.x <= this.x && !player.isHit){
-            console.log("left")
+            this.debug ? console.log("left") : null;
             player.x_v = -4;
             player.y_v = -3;
             player.predictedX = this.x - this.width + player.x_v;
             player.jump = true;
+            this.playSound ? this.hitSound.play() : null;
             player.hit(this.damage);
         }
         // Push the player right
         else if(player.x >= this.x && !player.isHit){
-            console.log("right")
+            this.debug ? console.log("right") : null;
             player.x_v = 4;
             player.y_v = -3;
             player.predictedX = this.x + player.width + player.x_v;
             player.jump = true;
+            this.playSound ? this.hitSound.play() : null;
             player.hit(this.damage);
         }
     }

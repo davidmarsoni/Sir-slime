@@ -1,102 +1,97 @@
-import {loadLevelFromJSON,loadPlayerFromJSON,loadStartScreenFromJSON} from "./LoaderManager.js";
+import loaderManager from "../management/LoaderManager.js";
 import Player from "../entity/Player.js";
 import Platform from "../Platform.js";
 import CollisionBlock from "../CollisionBlock.js";
 import Patrolman from "../entity/ennemy/Patrolman.js";
 import PassageWay from "../PassageWay.js";
 import Bat from "../entity/ennemy/Bat.js";
-import Collectable from "../collacteables/Collectible.js";
-import Coin from "../collacteables/Coin.js";
-import Heart from "../collacteables/Heart.js";
+import Collectible from "../collactiables/Collectible.js";
+import Coin from "../collactiables/Coin.js";
+import Heart from "../collactiables/Heart.js";
 
 /**
  * This class is used to load a level from a json file
  * It contains all the data of the loaded level and the player
  */
 class Loader{
+    //utilitary variables
+    #playSound = true;
+    #playMusic = false;
+    #errors = [];
 
     //for the game
-    #errors = [];
     #levelName;
     #levelAuthor;
-    #background;
-    #music;
+    #song;
     #player = null;
     #patrolmen = [];
     #platforms = [];
     #collisionBlocks = [];
     #passageWays = [];
-    #collacteables = [];
+    #collectibles = [];
     #backgroundImage = null;
     #bats = [];
 
     //for the startScreen
-       
     #backgroundStartScreen;
     #backgroundStartScreenImage;
-
-  
-    get levelName() {
-        return this.#levelName;
-    }
-    
-    get levelAuthor() {
-        return this.#levelAuthor;
-    }
-
-    get background() {
-        return this.#background;
-    }
-
-    get music() {
-        return this.#music;
-    }
-
-    get player() {
-        return this.#player;
-    }
-
-    set player(value) {
-        this.#player = value;
-    }
-
-    get patrolmen() {
-        return this.#patrolmen;
-    }
-
-    get platforms() {
-        return this.#platforms;
-    }
-
-    get collisionBlocks() {
-        return this.#collisionBlocks;
-    }
-
-    get passageWays() {
-        return this.#passageWays;
-    }
-
-    get bats() {
-        return this.#bats;
-    }
-
-    get collacteables() {
-        return this.#collacteables;
-    }
 
     /**
      * This function is used to get the errors list of the last loading
      */
-    get errors() {
-        return this.#errors;
+    get errors() {return this.#errors;}
+    
+    get playSound() {return this.#playSound;}
+
+    set playSound(value) {
+        this.#playSound = value;
+
+        this.player.playSound =  this.#playSound;
+        for (const patrolman of this.patrolmen) {
+            patrolman.playSound = this.#playSound;
+        }
+        for (const bat of this.bats) {
+            bat.playSound =  this.#playSound;
+        }
+        for (const collectible of this.collectibles) {
+            collectible.playSound =  this.#playSound;
+        }
+       
     }
 
-    /**
-     * This function is used to get the music of the level
-     */
-    get backgroundImage() {
-        return this.#backgroundImage;
+    get playMusic() {return this.#playMusic;}
+    
+    set playMusic(value) {
+        this.#playMusic = value;
+        if(this.#playMusic){
+            this.#song.play();
+        }else{
+            this.#song.pause();
+        }
     }
+    
+    get levelName() { return this.#levelName;}
+    get levelAuthor() { return this.#levelAuthor;}
+
+    get player() { return this.#player;}
+    get patrolmen() { return this.#patrolmen;}
+    get platforms() { return this.#platforms;}
+    get collisionBlocks() { return this.#collisionBlocks; }
+    get passageWays() { return this.#passageWays;}
+    get bats() { return this.#bats;}
+    get collectibles() { return this.#collectibles;}
+
+    /**
+     * This function is used to get the song of the current lodaded level
+     */
+    get song() {return this.#song;}
+
+    /**
+     * This function is used to get the background image of the level
+     */
+    get backgroundImage() {return this.#backgroundImage;}
+
+  
 
     //startGame getters
 
@@ -115,7 +110,7 @@ class Loader{
         this.clean();
         return new Promise((resolve) => {
             //set some constants for the function
-            const levelFolder = "./levels/";
+            const levelFolder = "./assets/levels/";
             const levelExtension = ".json";
 
             //check if the level exists
@@ -123,18 +118,19 @@ class Loader{
                 if (result) {
                     debug ? console.log("The level " + levelname + " was found") : null;
                     //Load the level
-                    loadLevelFromJSON(levelFolder + levelname + levelExtension, debug).then(([Information, player_info_level, objects, ennemies] )=>{
+                    loaderManager.loadLevelFromJSON(levelFolder + levelname + levelExtension, debug).then(([Information, player_info_level, objects, ennemies] )=>{
                         this.setInformation(Information);
-                        this.setObjects(objects);
-                        this.setEnnemies(ennemies);
-                        if (this.player == null) {
+                        this.setObjects(objects,debug);
+                        this.setEnnemies(ennemies,debug);
+                        
+                        if (this.player == null || this.player == undefined || this.player == []) {
                             debug ? console.log("player is empty") : null;
                             //load the player if it is not already loaded to keep is state between level
-                            loadPlayerFromJSON("jsons/player.json", debug).then((player_info) => {
+                            loaderManager.loadPlayerFromJSON("./assets/jsons/player.json", debug).then((player_info) => {
                                 this.setPlayer(player_info);
                                 this.updatePlayer(player_info_level);
-                                this.errors.size != 0 || debug ? console.log(this.errors) : null;
-                            resolve(true);
+                                this.errors.size != 0 && debug ? console.log(this.errors) : null;
+                                resolve(true);
                             });
                         } else {
                             debug ? console.log("player is not empty") : null;
@@ -155,13 +151,13 @@ class Loader{
         this.clean();
         return new Promise((resolve) => {
             //set some constants for the function
-            const StartScreenFolder = "./jsons/";
+            const StartScreenFolder = "./assets/jsons/";
             const StartScreenExtension = ".json";
 
             //check if the level exists
             this.findFile(StartScreenFolder, fileName, StartScreenExtension).then((result) => {
                 if (result) {
-                    loadStartScreenFromJSON(StartScreenFolder + fileName + StartScreenExtension, debug).then((startScreen_info) => {
+                    loaderManager.loadStartScreenFromJSON(StartScreenFolder + fileName + StartScreenExtension, debug).then((startScreen_info) => {
                         this.setStartScreenInfo(startScreen_info);
                         this.errors.size != 0 && debug ? console.log(this.errors) : null;
                     resolve(true);
@@ -201,17 +197,24 @@ class Loader{
             this.#errors.push("The import of the author failed | " + e.message);
         }
         try {
-            this.#background = Information[2]["Background"];
-            this.loadBackground();
+            this.loadBackground(Information[2]["Background"].path);
         } catch (e) {
             this.#errors.push("The import of the background failed | " + e.message);
         }
 
         try {
-            this.music = Information[3]["Music"];
+            this.#song = new Audio(Information[3]["Song"].path);
+            this.#song.loop = true;
+            this.#song.volume = 0.5;
+            if(this.playMusic){
+                this.#song.play();
+            }
         } catch (e) {
-            this.#errors.push("The import of the music failed | " + e.message);
+            this.#errors.push("The import of the song failed | " + e.message);
         }
+
+       
+        
     }
 
 
@@ -219,7 +222,7 @@ class Loader{
      * This function is used to set the player a the start of the game
      * @param {*} player_info a list of information about the player
      */
-     setPlayer(player_info) {
+     setPlayer(player_info,debug = false) {
         let playerObject = player_info[0][Player.name];
         let playertmp;
         try {
@@ -231,26 +234,38 @@ class Loader{
                 playerObject.texturepath, 
                 playerObject.origin_x,
                 playerObject.origin_y,
-                playerObject.lives,
+                playerObject.maxLives,
+                playerObject.maxPossibleLives,
                 playerObject.maxHealth,
+                playerObject.maxPossibleHealth,
                 playerObject.speed,
-                playerObject.damage
+                playerObject.damag,
+                playerObject.walkSoundPath,
+                playerObject.deadSoundPath,
             );
             this.#player = playertmp;
         } catch (e) {
             this.errors.push("The import of the player failed | " + e.message);
+            console.log(e);
         }
+
+        if(debug){
+            console.log("dump of the player");
+            console.log("player : "+this.player);
+        }
+            
+
     }
     /**
      * This function is used to set the objects in the level
      * @param {*} objectsArray a list of objects in the level
      */
-    setObjects(objectsArray) {
+    setObjects(objectsArray,debug = false) {
         //create the temporary objects
         let platformObject = [];
         let collisionBlockObject = [];
         let passageWaysObject = [];
-        let collacteableObject = [];
+        let collectibleObject = [];
 
         try {
             for (let i = 0; i < objectsArray.length; i++) {
@@ -290,33 +305,36 @@ class Loader{
                     passageWaysObject.push(passageWay);
                 }
                 if(element[Coin.name]){
-                    const collacteable = new Coin(
+                    const collectible = new Coin(
                         element[Coin.name].x,
                         element[Coin.name].y,
                         element[Coin.name].width,
                         element[Coin.name].height,
                         element[Coin.name].texturepath,
+                        element[Coin.name].spriteSheetOffsetX,
                         element[Coin.name].value,
-                        element[Coin.name].spriteSheetOffsetX
+                        element[Coin.name].sound
                         );
-                    collacteableObject.push(collacteable);
+                    collectibleObject.push(collectible);
                 }
                 if(element[Heart.name]){
-                    const collacteable = new Heart(
+                    const collectible = new Heart(
                         element[Heart.name].x,
                         element[Heart.name].y,
                         element[Heart.name].width,
                         element[Heart.name].height,
                         element[Heart.name].texturepath,
-                        element[Heart.name].value,
-                        element[Heart.name].spriteSheetOffsetX
+                        element[Heart.name].spriteSheetOffsetX,
+                        element[Heart.name].heal,
+                        element[Heart.name].hearthGain,
+                        element[Heart.name].sound
                         );
-                    collacteableObject.push(collacteable);
+                    collectibleObject.push(collectible);
                 }
-
             }
         } catch (e) {
             this.#errors.push("The import of the objects failed | " + e.message);
+            console.log(e);
         }
 
         
@@ -324,7 +342,7 @@ class Loader{
         this.#platforms = platformObject;
         this.#collisionBlocks = collisionBlockObject;
         this.#passageWays = passageWaysObject;
-        this.#collacteables = collacteableObject;
+        this.#collectibles = collectibleObject;
 
         //check if there is at least one platform and one collision block in the level
         if(this.platforms.length == 0){
@@ -333,12 +351,19 @@ class Loader{
         if(this.collisionBlocks.length == 0){
             this.#errors.push("There is no collision block in this level");
         }
+        if(debug){
+            console.log("dump of the objects in the level");
+            console.log("platforms : "+this.platforms.length);
+            console.log("collisionBlocks : "+this.collisionBlocks.length);
+            console.log("passageWays : "+this.passageWays.length);
+            console.log("collectibles : "+this.collectibles.length);
+        }
     }
     /**
      * This function is used to set the ennemies in the level
      * @param {*} ennemiesArray a list of ennemies in the level
      */
-    setEnnemies(ennemiesArray) {
+    setEnnemies(ennemiesArray,debug = false) {
         
         // create the temporary object
         let patrolmanObject = [];
@@ -384,6 +409,12 @@ class Loader{
         //set the global variable
         this.#patrolmen = patrolmanObject;
         this.#bats = batObject;
+
+        if(debug){
+            console.log("dump of the ennemies in the level");
+            console.log("patrolmen : "+this.patrolmen.length);
+            console.log("bats : "+this.bats.length);
+        }
     }
 
     setStartScreenInfo(startScreenArray){
@@ -400,12 +431,11 @@ class Loader{
     /**
      * This function is used to load the background image only one time when the level is loaded
      */
-    loadBackground(){
+    loadBackground(path){
         try {
             this.#backgroundImage = new Image();
-            if(this.background.path != null)
-            {
-                this.#backgroundImage.src = this.background.path;
+            if(path != null){
+                this.#backgroundImage.src = path;
             }else{
                 this.#backgroundImage = null;
             }
@@ -513,14 +543,17 @@ class Loader{
         this.#errors = [];
         this.#levelName = null;
         this.#levelAuthor = null;
-        this.#background = null;
-        this.#music = null;
         this.#patrolmen = [];
         this.#platforms = [];
         this.#collisionBlocks = [];
         this.#passageWays = [];
         this.#backgroundImage = null;
         this.#bats = [];
+        this.#collectibles = [];
+        if(this.#song != null){
+            this.#song.pause();
+        }
+        this.#song = null;
     }
 }
 

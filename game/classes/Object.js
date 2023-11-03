@@ -37,6 +37,10 @@ class Object extends GameObject{
     set spriteSheetHeight(value) {
         this.#spriteSheetHeight = value;
     }
+
+    render(){
+        super.render();
+    }
 }
 
 export default Object;

@@ -3,9 +3,13 @@ class Platform extends Object{
    
     constructor(x,y,width,height,texturepath,spriteSheetOffsetX,spriteSheetOffsetY,spriteSheetWidth,spriteSheetHeight) {
         super(x,y,width,height,texturepath,spriteSheetOffsetX,spriteSheetOffsetY,spriteSheetWidth,spriteSheetHeight);
+        this.isAnimated = false;
     }
 
     render(ctx){
+        if(this.isRendered === false){
+            return;
+        }
         if(!this.textureLoaded && !this.debug){
             this.debug = true;
         }

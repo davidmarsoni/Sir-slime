@@ -1,8 +1,8 @@
 // https://www.educative.io/answers/how-to-make-a-simple-platformer-using-javascript
 
 import Loader from "./classes/management/Loader.js";
-import Render from "./classes/management/render.js";
-import {GRAVITY} from "./classes/management/constant.js";
+import Render from "./classes/management/Render.js";
+import {FRICTION, GRAVITY} from "./classes/management/constant.js";
 import QuickObjectCreation from "./classes/management/QuickObjectCreation.js";
 
 //create the render object
@@ -22,7 +22,6 @@ let currentLevel = "level1";
 let devlopperMode = true;
 // The player character
 let player;
-
 // The status of the arrow keys
 let keys = {
     right: false,
@@ -30,9 +29,6 @@ let keys = {
     up: false,
     attack: false
 };
-// The friction and gravity to show realistic movements
-
-let friction = 0.7;
 
 // The objects
 let passageWays = [];
@@ -40,15 +36,16 @@ let platforms = [];
 let patrolmen = [];
 let bats = [];
 let collisionBlocks = [];
-let collacteables = [];
+let collectibles = [];
 
+// The main loop
 function loop(){
     switch(uiState){
         case GAME_ON : "game_on"
             update();
             break;
         case GAME_OFF : "game_off"
-            console.log("waiting to start")
+            //console.log("waiting to start")
             break;
         case COMMAND : "command"
             break;
@@ -57,6 +54,16 @@ function loop(){
         break;
     }
 }
+function goToStartScreen(){
+    loader.reset();
+    currentLevel = "level1";
+    window.removeEventListener("keydown", keydown)
+    window.removeEventListener("keyup", keyup)
+    uiState = START;
+    window.addEventListener("keydown", keydownStart)
+    window.addEventListener("keyup", keyupStart)
+}
+
 function start(){
     render.renderStart(loader.backgroundStartScreenImage);
 }
@@ -64,7 +71,7 @@ function start(){
 function update() {
     // If the player is not jumping apply the effect of friction
     if(player.jump === false) {
-        player.x_v *= friction;
+        player.x_v *= FRICTION;
     } else {
         // If the player is in the air then apply the effect of gravity
         // If the player is under terminal velocity (15), add gravity
@@ -99,14 +106,32 @@ function update() {
         bat.collide(player);
     }
 
-    for (const collacteable of collacteables){
-        collacteable.collide(player);
+    for (const collactible of collectibles){
+        collactible.collide(player);
     }
 
     // Death by falling
     if (player.predictedY > 1200) {
-        player.dead();
+        player.takeDamage(2);
+        player.respawn();
     }
+
+    // game over if no life remains
+    if(!player.lifeRemains){
+        alert("Game Over");
+        goToStartScreen();
+    }
+
+    for (const passageWay of passageWays){
+        if(passageWay.collide(player)){
+            console.log("passage way to : " + passageWay.passageWayTo);
+            loadLevel(passageWay.passageWayTo);
+            break;
+        }
+    }
+
+    //notes : the platform and the collision block  must be place a the end of the code 
+    // to be sure about the collision detection
 
     // See if the player is colliding with the platforms
     for (const platform of platforms) {
@@ -118,13 +143,8 @@ function update() {
         collisionBlock.collide(player);
     }
 
-    // game over if no life remains
-    if(!player.ifLifeRemains()){
-        uiState = START;
-        alert("Game Over the level1 will be reloaded");
-        loader.reset();
-        loadLevel("level1");
-    }
+    //update the player position
+    //================================
 
     player.y = player.predictedY;
     player.x = player.predictedX;
@@ -138,34 +158,46 @@ function update() {
         player.preventMovementFrames();
     }
 
-    for (const passageWay of passageWays){
-        if(passageWay.collide(player)){
-            console.log("passage way to : " + passageWay.passageWayTo);
-            loadLevel(passageWay.passageWayTo);
-            //currentLevel = passageWay.passageWayTo;
-            break;
-        }
-    }
-
+    //render the game
     render.render(loader,quickObjectCreation,keys);
-
+    
 }
 
 // Attack key listener
 function keydown(event) {
+    // Attack : left shift 
+    if(event.keyCode === 16) {
+        keys.attack = true;
+    }
+    // direction keys : left arrow or n
+    if(event.keyCode === 37) {
+        keys.left = true;
+    }
+    // jump : up arrow or space
+    if (event.keyCode === 38 || event.keyCode === 32) {
+        keys.up = true;
+        // make the player jump, DO NOT REMOVE even if it looks useless
+        if(!player.jump){
+            player.y_v = -10;
+        }
+    }
+    // direction keys 
+    if(event.keyCode === 39 ) {
+        keys.right = true;
+    }
+
     // key ctrl+shift+d (debug switch)
     if(event.shiftKey && event.keyCode === 68) {
         if(devlopperMode === false){
             alert("You need to be in devlopper mode to use this key."+
             "\nThis mode is use to debug the game and create new levels and facilitate the development of the game."+
             "\n If you want to desactivate it press ctrl+shift+d again.");
-        
         }
         devlopperMode = !devlopperMode;
         console.log("Devlopper mode : " + devlopperMode);
     }
 
-    //debug
+    //devlopper mode keys
     if(devlopperMode === true){
         if(event.keyCode === 68 && !event.shiftKey) {
             render.debug = !render.debug;
@@ -175,7 +207,7 @@ function keydown(event) {
         
             // ask for level name
             let levelName = prompt("Please enter the level name", "level1");
-            loader.findFile("./levels/",levelName,".json").then((result)=>{
+            loader.findFile("./assets/levels/",levelName,".json").then((result)=>{
                 if(result){
                     loadLevel(levelName,false);
                 }else{
@@ -217,6 +249,14 @@ function keydown(event) {
             }
         }
     }
+    // key n (mute sound)
+    if(event.keyCode === 78) {
+        loader.playSound = !loader.playSound;
+    }
+    // key m (mute music)
+    if(event.keyCode === 77) {
+        loader.playMusic = !loader.playMusic;
+    }
     // key p (pause)
     if(event.keyCode === 80) {
         if(uiState === GAME_ON){
@@ -225,6 +265,13 @@ function keydown(event) {
             uiState = GAME_ON;
         }
     }
+    //e : exit  
+    if(event.keyCode === 69) {
+        console.log("exit");
+        goToStartScreen();
+
+    }
+
     // key h (help)
     if(event.keyCode === 72) {
         let text = "Help :\n";
@@ -233,12 +280,14 @@ function keydown(event) {
         }else {
             text += "[player mode]\n";
         }
-        text += "Arrow keys or n m : move\n";
+        text += "Arrow keys : move\n";
         text += "Space or up key: jump\n";
         text += "left shift : attack\n";
         text += "e : exit\n";
         text += "p : pause\n";
         text += "h : help\n";
+        text += "n : mute sound\n";
+        text += "m : mute music\n";
         text += "crtl+d : Devlopper mode\n";
         if(devlopperMode === true){
             text += "d : debug\n";
@@ -249,32 +298,6 @@ function keydown(event) {
         }
         alert(text);
     }
-
-    //e : exit  
-    if(event.keyCode === 69) {
-       uiState = START;
-    }
-
-    // Attack : left shift 
-    if(event.keyCode === 16 ) {
-        keys.attack = true;
-    }
-    // direction keys : left arrow or n
-    if(event.keyCode === 37 || event.keyCode === 78) {
-        keys.left = true;
-    }
-    // jump : up arrow or space
-    if (event.keyCode === 38 || event.keyCode === 32) {
-        keys.up = true;
-        // make the player jump, DO NOT REMOVE even if it looks useless
-        if(!player.jump){
-            player.y_v = -10;
-        }
-    }
-    // direction keys : right arrow or m
-    if(event.keyCode === 39 || event.keyCode === 77) {
-        keys.right = true;
-    }
 }
 function keyup(event) {
     // left shift key
@@ -282,7 +305,7 @@ function keyup(event) {
         keys.attack = false;
     }
     // direction keys
-    if(event.keyCode === 37 || event.keyCode === 78) {
+    if(event.keyCode === 37 ) {
         keys.left = false;
     }
     if(event.keyCode === 38 || event.keyCode === 32) {
@@ -290,30 +313,28 @@ function keyup(event) {
             player.y_v = -3;
         }
     }
-    if(event.keyCode === 39 || event.keyCode === 77) {
+    if(event.keyCode === 39) {
         keys.right = false;
     }
-}
-
-function keyupStart(event){
 }
 
 function keydownStart(event) {
     //key = enter
     if(event.keyCode === 13) {
+        window.removeEventListener("keydown", keydownStart)
+        window.removeEventListener("keyup", keyupStart)
         uiState = GAME_OFF;
         window.addEventListener("keydown", keydown)
         window.addEventListener("keyup", keyup)
         loadLevel(currentLevel,false);
     }
-    
-
 }
-
+function keyupStart(event){
+}
 
 function loadLevel(levelpath,debug = false) {
     uiState = GAME_OFF;
-    loader.loadGame(levelpath,debug).then((result)=>{
+    loader.loadGame(levelpath,false).then((result)=>{
         if(result){
             currentLevel = loader.levelname;
             player = loader.player;
@@ -321,10 +342,10 @@ function loadLevel(levelpath,debug = false) {
             platforms = loader.platforms;
             collisionBlocks = loader.collisionBlocks;
             passageWays = loader.passageWays;
-            document.title = loader.levelName + " by " + loader.levelAuthor;
+            document.title =String.fromCodePoint(0x1F3AE) +" "+ loader.levelName + " by " + loader.levelAuthor;
             currentLevel = loader.levelName;
             bats = loader.bats;
-            collacteables = loader.collacteables;
+            collectibles = loader.collectibles;
             uiState = GAME_ON;
         }else{
             console.error(loader.errors);
@@ -336,7 +357,7 @@ window.addEventListener("keydown", keydownStart)
 window.addEventListener("keyup", keyupStart)
 setInterval(loop,25);
 //load the start screen
-loader.loadStartScreen("startScreen",true).then((result)=>{
+loader.loadStartScreen("startScreen").then((result)=>{
     if(!result){
         console.error(loader.errors);
     }

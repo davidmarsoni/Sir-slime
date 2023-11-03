@@ -2,9 +2,14 @@ import Entity from "./Entity.js";
 
 class Player extends Entity{
     // life variables
+    #maxPossibleHealth = 8;
+    #maxPossibleLives = 10;
+
     #maxHealth = 0;
     #currenthealth = 0;
-    #lives = 0;
+    #maxLives = 0;
+    #currentlives = 0;
+
     #isHit = false;
     #invicivibilityTimer = 120;
 
@@ -31,22 +36,44 @@ class Player extends Entity{
 
     //statistic variables
     #score = 0;
-    #numberOfEnnemieskilled = 0;
+    #numberOfEnemieskilled = 0;
     #numberOfHeartsCollected = 0;
     #numberOfCoinsCollected = 0;
     #numberOfDeaths = 0;
     #numberOfLevelCompleted = 0;
     #totalDamageTaken = 0;
+    #totalDamageDealt = 0;
+    #totalheal = 0;
 
-    constructor(x, y, width, height, texturepath, origin_x, origin_y, lives,maxHealth, speed, damage) {
+    //sound
+    #walkSound = null;
+    #deadSound = null;
+
+
+    constructor(x, y, width, height, texturepath, origin_x, origin_y, maxLives,maxPossibleLives,maxHealth,maxPossibleHealth, speed, damage,walkSoundPath,deadSounPath) {
         super(x, y, width, height, texturepath, speed, damage);
         this.#origin_x = origin_x;
         this.#origin_y = origin_y;
-        this.#lives = lives;
+        this.#maxPossibleLives = maxPossibleLives;
+        this.#maxLives = maxLives;
+        this.#currentlives = this.maxLives;
+        this.#maxPossibleHealth = maxPossibleHealth;
         this.#maxHealth = maxHealth;
-        this.#currenthealth = maxHealth;
-    }
+        this.#currenthealth = this.maxHealth;
+        this.#walkSound = new Audio(walkSoundPath);
+        this.#walkSound.volume = 0.5;
+        this.#walkSound.onerror = () => {
+            console.log("Error loading walk sound");
+            this.#walkSound = null;
+        };
 
+        this.#deadSound = new Audio(deadSounPath);
+        this.#deadSound.volume = 0.5;
+        this.#deadSound.onerror = () => {
+            console.log("Error loading dead sound");
+            this.#deadSound = null;
+};
+    }
     /**
      * Update the player position beetwen 2 level
      * @param {*} x new x position
@@ -67,199 +94,144 @@ class Player extends Entity{
     }
 
     // #region getters and setters
-    get lives() {
-        return this.#lives;
-    }
+    get maxPossibleHealth(){return this.#maxPossibleHealth;}
+    get maxPossibleLives(){return this.#maxPossibleLives;}
 
-    set lives(value) {
-        this.#lives = value;
-        if(this.#lives > 8){
-            this.#lives = 8;
-        }
-    }
-    get currenthealth() {
-        return this.#currenthealth;
-    }
-    set currenthealth(value) {
-        this.#currenthealth = value;
-    }
+    get maxHealth(){return this.#maxHealth;}
+    get health(){return this.#currenthealth;}
+    get maxLives(){return this.#maxLives;}
+    get lives(){return this.#currentlives;}
 
-    get maxHealth() {
-        return this.#maxHealth;
-    }
+    get isHit(){return this.#isHit;}
+    set isHit(value){this.#isHit = value;}
 
-    set maxHealth(value) {
-        this.#maxHealth = value;
-    }
+    get invicivibilityTimer(){return this.#invicivibilityTimer;}
+    set invicivibilityTimer(value){this.#invicivibilityTimer = value;}
 
-    get score() {
-        return this.#score;
-    }
+    get x_v(){return this.#x_v;}
+    set x_v(value){this.#x_v = value;}
 
-    set score(value) {
-        this.#score = value;
-    }
+    get y_v(){return this.#y_v;}
+    set y_v(value){this.#y_v = value;}
 
-    get x_v() {
-        return this.#x_v;
-    }
+    get jump(){return this.#jump;}
+    set jump(value){this.#jump = value;}
 
-    set x_v(value) {
-        this.#x_v = value;
-    }
+    get predictedX(){return this.#predictedX;}
+    set predictedX(value){this.#predictedX = value;}
 
-    get y_v() {
-        return this.#y_v;
-    }
+    get predictedY(){return this.#predictedY;}
+    set predictedY(value){this.#predictedY = value;}
 
-    set y_v(value) {
-        this.#y_v = value;
-    }
+    get origin_x(){return this.#origin_x;}
+    set origin_x(value){this.#origin_x = value;}
 
-    get origin_x() {
-        return this.#origin_x;
-    }
+    get origin_y(){return this.#origin_y;}
+    set origin_y(value){this.#origin_y = value;}
 
-    set origin_x(value) {
-        this.#origin_x = value;
-    }
+    get spriteSheetWidth(){return this.#spriteSheetWidth;}
+    set spriteSheetWidth(value){this.#spriteSheetWidth = value;}
 
-    get origin_y() {
-        return this.#origin_y;
-    }
+    get spriteSheetHeight(){return this.#spriteSheetHeight;}
+    set spriteSheetHeight(value){this.#spriteSheetHeight = value;}
 
-    set origin_y(value) {
-        this.#origin_y = value;
-    }
+    get hitAnimationCounter(){return this.#hitAnimationCounter;}
+    set hitAnimationCounter(value){this.#hitAnimationCounter = value;}
 
-    get jump() {
-        return this.#jump;
-    }
+    get preventMovement(){return this.#preventMovement;}
+    set preventMovement(value){this.#preventMovement = value;}
+    
+    get preventMovementTimer(){return this.#preventMovementTimer;}
+    set preventMovementTimer(value){this.#preventMovementTimer = value;}
 
-    set jump(value) {
-        this.#jump = value;
-    }
+    get score(){return this.#score;}
+    set score(value){this.#score = value;}
 
-    get spriteSheetWidth() {
-        return this.#spriteSheetWidth;
-    }
+    get numberOfEnemieskilled(){return this.#numberOfEnemieskilled;}
+    get numberOfHeartsCollected(){return this.#numberOfHeartsCollected;}
+    get numberOfCoinsCollected(){return this.#numberOfCoinsCollected;}
+    get numberOfDeaths(){return this.#numberOfDeaths;}
+    get numberOfLevelCompleted(){return this.#numberOfLevelCompleted;}
+    get totalDamageTaken(){return this.#totalDamageTaken;}
+    get totalDamageDealt(){return this.#totalDamageDealt;}
+    get totalheal(){return this.#totalheal;}
+    
+    get walkSound(){return this.#walkSound;}
+    get deadSound(){return this.#deadSound;}
 
-    set spriteSheetWidth(value) {
-        this.#spriteSheetWidth = value;
-    }
 
-    get spriteSheetHeight() {
-        return this.#spriteSheetHeight;
-    }
-
-    set predictedX(value) {
-        this.#predictedX = value;
-    }
-
-    get predictedX() {
-        return this.#predictedX;
-    }
-
-    set predictedY(value) {
-        this.#predictedY = value;
-    }
-
-    get predictedY() {
-        return this.#predictedY;
-    }
-
-    get isHit() {
-        return this.#isHit;
-    }
-
-    set isHit(value) {
-        this.#isHit = value;
-    }
-
-    get preventMovement() {
-        return this.#preventMovement;
-    } 
-
-    get numberOfEnnemieskilled() {
-        return this.#numberOfEnnemieskilled;
-    }
-
-    get numberOfHeartsCollected() {
-        return this.#numberOfHeartsCollected;
-    }
-
-    get numberOfCoinsCollected() {
-        return this.#numberOfCoinsCollected;
-    }
-
-    get numberOfDeaths() {
-        return this.#numberOfDeaths;
-    }
-
-    get numberOfLevelCompleted() {
-        return this.#numberOfLevelCompleted;
-    }
-
-    get totalDamageTaken() {
-        return this.#totalDamageTaken;
-    }
+    // #endregion
+    // #region statistic methods
+    addEnemykilled() {this.#numberOfEnemieskilled++;}
+    addHeartCollected() {this.#numberOfHeartsCollected++;}
+    addCoinCollected() {this.#numberOfCoinsCollected++;}
+    addDeath() {this.#numberOfDeaths++;}
+    addLevelCompleted() {this.#numberOfLevelCompleted++;}
+    addDamageTaken(value) {this.#totalDamageTaken += value;}
+    addDamageDealt(value) {this.#totalDamageDealt += value;}
     
     // #endregion
 
-    // #region statistic methods
-    addEnnemykilled() {
-        this.#numberOfEnnemieskilled++;
-    }
-
-    addHeartCollected() {
-        this.#numberOfHeartsCollected++;
-    }
-
-    addCoinCollected() {
-        this.#numberOfCoinsCollected++;
-    }
-
-    addDeath() {
-        this.#numberOfDeaths++;
-    }
-
-    addLevelCompleted() {
-        this.#numberOfLevelCompleted++;
-    }
-
-    addDamageTaken(value) {
-        this.#totalDamageTaken += value;
-    }
-
-    // #endregion
-
     // #region life methods
+    heal(value = null){
+        if(value === null){
+            value = this.#maxHealth;
+        }
+        if(value > 0){
+            this.#currenthealth += value;
+            if(this.#currenthealth > this.#maxHealth){
+                this.#currenthealth = this.#maxHealth;
+            }
+        }
+    }
+
+    addHeart(value = 1){
+        this.addHeartCollected();
+        if(value > 0){
+            this.#maxHealth += value*2;
+            if(this.#maxHealth > this.#maxPossibleHealth){
+                this.#maxHealth = this.#maxPossibleHealth;
+            }
+        }
+    }
+
+    addLife(value = 1){
+        this.addLevelCompleted();
+        if(value > 0){
+            this.#maxLives += value;
+            if(this.#maxLives > this.#maxPossibleLives){
+                this.#maxLives = this.#maxPossibleLives;
+            }
+        }
+    }
 
     takeDamage(value) {
+        this.addDamageTaken(value);
         if(value > 0){
+            this.debug ? console.log("player take damage current health: "+this.#currenthealth+" damage taken: "+value+" new health: "+(this.#currenthealth - value)+"") : null;
             this.addDamageTaken(value);
-            if(this.#currenthealth - value > 0){
-                this.#currenthealth -= value;
-            }else{
+            this.#currenthealth -= value;
+            if(this.isDead()){
                 this.dead();
             }
         }
     }
 
     dead(){
-        this.#lives -= 1;
         this.addDeath();
-        if(this.#lives > 0){
+        this.#currentlives--;
+        this.playSound && this.deadSound != null ? this.deadSound.play() : null;
+        if(this.lifeRemains){
+            this.#currenthealth = this.#maxHealth;
             this.respawn();
         }
     }
 
     isDead(){
-        return this.#currenthealth <= 0;
+        return this.#currenthealth < 1;
     }
 
     respawn(){
-        this.#currenthealth = this.#maxHealth;
         this.x = this.#origin_x;
         this.y = this.#origin_y;
         this.predictedX = this.#origin_x;
@@ -270,10 +242,9 @@ class Player extends Entity{
         this.debug ? console.log("respawn number of life left : "+this.lives) : null;
     }
 
-    ifLifeRemains(){
-        return this.#lives > 0;
+    get lifeRemains(){
+        return this.lives > 0;
     }
-
 
     // #endregion
 
@@ -296,6 +267,9 @@ class Player extends Entity{
     // #endregion
 
     render(ctx,keys) {
+        if(this.isRendered === false){
+            return;
+        }
         // src https://codehs.com/tutorial/andy/Programming_Sprites_in_JavaScript
         // was for the original idea of animation, but we adapted it.
         if (this.debug) {
@@ -346,6 +320,7 @@ class Player extends Entity{
                 this.timer++;
                 if (this.timer === 4) {
                     this.timer = 0;
+                    this.playSound && this.#walkSound != null ? this.walkSound.play() : null;
                 }
             }
             animationOffset = this.timer * 32;
@@ -353,18 +328,21 @@ class Player extends Entity{
             this.counter = 0;
             this.timer = 0;
         }
-        
-        ctx.drawImage(
-            this.texture,
-            spriteDirectionOffset + hitSpriteOffset,  //sprite sheet offset x
-            animationOffset,  //sprite sheet offset y
-            this.#spriteSheetWidth, //sprite sheet w
-            this.#spriteSheetHeight, //sprite sheet h
-            this.x - this.height,
-            this.y - this.height,
-            this.width,
-            this.height
-        );
+        if(this.textureLoaded === true){
+            ctx.drawImage(
+                this.texture,
+                spriteDirectionOffset + hitSpriteOffset,  //sprite sheet offset x
+                animationOffset,  //sprite sheet offset y
+                this.#spriteSheetWidth, //sprite sheet w
+                this.#spriteSheetHeight, //sprite sheet h
+                this.x - this.height,
+                this.y - this.height,
+                this.width,
+                this.height
+            );
+        }else{
+            this.debug = true;
+        }
 
         if (this.debug) {
             ctx.fillStyle = "#000";
@@ -372,14 +350,14 @@ class Player extends Entity{
         }
     }
 
-
     hit(damage = 1){
-        this.takeDamage(damage);
         this.debug ? console.log("current helth of the player: " +this.#currenthealth) : null;
+       
         if(!this.isHit){
             this.#invicivibilityTimer = 0;
             this.isHit = true;
-            // TODO: lose health
+            console.log("player hit");
+            this.takeDamage(damage);
         }
         this.#preventMovement = true;
         this.#preventMovementTimer = 0;

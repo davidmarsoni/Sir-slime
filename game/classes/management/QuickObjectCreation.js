@@ -4,8 +4,8 @@ import CollisionBlock from "../CollisionBlock.js";
 import Patrolman from "../entity/ennemy/Patrolman.js";
 import PassageWay from "../PassageWay.js";
 import Bat from "../entity/ennemy/Bat.js";
-import Coin from "../collacteables/Coin.js";
-import Heart from "../collacteables/Heart.js";
+import Coin from "../collactiables/Coin.js";
+import Heart from "../collactiables/Heart.js";
 
 
 class QuickObjectCreation{
@@ -37,6 +37,24 @@ class QuickObjectCreation{
     mouseMoveHandler = (e) => {
         this.#x = e.clientX -this.canvas.offsetLeft;
         this.#y = e.clientY-this.canvas.offsetTop;
+
+        //get the value of the input if there is one
+        if(input1.value !== ""){
+            this.#value1 = input1.value;
+        }
+        const input2 = document.getElementById("input2");
+        if(input2.value !== ""){
+            this.#value2 = input2.value;
+        }
+        const input3 = document.getElementById("input3");
+        if(input3.value !== ""){
+            this.#value3 =input3.value;
+        }
+        const input4 = document.getElementById("input4");
+        
+        if(input4.value !== ""){
+            this.#value4 =input4.value;
+        }
     };
 
     constructor(){
@@ -73,13 +91,13 @@ class QuickObjectCreation{
 
     init(){
         //create object for the preview
-        this.#platform = new Platform(0,0,96,16,"Sprites/DecorSheet.png",0,0,96,16);
-        this.#patrolman = new Patrolman(0,0,32,32,"Sprites/Patrolman.png",0,0,32,32);
+        this.#platform = new Platform(0,0,96,16,"assets/sprites/DecorSheet.png",0,0,96,16);
+        this.#patrolman = new Patrolman(0,0,32,32,"assets/sprites/Patrolman.png",0,0,32,32);
         this.#collisionBlock = new CollisionBlock(0,0,100,100,0);
         this.#passageWay = new PassageWay(0,0,100,100,"");
-        this.#bat = new Bat(0,0,32,32,"Sprites/Bats.png",0,0,32,32);
-        this.#coin = new Coin(0,0,16,16,"Sprites/Collectible.png",0,0);
-        this.#heart = new Heart(0,0,16,16,"Sprites/Collectible.png",0,0);
+        this.#bat = new Bat(0,0,32,32,"assets/sprites/Bats.png",0,0,32,32);
+        this.#coin = new Coin(0,0,16,16,"assets/sprites/Collectible.png",0,0);
+        this.#heart = new Heart(0,0,16,16,"assets/sprites/Collectible.png",0,0);
 
         //add a title to the quick object creation
         const title = document.createElement('h2');
@@ -108,37 +126,12 @@ class QuickObjectCreation{
         // Add an event listener 
         // get the x,y and the value of the input and some other data
         select.addEventListener('change', (event) => {
-            //get the mouse position
-            this.x = event.clientX -this.canvas.offsetLeft;
-            this.y = event.clientY-this.canvas.offsetTop;
-           
-            //get the value of the input if there is one and find the right type of data
-            const input1 = document.getElementById("input1");
-        
-            //get the value of the input if there is one
-            if(input1.value !== ""){
-                this.#value1 = input1.value;
-            }
-            const input2 = document.getElementById("input2");
-            if(input2.value !== ""){
-                this.#value2 = input2.value;
-            }
-            const input3 = document.getElementById("input3");
-            if(input3.value !== ""){
-                this.#value3 =input3.value;
-            }
-            const input4 = document.getElementById("input4");
-            
-            if(input4.value !== ""){
-                this.#value4 =input4.value;
-            }
-
             this.type = event.target.value;
-           
         });
         
         //set the default value
         select.value = "Platform";
+        this.type = "Platform";
 
         // Insert the select element before the canvas
         this.canvas.parentNode.insertBefore(select, this.canvas)
@@ -180,6 +173,7 @@ class QuickObjectCreation{
         div.style.height = "7px";
         this.canvas.parentNode.insertBefore(div, this.canvas);
 
+
         //add the event listener to the canvas
         this.canvas.addEventListener("mousedown", this.mouseDownHandler);
         this.canvas.addEventListener("mousemove", this.mouseMoveHandler);
@@ -199,7 +193,8 @@ class QuickObjectCreation{
         document.querySelector('div').remove();
         this.canvas.removeEventListener("mousedown", this.mouseDownHandler);
         this.canvas.removeEventListener("mousemove", this.mouseMoveHandler);
-       
+        
+        this.#type = "";
     }
  
     /**
@@ -259,7 +254,7 @@ class QuickObjectCreation{
                         "spriteSheetOffsetY" : 0,
                         "spriteSheetWidth" : 96,
                         "spriteSheetHeight" : 16,
-                        "texturepath": "Sprites/DecorSheet.png"
+                        "texturepath": "assets/sprites/DecorSheet.png"
                     }
                 };
                 break;
@@ -279,7 +274,7 @@ class QuickObjectCreation{
                         ],
                         "speed": 1,
                         "damage": parseInt(value3) == 0 ? 1 :parseInt(value3),
-                        "texturepath": "Sprites/Patrolman.png"
+                        "texturepath": "assets/sprites/Patrolman.png"
                     }
                 };
                 break;
@@ -321,7 +316,7 @@ class QuickObjectCreation{
                         "speed":2.5,
                         "damage":parseInt(value3) == 0 ? 1 :parseInt(value3),
                         "triggerZone" : parseInt(value3) == 0 ? 200 :parseInt(value3),
-                        "texturepath": "Sprites/Bats.png"
+                        "texturepath": "assets/sprites/Bats.png"
                     }
                 };
                 break;
@@ -334,7 +329,7 @@ class QuickObjectCreation{
                         "width": 16,
                         "height": 16,
                         "value": parseInt(value3) == 0 ? 10 :parseInt(value3),
-                        "texturepath": "Sprites/Collectable.png"
+                        "texturepath": "assets/sprites/Collectible.png"
                     }
                 };
                 break;
@@ -347,7 +342,7 @@ class QuickObjectCreation{
                         "width": 16,
                         "height": 16,
                         "value": parseInt(value3) == 0 ? 1 :parseInt(value3),
-                        "texturepath": "Sprites/Collectable.png"
+                        "texturepath": "assets/sprites/Collectible.png"
                     }
                 };
                 break;

@@ -1,7 +1,7 @@
 import Entity from "../Entity.js";
 class Enemy extends Entity{
     #isAlive = true;
-    #isRendered = true;
+    #hitSound;
 
     constructor(x, y, width, height, texturepath, speed, damage) {
         super(x, y, width, height, texturepath, speed, damage);
@@ -16,13 +16,13 @@ class Enemy extends Entity{
        
     }
 
-    get isRendered() {
-        return this.#isRendered;
+    get hitSound() {
+        return this.#hitSound;
     }
 
-    set isRendered(value) {
-        this.#isRendered = value;
+    set hitSound(value) {
+        this.#hitSound = value;
     }
-
+    
 }
 export default Enemy;

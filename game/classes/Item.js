@@ -1,5 +1,7 @@
 import GameObject from "./GameObject.js";
-
+/**
+ * @deprecated
+ */
 class Item extends GameObject{
     #spriteSheetWidth = 32;
     #spriteSheetHeight = 32;

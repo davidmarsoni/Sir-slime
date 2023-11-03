@@ -7,7 +7,12 @@
     },
     {
         "Background": {
-            "path": "images/level1.png"
+            "path": "assets/images/level1.png"
+        }
+    },
+    {
+        "Song": {
+            "path": "assets/songs/level1.mp3"
         }
     },
     {
@@ -37,7 +42,7 @@
             "spriteSheetOffsetY": 48,
             "spriteSheetWidth": 96,
             "spriteSheetHeight": 48,
-            "texturepath": "Sprites/DecorSheet.png"
+            "texturepath": "assets/sprites/DecorSheet.png"
         }
     },
     {
@@ -50,7 +55,7 @@
             "spriteSheetOffsetY": 96,
             "spriteSheetWidth": 96,
             "spriteSheetHeight": 48,
-            "texturepath": "Sprites/DecorSheet.png"
+            "texturepath": "assets/sprites/DecorSheet.png"
         }
     },
     {
@@ -63,7 +68,7 @@
             "spriteSheetOffsetY": 48,
             "spriteSheetWidth": 96,
             "spriteSheetHeight": 48,
-            "texturepath": "Sprites/DecorSheet.png"
+            "texturepath": "assets/sprites/DecorSheet.png"
         }
     },
     {
@@ -80,7 +85,7 @@
             ],
             "speed": 1,
             "damage": 2,
-            "texturepath": "Sprites/Patrolman.png"
+            "texturepath": "assets/sprites/Patrolman.png"
         }
     },
     {
@@ -94,7 +99,7 @@
             "speed": 0,
             "damage": 1,
             "triggerZone": 200,
-            "texturepath": "Sprites/Bats.png"
+            "texturepath": "assets/sprites/Bats.png"
         }
     },
     {
@@ -149,7 +154,8 @@
             "width": 16,
             "height": 16,
             "value": 10,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -159,7 +165,8 @@
             "width": 16,
             "height": 16,
             "value": 10,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -169,17 +176,19 @@
             "width": 16,
             "height": 16,
             "value": 10,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
         "Coin": {
-            "x": 1090,
+            "x": 1083,
             "y": 350,
             "width": 16,
             "height": 16,
             "value": 10,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -189,7 +198,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -199,7 +209,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -212,7 +223,7 @@
             "spriteSheetOffsetY": 16,
             "spriteSheetWidth": 96,
             "spriteSheetHeight": 16,
-            "texturepath": "Sprites/none.png"
+            "texturepath": "assets/sprites/none.png"
         }
     },
     {
@@ -225,7 +236,7 @@
             "spriteSheetOffsetY": 16,
             "spriteSheetWidth": 96,
             "spriteSheetHeight": 16,
-            "texturepath": "Sprites/none.png"
+            "texturepath": "assets/sprites/none.png"
         }
     },
     {
@@ -235,7 +246,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -245,7 +257,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -255,7 +268,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -265,7 +279,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -275,7 +290,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -285,7 +301,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -295,7 +312,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -305,7 +323,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -315,7 +334,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -325,7 +345,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -335,7 +356,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -345,7 +367,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -355,7 +378,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -365,7 +389,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -375,7 +400,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -385,7 +411,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -395,7 +422,8 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
     {
@@ -405,11 +433,70 @@
             "width": 16,
             "height": 16,
             "value": 100,
-            "texturepath": "Sprites/Collectible.png"
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
         }
     },
-    {"Platform":{"x":871,"y":291,"width":96,"height":16,"spriteSheetOffsetX":0,"spriteSheetOffsetY":0,"spriteSheetWidth":96,"spriteSheetHeight":16,"texturepath":"Sprites/none.png"}}
-    ,{"Platform":{"x":738,"y":218,"width":96,"height":16,"spriteSheetOffsetX":0,"spriteSheetOffsetY":0,"spriteSheetWidth":96,"spriteSheetHeight":16,"texturepath":"Sprites/none.png"}}
-    ,{"Platform":{"x":842,"y":162,"width":96,"height":16,"spriteSheetOffsetX":0,"spriteSheetOffsetY":0,"spriteSheetWidth":96,"spriteSheetHeight":16,"texturepath":"Sprites/none.png"}}
-    ,{"Heart":{"x":884,"y":80,"width":16,"height":16,"value":2,"texturepath":"Sprites/none.png"}}
+    {
+        "Platform": {
+            "x": 1065,
+            "y": 285,
+            "width": 53,
+            "height": 10,
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 0,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 16,
+            "texturepath": "assets/sprites/none.png"
+        }
+    },
+    {
+        "Platform": {
+            "x": 1007,
+            "y": 225,
+            "width": 40,
+            "height": 10,
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 0,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 16,
+            "texturepath": "assets/sprites/none.png"
+        }
+    },
+    {
+        "Platform": {
+            "x": 842,
+            "y": 162,
+            "width": 96,
+            "height": 16,
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 0,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 16,
+            "texturepath": "assets/sprites/none.png"
+        }
+    },
+    {
+        "Heart": {
+            "x": 884,
+            "y": 80,
+            "width": 16,
+            "height": 16,
+            "heal": 0,
+            "heart_gain" :1,
+            "texturepath": "assets/sprites/none.png",
+            "sound" : "assets/sounds/collectible/heart_gain.wav"
+        }
+    },
+    {
+        "Coin": {
+            "x": 1083,
+            "y": 258,
+            "width": 16,
+            "height": 16,
+            "value": 50,
+            "texturepath": "assets/sprites/Collectible.png",
+            "sound" : "assets/sounds/collectible/coin.wav"
+        }
+    }
 ]

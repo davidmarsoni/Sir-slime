@@ -1,0 +1,28 @@
+[
+    {
+        "Name": "level2bis"
+      },
+      {
+        "Author": "David"
+      },
+      {
+        "Background": {
+          "path": "assets/images/level2.png"
+        }
+      }, {
+        "Player": {
+          "x": 32,
+          "y": 201,
+          "origin_x": 64,
+          "origin_y": 151
+        }
+      },{
+        "CollisionBlock": {
+          "x": 0,
+          "y": 200,
+          "width": 175,
+          "height": 800,
+          "collisionSide": 0
+        }
+      }
+]

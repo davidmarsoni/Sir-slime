@@ -3,13 +3,18 @@ class GameObjectLogic {
     #y;
     #width;
     #height;
+    #playSound = true;
     #debug = false;
+    #isRendered;
+    #isAnimated;
 
     constructor(x, y, width, height) {
         this.#x = x;
         this.#y = y;
         this.#width = width;
         this.#height = height;
+        this.#isRendered = true;
+        this.#isAnimated = true;
     }
 
     get x() {
@@ -52,9 +57,31 @@ class GameObjectLogic {
         this.#debug = value;
     }
 
-    render(ctx) {
-        ctx.fillStyle = 'black';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+    get playSound() {
+        return this.#playSound;
+    }
+
+    set playSound(value) {
+        this.#playSound = value;
+    }
+
+    get isRendered() {
+        return this.#isRendered;
+    }
+
+    set isRendered(value) {
+        this.#isRendered = value;
+    }
+
+    get isAnimated() {
+        return this.#isAnimated;
+    }
+
+    set isAnimated(value) {
+        this.#isAnimated = value;
+    }
+
+    render() {
     }
 
 }

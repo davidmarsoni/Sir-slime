@@ -15,6 +15,9 @@ class CollisionBlock extends GameObjectLogic{
     }
 
     render(ctx) {
+        if(this.isRendered === false){
+            return;
+        }
         if (this.debug) {
             if (this.collisionSide === 0){
                 ctx.fillStyle = "rgba(255,0,0,0.50)";

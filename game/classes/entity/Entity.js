@@ -7,6 +7,7 @@ class Entity extends GameObject {
     #spriteSheetHeight = 32;
     #speed = 0;
     #damage = 0;
+    #IsAlive = true;
 
     constructor(x, y, width, height, texturepath, speed, damage) {
         super(x, y, width, height, texturepath);
@@ -62,9 +63,16 @@ class Entity extends GameObject {
         this.#damage = value;
     }
 
-    // use the abstract method render() from the parent class
+    get IsAlive() {
+        return this.#IsAlive;
+    }
+
+    set IsAlive(value) {
+        this.#IsAlive = value;
+    }
+
     render() {
-        throw new Error("You have to implement the method render!");
+        super.render();
     }
 }
 

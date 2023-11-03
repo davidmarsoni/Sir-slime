@@ -1,13 +1,14 @@
 import Collectable from "./Collectible.js";
 
 class Coin extends Collectable{
-    #value = 1;
+    #value = 10;
 
-    constructor(x, y, width, height, texturepath,value,spriteSheetOffsetX) {
+    constructor(x, y, width, height, texturepath,spriteSheetOffsetX,value,sound) {
         if(spriteSheetOffsetX === undefined){
             spriteSheetOffsetX = 0;
         }
-        super(x, y, width, height, texturepath, spriteSheetOffsetX);
+        super(x, y, width, height, texturepath,spriteSheetOffsetX,sound);
+       
         this.#value = value;
     }
     get value() {
