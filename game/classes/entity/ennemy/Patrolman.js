@@ -1,20 +1,28 @@
-import Enemy from "./Enemy.js";
-class Patrolman extends Enemy{
+import Entity from "./Entity.js";
+class Patrolman extends Entity{
     #origin_x = 64;
     #origin_y = 64;
     #direction = true;
     #animStep = 0;
     #animTimer = 0;
     #path = [];
+    #speed = 1;
     #step = 0;
-
-
+    #damage = 0;
+    #isAlive = true;
+    #x_v = 0
+    #y_v = -4;
+    #values = [0.05,-0.05];
+    #default = [2, -2]
+    #random = 0;
 
     constructor(x, y, width, height, texturepath, origin_x, origin_y, path, speed,damage) {
-        super(x, y, width, height, texturepath, speed, damage);
+        super(x, y, width, height, texturepath);
         this.#origin_x = origin_x;
         this.#origin_y = origin_y;
         this.#path = path;
+        this.#speed = speed;
+        this.#damage = damage;
     }
 
     get step() {
@@ -23,6 +31,14 @@ class Patrolman extends Enemy{
 
     set step(value) {
         this.#step = value;
+    }
+
+    get speed() {
+        return this.#speed;
+    }
+
+    set speed(value) {
+        this.#speed = value;
     }
 
     get path() {
@@ -73,6 +89,38 @@ class Patrolman extends Enemy{
         this.#origin_x = value;
     }
 
+    get damage() {
+        return this.#damage;
+    }
+
+    set damage(value) {
+        this.#damage = value;
+    }
+
+    get isAlive() {
+        return this.#isAlive;
+    }
+
+    set isAlive(value) {
+        this.#isAlive = value;
+    }
+
+    get x_v() {
+        return this.#x_v[this.#random];
+    }
+
+    set x_v(value) {
+        this.#x_v = value;
+    }
+
+    get y_v() {
+        return this.#y_v;
+    }
+
+    set y_v(value) {
+        this.#y_v = value;
+    }
+
     getTrampleBoxLeft(){
         return this.x - this.width + this.width/4;
     }
@@ -104,12 +152,19 @@ class Patrolman extends Enemy{
           }
       }
 
+      if(this.isAlive === false){
+            this.animStep = 4;
+        }
+
+
+
+
       ctx.drawImage(
         this.texture,  // Sprite
         spriteDirectionOffset,  // Sprite sheet offset x
         this.width*this.animStep,  // Sprite sheet offset y
-        this.width, // Sprite sheet w
-        this.height, // Sprite sheet h
+        32, // Sprite sheet w
+        32, // Sprite sheet h
         this.x - this.width,
         this.y - this.height,
         this.width,
@@ -147,13 +202,22 @@ class Patrolman extends Enemy{
                 && (
                     player.getTrampleBoxLeft(true) <= this.getTrampleBoxRight()
                     || player.getTrampleBoxRight(true) >= this.getTrampleBoxLeft()
-                ) && player.y_v > 0
+                ) && player.y_v > 0 && this.isAlive === true
             ) {
                 this.debug ? console.log("trample") : null;
-                // Destroy the enemy
+                player.y_v = -7;
+                this.#random = Math.round(Math.random());
+                this.#x_v = this.#default[this.#random];
+
+
+                
+                this.isAlive = false;
+                
+                
+                
             }
             // Push the player left
-            else if(player.x <= this.x){
+            else if(player.x <= this.x && this.isAlive === true){
                 this.debug ? console.log("left") : null;
                 player.x_v = -5;
                 player.y_v = -3;
@@ -162,24 +226,29 @@ class Patrolman extends Enemy{
                 player.hit(this.damage);
             }
             // Push the player right
-            else if(player.x >= this.x){
+            else if(player.x >= this.x && this.isAlive === true){
                 this.debug ? console.log("right") : null;
                 player.x_v = 5;
                 player.y_v = -3;
                 player.predictedX = this.x + player.width + player.x_v;
                 player.jump = true;
                 player.hit(this.damage);
-            } 
+            } else {
+                this.debug ? console.log("an error in collision was made, oops !!") : null;
+            }
         }
     }
 
     // move the patrolman
     move() {
-        if (this.x < this.path[this.step]) {
+        
+
+        
+        if (this.x < this.path[this.step] && this.isAlive === true) {
             this.x += this.speed;
             this.direction = true;
 
-        } else {
+        } else if(this.x > this.path[this.step] && this.isAlive === true) {
             this.x -= this.speed;
             this.direction = false;
         }
@@ -189,6 +258,19 @@ class Patrolman extends Enemy{
                 this.step = 0;
             }
         }
+
+        if(this.isAlive === false){
+            this.#x_v += this.#values[this.#random];
+            console.log(this.#x_v);
+            this.#y_v += 0.7;
+
+            this.x = this.x + this.#x_v;
+            this.y = this.y + this.#y_v;
+
+        
+
+        }
+
     }
 
 
