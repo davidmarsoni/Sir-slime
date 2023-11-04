@@ -343,10 +343,10 @@ class Player extends Entity{
         }else{
             this.debug = true;
         }
-
         if (this.debug) {
             ctx.fillStyle = "#000";
             ctx.fillRect(this.x, this.y, -8, -8);
+            //ctx.fillRect(this.center.x-2, this.center.y-2, 4, 4);
         }
     }
 
@@ -378,6 +378,61 @@ class Player extends Entity{
             this.#preventMovement = false;
         }
     }
+
+    distanceToTheLeft(object){
+        //absolute value of the distance between the player and the object
+        return Math.abs(this.maxX-object.minX);
+    }
+
+    distanceToTheRight(object){
+        //absolute value of the distance between the player and the object
+        return Math.abs(this.minX-object.maxX);
+    }
+
+    distanceToTheTop(object){
+        return Math.abs(this.maxY-object.minY);
+    }
+
+    distanceToTheBottom(object){
+        return Math.abs(this.minY-object.maxY);
+    }
+
+    InAPerimeter(object,width,height){ 
+        //console.log(this.distanceToTheLeft(object),this.distanceToTheRight(object),this.distanceToTheTop(object),this.distanceToTheBottom(object));
+        //console.log(width,height);
+        
+        /**
+         *  █▯█
+         *  █▯█
+         *  █▯█
+         */
+
+        if(this.distanceToTheLeft(object) <= width && this.distanceToTheTop(object) <= height){
+            return true;
+        }
+        if(this.distanceToTheLeft(object) <= width && this.distanceToTheBottom(object) <= height){
+            return true;
+        };
+        if(this.distanceToTheRight(object) <= width && this.distanceToTheTop(object) <= height){
+            return true;
+        }
+        if(this.distanceToTheRight(object) <= width && this.distanceToTheBottom(object) <= height){
+            return true;
+        }
+
+        /**
+         *  ▯█▯
+         *  ▯█▯
+         *  ▯█▯
+         */
+
+        if(this.maxX >= object.minX && this.minX <= object.maxX && this.maxY >= object.minY-height && this.minY <= object.maxY+height){
+            return true;
+        }
+       
+        return false;
+    }
+
 }
 
 export default Player;

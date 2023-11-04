@@ -8,6 +8,7 @@ import Bat from "../entity/ennemy/Bat.js";
 import Collectible from "../collactiables/Collectible.js";
 import Coin from "../collactiables/Coin.js";
 import Heart from "../collactiables/Heart.js";
+import ActivationPlatform from "../ActivationPlatform.js";
 
 /**
  * This class is used to load a level from a json file
@@ -281,8 +282,26 @@ class Loader{
                         element[Platform.name].spriteSheetOffsetY,
                         element[Platform.name].spriteSheetWidth,
                         element[Platform.name].spriteSheetHeight
-                        );
+                    );
                     platformObject.push(platform);
+                }
+
+                if(element[ActivationPlatform.name]){
+                    const activationPlatform = new ActivationPlatform(
+                        element[ActivationPlatform.name].x,
+                        element[ActivationPlatform.name].y,
+                        element[ActivationPlatform.name].width,
+                        element[ActivationPlatform.name].height,
+                        element[ActivationPlatform.name].texturepath,
+                        element[ActivationPlatform.name].spriteSheetOffsetX,
+                        element[ActivationPlatform.name].spriteSheetOffsetY,
+                        element[ActivationPlatform.name].spriteSheetWidth,
+                        element[ActivationPlatform.name].spriteSheetHeight,
+                        element[ActivationPlatform.name].triggerZoneX,
+                        element[ActivationPlatform.name].triggerZoneY,
+                        element[ActivationPlatform.name].activationTimer
+                    );
+                    platformObject.push(activationPlatform);
                 }
                 if(element[CollisionBlock.name]){
                     const collisionBlock = new CollisionBlock(

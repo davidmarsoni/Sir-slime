@@ -48,7 +48,7 @@ class Render {
             collisionBlock.debug = this.debug;
             collisionBlock.render(this.ctx);
         }
-
+        
         for (const platform of platforms) {
             platform.debug = this.debug;
             platform.render(this.ctx);
@@ -85,92 +85,27 @@ class Render {
             bat.render(this.ctx);
         }
     }
-    
-    /*renderScorboard(loader){
-        this.collactible.animStep = 0;
-        //create a score board for the player
-        this.ctx.fillStyle = "rgba(0,0,0,0.5)";
-        let x = this.ctx.canvas.width-280;
-        let y = this.ctx.canvas.height-174;
-        this.ctx.fillRect(x, y, this.ctx.canvas.width, this.ctx.canvas.height);
-        this.ctx.fillStyle = "rgba(255,255,255,1)";
-        this.ctx.font = "20px Consolas";
-        x += 280/2;
-        y += 20;
-        //center the text 
-        this.ctx.textAlign = "center";
-        this.ctx.fillText(loader.levelName, x, y);
-        x -= 280/2 - 10;
-        y += 24;
-        this.ctx.textAlign = "left";
-        this.ctx.fillText("Score    : " + loader.player.score, x, y);
-        //render the health
-        y += 24;
-        this.ctx.fillText("Health   : ",x, y);
-        let numberOfHearts = loader.player.maxHealth/2;
-        this.collactible.spriteSheetOffsetX = 2;
-        for (let i = 0; i < numberOfHearts ; i++){
-            this.collactible.x = x+122+(i*20);
-            this.collactible.y = y-14;
-            this.collactible.render(this.ctx);
-        }
-        this.collactible.spriteSheetOffsetX = 1;
-        let numberOfCurrentHearts = loader.player.currenthealth/2;
-        if(loader.player.currenthealth%2 === 1){
-            numberOfCurrentHearts--;
-        }
-        for (let i = 0; i < numberOfCurrentHearts ; i++){
-            this.collactible.x = x+122+(i*20);
-            this.collactible.y = y-14;
-            this.collactible.render(this.ctx);
-        }
-        if(loader.player.currenthealth%2 === 1){
-            this.collactible.spriteSheetOffsetX = 1;
-            this.collactible.animStep = 1;
-            this.collactible.x = x+122+(numberOfCurrentHearts*20)+10;
-            this.collactible.y = y-14;
-            this.collactible.render(this.ctx);
-        }
-        
-        y += 24;
-        this.ctx.fillText("lives    : ", x, y);
-        //draw a red square for each life 10x10 
-        this.ctx.fillStyle = "rgba(255,255,255,1)";
-        for (let i = 0; i < loader.player.lives; i++){
-            this.ctx.fillRect(x+122+(i*20), y-13, 16, 16);
-        }
-        y += 24;
-        let remainingEnemies = loader.numberOfEnnemies; 
-        this.ctx.fillText("Ennemies : "+remainingEnemies , x, y);
-        y += 24;
-        this.ctx.fillText("-------------", x, y);
-        y += 7;
-        this.collactible.spriteSheetOffsetX = 0;
-        this.collactible.animStep = 0;
-        this.collactible.x = x;
-        this.collactible.y = y;
-        this.collactible.render(this.ctx);
-        this.ctx.fillText(" "+loader.player.numberOfCoinsCollected, x+16, y+15);
-        this.collactible.spriteSheetOffsetX = 3;
-        this.collactible.x = x+70;
-        this.collactible.render(this.ctx);
-        this.ctx.fillText(" "+loader.player.numberOfEnnemieskilled, x+86, y+15);
-        //this.ctx.fillText("Position: x:" + loader.player.x +" y:"+loader.player.y , x, y);
-
-        this.ctx.fillStyle = "rgba(0,0,0,0.5)";
-        this.ctx.fillRect(0, 0, 135,  20);
-        this.ctx.fillStyle = "rgba(255,255,255,1)";
-        this.ctx.font = "14px Consolas";
-        this.ctx.fillText("key 'h' for help", 5, 13);
-
-    }*/
     renderScorboard(loader){
         this.ctx.textAlign = "left";
-        this.ctx.fillStyle = "rgba(0,0,0,0.5)";
+        this.ctx.fillStyle = "rgba(0,0,0,1)";
         let x = 10;
         let y = 10;
+       
+        if(this.debug){
+            this.ctx.fillRect(x, y, 100+this.ctx.measureText("debug").width, 38);
+            this.ctx.fillStyle = "rgba(255,255,255,1)";
+            this.ctx.font = "20px Consolas";
+            x+=10;
+            y+=25;
+            this.ctx.fillText("Debug mode", x, y);
+
+            x-=10;
+            y-=25;
+            x+=90+this.ctx.measureText("debug").width;
+        }
+        
         this.ctx.fillStyle = "rgba(0,0,0,1)";
-        this.ctx.fillRect(x, y, 180+loader.player.maxHealth*10, 38);
+        this.ctx.fillRect(x, y, 112+this.ctx.measureText(loader.levelName).width+loader.player.maxHealth*10, 38);
         this.ctx.fillStyle = "rgba(255,255,255,1)";
         this.ctx.font = "20px Consolas";
         //contour des lettres en noir
@@ -236,17 +171,14 @@ class Render {
         this.ctx.fillText("x"+lives, x-2, y+25);
         
         //add the score before the lives
-        let score = loader.player.score.toString().padStart(5, '0');
-        x -= this.ctx.measureText(score).width+8;
+        let score = loader.player.score.toString().padStart(6, '0');
+        x -= this.ctx.measureText(score).width-4;
         this.ctx.fillStyle = "rgba(0,0,0,1)";
         this.ctx.fillRect(x-this.ctx.measureText(score).width-20, y, this.ctx.measureText(score).width+26, 38);
         this.ctx.fillStyle = "rgba(255,255,255,1)";
         this.ctx.font = "bold 20px Consolas";
         this.ctx.textAlign = "right";
         this.ctx.fillText(score, x-6, y+25);
-
-        
-      
     }
 
     renderStart(backgroundImage){

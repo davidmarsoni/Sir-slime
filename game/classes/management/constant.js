@@ -6,6 +6,7 @@
  */
 import Player from "../entity/Player.js";
 import Platform from "../Platform.js";
+import ActivationPlatform from "../ActivationPlatform.js";
 import CollisionBlock from "../CollisionBlock.js";
 import Patrolman from "../entity/ennemy/Patrolman.js";
 import PassageWay from "../PassageWay.js";
@@ -20,7 +21,7 @@ const startScreen_list = ["Background"];
 const Information_list = ["Name","Author","Background","Song"];
 const ennemies_list = [Patrolman.name,Bat.name];
 const player_list = [Player.name];
-const objects_list = [Platform.name,CollisionBlock.name,PassageWay.name,Coin.name,Heart.name];
+const objects_list = [Platform.name,ActivationPlatform.name,CollisionBlock.name,PassageWay.name,Coin.name,Heart.name];
 
 export {Information_list};
 export {player_list};

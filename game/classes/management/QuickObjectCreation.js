@@ -6,6 +6,7 @@ import PassageWay from "../PassageWay.js";
 import Bat from "../entity/ennemy/Bat.js";
 import Coin from "../collactiables/Coin.js";
 import Heart from "../collactiables/Heart.js";
+import ActivationPlatform from "../ActivationPlatform.js";
 
 
 class QuickObjectCreation{
@@ -21,6 +22,7 @@ class QuickObjectCreation{
     #value4 = "";
 
     #platform; 
+    #activationPlatform;
     #patrolman; 
     #collisionBlock;
     #passageWay;
@@ -92,6 +94,7 @@ class QuickObjectCreation{
     init(){
         //create object for the preview
         this.#platform = new Platform(0,0,96,16,"assets/sprites/DecorSheet.png",0,0,96,16);
+        this.#activationPlatform = new ActivationPlatform(0,0,96,16,"assets/sprites/DecorSheet.png",96,0,96,16,10,10,200);
         this.#patrolman = new Patrolman(0,0,32,32,"assets/sprites/Patrolman.png",0,0,32,32);
         this.#collisionBlock = new CollisionBlock(0,0,100,100,0);
         this.#passageWay = new PassageWay(0,0,100,100,"");
@@ -258,6 +261,25 @@ class QuickObjectCreation{
                     }
                 };
                 break;
+            case "ActivationPlatform":
+                console.log("activationPlatform created");
+                json = {
+                    "ActivationPlatform": {
+                        "x": x,
+                        "y": y,
+                        "width": parseInt(value1) == 0 ? 96 :parseInt(value1),
+                        "height": parseInt(value2) == 0 ? 16 :parseInt(value2),
+                        "spriteSheetOffsetX" : 96,
+                        "spriteSheetOffsetY" : 0,
+                        "spriteSheetWidth" : parseInt(value1) == 0 ? 96 :parseInt(value1),
+                        "spriteSheetHeight" : parseInt(value2) == 0 ? 16 :parseInt(value2),
+                        "texturepath": "assets/sprites/DecorSheet.png",
+                        "triggerZoneX": parseInt(value3) == 0 ? 10 :parseInt(value3),
+                        "triggerZoneY": parseInt(value4) == 0 ? 10 :parseInt(value4),
+                        "activationTimer": 200
+                    }
+                };
+                break;
             case "Patrolman":
                 console.log("patrolman created");
                 json = {
@@ -372,6 +394,17 @@ class QuickObjectCreation{
                 this.#platform.y = this.#y;
                 this.#platform.debug = true;
                 this.#platform.render(ctx);
+                break;
+            case "ActivationPlatform":
+                this.#activationPlatform.x = this.#x;
+                this.#activationPlatform.y = this.#y;
+                this.#activationPlatform.width = parseInt(this.#value1);
+                this.#activationPlatform.height = parseInt(this.#value2);
+                this.#activationPlatform.triggerZoneX = parseInt(this.#value3) < 0 ? 10 :parseInt(this.#value3);
+                this.#activationPlatform.triggerZoneY = parseInt(this.#value4) < 0 ? 10 :parseInt(this.#value4);
+                console.log(this.#value3, this.#value4)
+                this.#activationPlatform.debug = true;
+                this.#activationPlatform.render(ctx);
                 break;
             case "Patrolman":
                 this.#patrolman.x = this.#x;

@@ -83,7 +83,7 @@ render(ctx) {
     
     if(this.debug){
         ctx.fillStyle = "rgba(100,100,100,0.15)"
-        ctx.fillRect(this.x - this.#triggerZone+this.width,this.y - this.#triggerZone+this.height,this.triggerZone*2-this.width*2,this.triggerZone*2-this.height*2)
+        ctx.fillRect(this.minX-this.triggerZone,this.minY-this.triggerZone,this.triggerZone*2+this.width,this.triggerZone*2+this.height)
         ctx.fillStyle = "rgba(67,34,67,0.25)"
         ctx.fillRect(this.x - this.width,this.y - this.height,this.width,this.height)
         ctx.fillStyle = "rgba(169,208,72,0.25)"
@@ -138,7 +138,7 @@ render(ctx) {
 move(player){
     const playerDistance = Math.sqrt((player.x - this.x) ** 2 + (player.y - this.y) ** 2);
     
-    if(playerDistance<=this.triggerZone){
+    if(player.InAPerimeter(this, this.triggerZone, this.triggerZone)){
         this.#isIdle = false;
         const deltaX = player.x - this.x;
         const deltaY = player.y - this.y;

@@ -71,9 +71,31 @@ class Entity extends GameObject {
         this.#IsAlive = value;
     }
 
-    render() {
-        super.render();
+    get center() {
+        return {
+            x: this.x - this.width / 2,
+            y: this.y - this.height / 2
+        }
     }
+    get maxX() {
+        return this.x;
+    }
+
+    get maxY() {
+        return this.y;
+    }
+
+    get minX() {
+        return this.x-this.width;
+    }
+
+    get minY() {
+        return this.y-this.height;
+    }
+
+    render(){
+    }
+  
 }
 
 export default Entity;

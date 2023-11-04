@@ -214,29 +214,35 @@
         }
     },
     {
-        "Platform": {
+        "ActivationPlatform": {
             "x": 225,
             "y": 655,
             "width": 32,
             "height": 16,
-            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetX": 96,
             "spriteSheetOffsetY": 16,
             "spriteSheetWidth": 96,
             "spriteSheetHeight": 16,
-            "texturepath": "assets/sprites/none.png"
+            "triggerZoneX": 10,
+            "triggerZoneY": 30,
+            "activationTimer": 500,
+            "texturepath": "assets/sprites/DecorSheet.png"
         }
     },
     {
-        "Platform": {
+        "ActivationPlatform": {
             "x": 225,
             "y": 565,
             "width": 32,
             "height": 16,
-            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetX": 96,
             "spriteSheetOffsetY": 16,
             "spriteSheetWidth": 96,
             "spriteSheetHeight": 16,
-            "texturepath": "assets/sprites/none.png"
+            "triggerZoneX": 10,
+            "triggerZoneY": 30,
+            "activationTimer": 500,
+            "texturepath": "assets/sprites/DecorSheet.png"
         }
     },
     {
@@ -438,42 +444,51 @@
         }
     },
     {
-        "Platform": {
+        "ActivationPlatform": {
             "x": 1065,
             "y": 285,
             "width": 53,
             "height": 10,
-            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetX": 96,
             "spriteSheetOffsetY": 0,
             "spriteSheetWidth": 96,
             "spriteSheetHeight": 16,
-            "texturepath": "assets/sprites/none.png"
+            "triggerZoneX": 1,
+            "triggerZoneY": 20,
+            "activationTimer": 500,
+            "texturepath": "assets/sprites/DecorSheet.png"
         }
     },
     {
-        "Platform": {
+        "ActivationPlatform": {
             "x": 1007,
             "y": 225,
             "width": 40,
             "height": 10,
-            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetX": 96,
             "spriteSheetOffsetY": 0,
             "spriteSheetWidth": 96,
             "spriteSheetHeight": 16,
-            "texturepath": "assets/sprites/none.png"
+            "triggerZoneX": 50,
+            "triggerZoneY": 30,
+            "activationTimer": 500,
+            "texturepath": "assets/sprites/DecorSheet.png"
         }
     },
     {
-        "Platform": {
+        "ActivationPlatform": {
             "x": 842,
             "y": 162,
             "width": 96,
             "height": 16,
-            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetX": 96,
             "spriteSheetOffsetY": 0,
             "spriteSheetWidth": 96,
             "spriteSheetHeight": 16,
-            "texturepath": "assets/sprites/none.png"
+            "triggerZoneX": 100,
+            "triggerZoneY": 40,
+            "activationTimer": 500,
+            "texturepath": "assets/sprites/DecorSheet.png"
         }
     },
     {
