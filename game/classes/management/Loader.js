@@ -130,7 +130,7 @@ class Loader{
                             resolve(true);
                         };
 
-                        if (!Array.isArray(this.player) || !this.player.length) {
+                        if (this.player == null || this.player == undefined) {
                             debug && console.log("player is empty");
                             loaderManager.loadPlayerFromJSON("./assets/jsons/player.json", debug).then((player_info) => {
                                 this.setPlayer(player_info);
