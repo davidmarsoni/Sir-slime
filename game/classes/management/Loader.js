@@ -1,4 +1,4 @@
-import loaderManager from "../management/LoaderManager.js";
+import loaderManager from "./LoaderManager.js";
 import Player from "../entity/Player.js";
 import Platform from "../Platform.js";
 import CollisionBlock from "../CollisionBlock.js";
@@ -36,6 +36,7 @@ class Loader{
     //for the startScreen
     #backgroundStartScreen;
     #backgroundStartScreenImage;
+    // => getter row 98 
 
     /**
      * This function is used to get the errors list of the last loading
@@ -110,42 +111,42 @@ class Loader{
     loadGame(levelname, debug = false) {
         this.clean();
         return new Promise((resolve) => {
-            //set some constants for the function
             const levelFolder = "./assets/levels/";
             const levelExtension = ".json";
 
-            //check if the level exists
             this.findFile(levelFolder, levelname, levelExtension).then((result) => {
                 if (result) {
-                    debug ? console.log("The level " + levelname + " was found") : null;
-                    //Load the level
-                    loaderManager.loadLevelFromJSON(levelFolder + levelname + levelExtension, debug).then(([Information, player_info_level, objects, ennemies] )=>{
+                    debug && console.log(`The level ${levelname} was found`);
+                    loaderManager.loadLevelFromJSON(`${levelFolder}${levelname}${levelExtension}`, debug).then(([Information, player_info_level, objects, ennemies]) => {
                         this.setInformation(Information);
-                        this.setObjects(objects,debug);
-                        this.setEnnemies(ennemies,debug);
-                        
-                        if (this.player == null || this.player == undefined || this.player == []) {
-                            debug ? console.log("player is empty") : null;
-                            //load the player if it is not already loaded to keep is state between level
+                        this.setObjects(objects, debug);
+                        this.setEnnemies(ennemies, debug);
+
+                        const finalizeLoading = () => {
+                            this.updatePlayer(player_info_level);
+                            if (this.errors.size != 0 && debug) {
+                                console.log(this.errors);
+                            }
+                            resolve(true);
+                        };
+
+                        if (!Array.isArray(this.player) || !this.player.length) {
+                            debug && console.log("player is empty");
                             loaderManager.loadPlayerFromJSON("./assets/jsons/player.json", debug).then((player_info) => {
                                 this.setPlayer(player_info);
-                                this.updatePlayer(player_info_level);
-                                this.errors.size != 0 && debug ? console.log(this.errors) : null;
-                                resolve(true);
+                                finalizeLoading();
                             });
                         } else {
-                            debug ? console.log("player is not empty") : null;
-                            this.updatePlayer(player_info_level);
-                            this.errors.size != 0 && debug ? console.log(this.errors) : null;
-                            resolve(true);
+                            debug && console.log("player is not empty");
+                            finalizeLoading();
                         }
                     });
                 } else {
-                    this.#errors.push("The level " + levelname + levelExtension + " could not be found in the folder " + levelFolder + " or the folder does not exist");
+                    this.#errors.push(`The level ${levelname}${levelExtension} could not be found in the folder ${levelFolder} or the folder does not exist`);
                     resolve(false);
                 }
             });
-       })
+        });
     }
 
     loadStartScreen(fileName, debug = false) {
@@ -158,17 +159,21 @@ class Loader{
             //check if the level exists
             this.findFile(StartScreenFolder, fileName, StartScreenExtension).then((result) => {
                 if (result) {
-                    loaderManager.loadStartScreenFromJSON(StartScreenFolder + fileName + StartScreenExtension, debug).then((startScreen_info) => {
-                        this.setStartScreenInfo(startScreen_info);
-                        this.errors.size != 0 && debug ? console.log(this.errors) : null;
-                    resolve(true);
+                    loaderManager.loadStartScreenFromJSON(`${StartScreenFolder}${fileName}${StartScreenExtension}`, debug).then(([information,objects]) => {
+                       
+                        this.setStartScreenInformation(information,debug);
+                        this.setStartScreenObjects(objects, debug);
+                        if (this.errors.size != 0 && debug) {
+                            console.log(this.errors);
+                        }
+                        resolve(true);
                     });
                 } else {
-                    this.#errors.push("The Start Screen " + fileName + StartScreenExtension + " could not be found in the folder " + StartScreenFolder + " or the folder does not exist");
+                    this.#errors.push(`The Start Screen ${fileName}${StartScreenExtension} could not be found in the folder ${StartScreenFolder} or the folder does not exist`);
                     resolve(false);
                 }
             });
-       })
+        });
     }
 
     /**
@@ -186,36 +191,37 @@ class Loader{
      */
     setInformation(Information){
         try {
-            this.#levelName = Information[0]["Name"];
-        }
-        catch (e) {
-            this.#errors.push("The import of the level name failed |" + e.message);
-        }
-
-        try {
-            this.#levelAuthor = Information[1]["Author"];
+            const { Name } = Information[0];
+            this.#levelName = Name;
         } catch (e) {
-            this.#errors.push("The import of the author failed | " + e.message);
+            this.#errors.push(`The import of the level name failed | ${e.message}`);
         }
+    
         try {
-            this.loadBackground(Information[2]["Background"].path);
+            const { Author } = Information[1];
+            this.#levelAuthor = Author;
         } catch (e) {
-            this.#errors.push("The import of the background failed | " + e.message);
+            this.#errors.push(`The import of the author failed | ${e.message}`);
         }
-
+    
         try {
-            this.#song = new Audio(Information[3]["Song"].path);
+            const { path } = Information[2]["Background"];
+            this.loadBackground(path);
+        } catch (e) {
+            this.#errors.push(`The import of the background failed | ${e.message}`);
+        }
+    
+        try {
+            const { path } = Information[3]["Song"];
+            this.#song = new Audio(path);
             this.#song.loop = true;
             this.#song.volume = 0.5;
             if(this.playMusic){
                 this.#song.play();
             }
         } catch (e) {
-            this.#errors.push("The import of the song failed | " + e.message);
+            this.#errors.push(`The import of the song failed | ${e.message}`);
         }
-
-       
-        
     }
 
 
@@ -271,97 +277,109 @@ class Loader{
         try {
             for (let i = 0; i < objectsArray.length; i++) {
                 const element = objectsArray[i];
-                if(element[Platform.name]){
-                    const platform = new Platform(
-                        element[Platform.name].x,
-                        element[Platform.name].y,
-                        element[Platform.name].width,
-                        element[Platform.name].height,
-                        element[Platform.name].texturepath,
-                        element[Platform.name].spriteSheetOffsetX,
-                        element[Platform.name].spriteSheetOffsetY,
-                        element[Platform.name].spriteSheetWidth,
-                        element[Platform.name].spriteSheetHeight
-                    );
-                    platformObject.push(platform);
-                }
-
-                if(element[ActivationPlatform.name]){
-                    const activationPlatform = new ActivationPlatform(
-                        element[ActivationPlatform.name].x,
-                        element[ActivationPlatform.name].y,
-                        element[ActivationPlatform.name].width,
-                        element[ActivationPlatform.name].height,
-                        element[ActivationPlatform.name].texturepath,
-                        element[ActivationPlatform.name].spriteSheetOffsetX,
-                        element[ActivationPlatform.name].spriteSheetOffsetY,
-                        element[ActivationPlatform.name].spriteSheetWidth,
-                        element[ActivationPlatform.name].spriteSheetHeight,
-                        element[ActivationPlatform.name].triggerZoneX,
-                        element[ActivationPlatform.name].triggerZoneY,
-                        element[ActivationPlatform.name].activationTimer
-                    );
-                    platformObject.push(activationPlatform);
-                }
-                if(element[CollisionBlock.name]){
-                    const collisionBlock = new CollisionBlock(
-                        element[CollisionBlock.name].x,
-                        element[CollisionBlock.name].y,
-                        element[CollisionBlock.name].width,
-                        element[CollisionBlock.name].height,
-                        element[CollisionBlock.name].collisionSide
+                const elementType = Object.keys(element)[0];
+                const elementData = element[elementType];
+    
+                switch (elementType) {
+                    case Platform.name:
+                        const platform = new Platform(
+                            elementData.x,
+                            elementData.y,
+                            elementData.width,
+                            elementData.height,
+                            elementData.texturepath,
+                            elementData.spriteSheetOffsetX,
+                            elementData.spriteSheetOffsetY,
+                            elementData.spriteSheetWidth,
+                            elementData.spriteSheetHeight
                         );
-                    collisionBlockObject.push(collisionBlock);
-                }
-                if(element[PassageWay.name]){
-                    const passageWay = new PassageWay(
-                        element[PassageWay.name].x,
-                        element[PassageWay.name].y,
-                        element[PassageWay.name].width,
-                        element[PassageWay.name].height,
-                        element[PassageWay.name].passageWayTo
+                        platformObject.push(platform);
+                        break;
+    
+                    case ActivationPlatform.name:
+                        const activationPlatform = new ActivationPlatform(
+                            elementData.x,
+                            elementData.y,
+                            elementData.width,
+                            elementData.height,
+                            elementData.texturepath,
+                            elementData.spriteSheetOffsetX,
+                            elementData.spriteSheetOffsetY,
+                            elementData.spriteSheetWidth,
+                            elementData.spriteSheetHeight,
+                            elementData.triggerZoneX,
+                            elementData.triggerZoneY,
+                            elementData.activationTimer
                         );
-                    passageWaysObject.push(passageWay);
-                }
-                if(element[Coin.name]){
-                    const collectible = new Coin(
-                        element[Coin.name].x,
-                        element[Coin.name].y,
-                        element[Coin.name].width,
-                        element[Coin.name].height,
-                        element[Coin.name].texturepath,
-                        element[Coin.name].spriteSheetOffsetX,
-                        element[Coin.name].value,
-                        element[Coin.name].sound
+                        platformObject.push(activationPlatform);
+                        break;
+    
+                    case CollisionBlock.name:
+                        const collisionBlock = new CollisionBlock(
+                            elementData.x,
+                            elementData.y,
+                            elementData.width,
+                            elementData.height,
+                            elementData.collisionSide
                         );
-                    collectibleObject.push(collectible);
-                }
-                if(element[Heart.name]){
-                    const collectible = new Heart(
-                        element[Heart.name].x,
-                        element[Heart.name].y,
-                        element[Heart.name].width,
-                        element[Heart.name].height,
-                        element[Heart.name].texturepath,
-                        element[Heart.name].spriteSheetOffsetX,
-                        element[Heart.name].heal,
-                        element[Heart.name].hearthGain,
-                        element[Heart.name].sound
+                        collisionBlockObject.push(collisionBlock);
+                        break;
+    
+                    case PassageWay.name:
+                        const passageWay = new PassageWay(
+                            elementData.x,
+                            elementData.y,
+                            elementData.width,
+                            elementData.height,
+                            elementData.passageWayTo
                         );
-                    collectibleObject.push(collectible);
+                        passageWaysObject.push(passageWay);
+                        break;
+    
+                    case Coin.name:
+                        const coin = new Coin(
+                            elementData.x,
+                            elementData.y,
+                            elementData.width,
+                            elementData.height,
+                            elementData.texturepath,
+                            elementData.spriteSheetOffsetX,
+                            elementData.value,
+                            elementData.sound
+                        );
+                        collectibleObject.push(coin);
+                        break;
+    
+                    case Heart.name:
+                        const heart = new Heart(
+                            elementData.x,
+                            elementData.y,
+                            elementData.width,
+                            elementData.height,
+                            elementData.texturepath,
+                            elementData.spriteSheetOffsetX,
+                            elementData.heal,
+                            elementData.hearthGain,
+                            elementData.sound
+                        );
+                        collectibleObject.push(heart);
+                        break;
+                    default:
+                        this.#errors.push(`Unknown object type: ${elementType}`);
+                        break;
                 }
             }
         } catch (e) {
             this.#errors.push("The import of the objects failed | " + e.message);
+            
             console.log(e);
+        } finally {
+            // Set the object arrays to the class properties
+            this.#platforms = platformObject;
+            this.#collisionBlocks = collisionBlockObject;
+            this.#passageWays = passageWaysObject;
+            this.#collectibles = collectibleObject;
         }
-
-        
-        //set the global variables
-        this.#platforms = platformObject;
-        this.#collisionBlocks = collisionBlockObject;
-        this.#passageWays = passageWaysObject;
-        this.#collectibles = collectibleObject;
 
         //check if there is at least one platform and one collision block in the level
         if(this.platforms.length == 0){
@@ -370,6 +388,7 @@ class Loader{
         if(this.collisionBlocks.length == 0){
             this.#errors.push("There is no collision block in this level");
         }
+
         if(debug){
             console.log("dump of the objects in the level");
             console.log("platforms : "+this.platforms.length);
@@ -383,47 +402,60 @@ class Loader{
      * @param {*} ennemiesArray a list of ennemies in the level
      */
     setEnnemies(ennemiesArray,debug = false) {
-        
         // create the temporary object
         let patrolmanObject = [];
         let batObject = [];
         try {
             for (let i = 0; i < ennemiesArray.length; i++) {
                 const element = ennemiesArray[i];
-                if(element[Patrolman.name]){
-                    const patrolman = new Patrolman(
-                        element[Patrolman.name].x,
-                        element[Patrolman.name].y,
-                        element[Patrolman.name].width,
-                        element[Patrolman.name].height,
-                        element[Patrolman.name].texturepath,
-                        element[Patrolman.name].origin_x,
-                        element[Patrolman.name].origin_y,
-                        element[Patrolman.name].path,
-                        element[Patrolman.name].speed,
-                        element[Patrolman.name].damage
-                    );
-                    patrolmanObject.push(patrolman);
-                }
+                const elementType = Object.keys(element)[0];
+                const elementData = element[elementType];
 
-                if(element[Bat.name]){
-                    const bat = new Bat(
-                        element[Bat.name].x,
-                        element[Bat.name].y,
-                        element[Bat.name].width,
-                        element[Bat.name].height,
-                        element[Bat.name].texturepath,
-                        element[Bat.name].origin_x,
-                        element[Bat.name].origin_y,
-                        element[Bat.name].speed,
-                        element[Bat.name].damage,
-                        element[Bat.name].triggerZone
-                    );
-                    batObject.push(bat);
+                switch (elementType) {
+                    case Patrolman.name:
+                        const patrolman = new Patrolman(
+                            elementData.x,
+                            elementData.y,
+                            elementData.width,
+                            elementData.height,
+                            elementData.texturepath,
+                            elementData.origin_x,
+                            elementData.origin_y,
+                            elementData.path,
+                            elementData.speed,
+                            elementData.damage
+                        );
+                        patrolmanObject.push(patrolman);
+                        break;
+
+                    case Bat.name:
+                        const bat = new Bat(
+                            elementData.x,
+                            elementData.y,
+                            elementData.width,
+                            elementData.height,
+                            elementData.texturepath,
+                            elementData.origin_x,
+                            elementData.origin_y,
+                            elementData.speed,
+                            elementData.damage,
+                            elementData.triggerZone
+                        );
+                        batObject.push(bat);
+                        break;
+
+                    default:
+                        this.#errors.push(`Unknown enemy type: ${elementType}`);
+                        break;
                 }
             }
         } catch (e) {
-            this.#errors.push("The import of the ennemies failed | " + e.message);
+            this.#errors.push(`The import of the enemies failed | ${e.message}`);
+            console.error(e);
+        } finally {
+            // Set the enemy arrays to the class properties
+            this.#patrolmen = patrolmanObject;
+            this.#bats = batObject;
         }
         //set the global variable
         this.#patrolmen = patrolmanObject;
@@ -436,9 +468,9 @@ class Loader{
         }
     }
 
-    setStartScreenInfo(startScreenArray){
+    setStartScreenInformation(information){
         try {
-            this.#backgroundStartScreen = startScreenArray[0]["Background"];
+            this.#backgroundStartScreen = information[0]["Background"];
             this.loadBackground();
         } catch (e) {
             this.#errors.push("The import of the background failed | " + e.message);
@@ -447,43 +479,41 @@ class Loader{
 
     }
 
+    setStartScreenObjects(objectsArray,debug = false){
+        //TODO : code for the start screen objects
+    }
     /**
      * This function is used to load the background image only one time when the level is loaded
      */
-    loadBackground(path){
+    loadImage(path) {
+        const image = new Image();
+        if (path != null) {
+            image.src = path;
+        } else {
+            image = null;
+        }
+        image.onerror = () => {
+            image = null;
+            this.#errors.push("The background image could not be found");
+        };
+        return image;
+    }
+
+    loadBackground(path) {
         try {
-            this.#backgroundImage = new Image();
-            if(path != null){
-                this.#backgroundImage.src = path;
-            }else{
-                this.#backgroundImage = null;
-            }
-            this.#backgroundImage.onerror = () => {
-                this.#backgroundImage = null;
-                this.#errors.push("The background image could not be found");
-            };
+            this.#backgroundImage = this.loadImage(path);
         } catch (e) {
             this.#backgroundImage = null;
-            this.#errors.push("The import of the background image failed | " + e.message);
+            this.#errors.push(`The import of the background image failed | ${e.message}`);
         }
     }
 
-    loadBackgroundStartScreen(){
+    loadBackgroundStartScreen() {
         try {
-            this.#backgroundStartScreenImage = new Image();
-            if(this.#backgroundStartScreen.path != null)
-            {
-                this.#backgroundStartScreenImage.src = this.#backgroundStartScreen.path;
-            }else{
-                this.#backgroundStartScreenImage = null;
-            }
-            this.#backgroundStartScreenImage.onerror = () => {
-                this.#backgroundStartScreenImage = null;
-                this.#errors.push("The background image could not be found");
-            };
+            this.#backgroundStartScreenImage = this.loadImage(this.#backgroundStartScreen.path);
         } catch (e) {
             this.#backgroundStartScreenImage = null;
-            this.#errors.push("The import of the background image failed | " + e.message);
+            this.#errors.push(`The import of the background image failed | ${e.message}`);
         }
     }
 
@@ -495,36 +525,22 @@ class Loader{
      * @returns true if the file is found false otherwise
      */
     findFile(folder, name, extension) {
-        //create a promise to return the result only when the process is finished
         return new Promise((resolve, reject) => {
-            //create a list of all the files in the folder
-            let fileList = [];
             const xhr = new XMLHttpRequest();
             xhr.open('GET', folder);
             xhr.onload = function () {
                 const parser = new DOMParser();
                 const htmlDoc = parser.parseFromString(xhr.responseText, 'text/html');
-                const links = htmlDoc.getElementsByTagName('a');
-                //create a list of all the files in the folder
-                for (let i = 0; i < links.length; i++) {
-                    const fileName = links[i].getAttribute('href');
-                    if (fileName.endsWith(extension)) {
-                        const filename = fileName.slice(0, -5);
-                        fileList.push(filename);
-                    }
-                }
-                //check if the file is in the list
-                if (fileList.includes(name)) {
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
+                const links = Array.from(htmlDoc.getElementsByTagName('a'));
+                const fileExists = links.some(link => {
+                    const fileName = link.getAttribute('href');
+                    return fileName.endsWith(extension) && fileName.slice(0, -5) === name;
+                });
+                resolve(fileExists);
             };
-            // error handling
             xhr.onerror = function () {
                 reject(new Error("An error occurred while trying to find the file."));
             };
-            // send request
             xhr.send();
         });
     }
@@ -558,18 +574,23 @@ class Loader{
     /**
      * This function is used to clean the loader before loading a new level
      */
-    clean(){
+    clean() {
+        // Reset array properties
         this.#errors = [];
-        this.#levelName = null;
-        this.#levelAuthor = null;
         this.#patrolmen = [];
         this.#platforms = [];
         this.#collisionBlocks = [];
         this.#passageWays = [];
-        this.#backgroundImage = null;
         this.#bats = [];
         this.#collectibles = [];
-        if(this.#song != null){
+
+        // Reset other properties
+        this.#levelName = null;
+        this.#levelAuthor = null;
+        this.#backgroundImage = null;
+
+        // Pause and reset the song if it exists
+        if (this.#song != null) {
             this.#song.pause();
         }
         this.#song = null;

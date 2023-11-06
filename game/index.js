@@ -4,22 +4,20 @@ import Loader from "./classes/management/Loader.js";
 import Render from "./classes/management/Render.js";
 import {FRICTION, GRAVITY} from "./classes/management/constant.js";
 import QuickObjectCreation from "./classes/management/QuickObjectCreation.js";
-
-//create the render object
-const render = new Render(false);
-const loader = new Loader();
-const quickObjectCreation = new QuickObjectCreation();
+import ModalWindow from "./classes/management/ModalWindow.js";
 
 // game variables
 const GAME_ON = "game_on";
 const GAME_OFF = "game_off";
 const COMMAND = "command";
+const MODAL = "modal";
 const START = "start";
 let uiState = START;
 
 // The game state
 let currentLevel = "level1";
 let devlopperMode = true;
+let debug = false;
 // The player character
 let player;
 // The status of the arrow keys
@@ -38,32 +36,60 @@ let bats = [];
 let collisionBlocks = [];
 let collectibles = [];
 
-// The main loop
+//create the render object
+const render = new Render(debug,devlopperMode);
+const loader = new Loader();
+const quickObjectCreation = new QuickObjectCreation();
+
+// variables for the game loop
+let fps = 40;
+let now;
+let then = Date.now();
+let interval = 1000/fps;
+let delta;
+
+function animate() {
+    requestAnimationFrame(animate);
+    now = Date.now();
+    delta = now - then;
+    if (delta > interval) {
+        // update time
+        then = now - (delta % interval);
+        loop();
+    }
+}
+
 function loop(){
     switch(uiState){
         case GAME_ON : "game_on"
             update();
             break;
         case GAME_OFF : "game_off"
-            //console.log("waiting to start")
             break;
         case COMMAND : "command"
+            break;
+        case MODAL : "modal"
             break;
         case START : "start"
             start();
         break;
     }
 }
-function goToStartScreen(){
+function goToStartState(){
     loader.reset();
     currentLevel = "level1";
     window.removeEventListener("keydown", keydown)
     window.removeEventListener("keyup", keyup)
     uiState = START;
     window.addEventListener("keydown", keydownStart)
-    window.addEventListener("keyup", keyupStart)
 }
+function goToModalState(){
+    uiState = MODAL;
+    window.removeEventListener("keydown", keydown)
+    window.removeEventListener("keyup", keyup)
 
+    window.addEventListener("keydown", keydownModal)
+}
 function start(){
     render.renderStart(loader.backgroundStartScreenImage);
 }
@@ -119,7 +145,7 @@ function update() {
     // game over if no life remains
     if(!player.lifeRemains){
         alert("Game Over");
-        goToStartScreen();
+        goToStartState();
     }
 
     for (const passageWay of passageWays){
@@ -189,11 +215,22 @@ function keydown(event) {
     // key ctrl+shift+d (debug switch)
     if(event.shiftKey && event.keyCode === 68) {
         if(devlopperMode === false){
-            alert("You need to be in devlopper mode to use this key."+
-            "\nThis mode is use to debug the game and create new levels and facilitate the development of the game."+
-            "\n If you want to desactivate it press ctrl+shift+d again.");
+            let text = "Informations\n\n";
+            text += "you're going to switch to devlopper mode please concider the folowing message : \n\n";
+            text += "You need to be a devlopper mode to use this key.\n";
+            text += "This mode is use to debug the game and create new levels and facilitate the development of the game.\n";
+            text += "This mode can be use to cheat and break the game. Please use it wisely. \n";
+            text += "To quit this mode press ctrl+shift+d again. \n";
+            text += "To quit this page press enter. or escape";
+
+            let modal = new ModalWindow("Devloppers note",text);
+            uiState = GAME_OFF;
+            goToModalState();
+            modal.open();
         }
+        
         devlopperMode = !devlopperMode;
+        render.devlopperMode = devlopperMode;
         console.log("Devlopper mode : " + devlopperMode);
     }
 
@@ -249,6 +286,33 @@ function keydown(event) {
             }
         }
     }
+    //key s (statistics)
+    if(event.keyCode === 83) {
+        let text = "You are on the statistics page to quit press enter or escape\n\n"
+        text += "Current level              : " + currentLevel + "\n";
+        text += "Current Mode               : ";
+        if(devlopperMode === true){
+            text += "[devlopper mode]\n";
+        }else {
+            text += "[player mode]\n";
+        }
+        text += "Current position           : x:" + player.x + " y:" + player.y + "\n";
+        text += "Current life               : " + player.lives + "\n";
+        text += "Current score              : " + player.score + "\n";
+        text += "Total damage taken         : " + player.totalDamageTaken + "\n";
+        text += "Total damage dealt         : " + player.totalDamageDealt + "\n";
+        text += "Total heal                 : " + player.totalheal + "\n";
+        text += "Number of enemies killed   : " + player.numberOfEnemieskilled + "\n";
+        text += "Number of hearts collected : " + player.numberOfHeartsCollected + "\n";
+        text += "Number of coins collected  : " + player.numberOfCoinsCollected + "\n";
+        text += "Number of deaths           : " + player.numberOfDeaths + "\n";
+        text += "Number of level completed  : " + player.numberOfLevelCompleted + "\n";
+        goToModalState();
+        let modal = new ModalWindow("Statistics",text);
+       
+        modal.open();
+
+    }
     // key n (mute sound)
     if(event.keyCode === 78) {
         loader.playSound = !loader.playSound;
@@ -268,35 +332,40 @@ function keydown(event) {
     //e : exit  
     if(event.keyCode === 69) {
         console.log("exit");
-        goToStartScreen();
+        goToStartState();
 
     }
 
     // key h (help)
     if(event.keyCode === 72) {
-        let text = "Help :\n";
+        let text = "You are on the help page to quit press enter or escape\n\n";
+        text += "Current Mode    : ";
         if(devlopperMode === true){
             text += "[devlopper mode]\n";
         }else {
             text += "[player mode]\n";
         }
-        text += "Arrow keys : move\n";
-        text += "Space or up key: jump\n";
-        text += "left shift : attack\n";
-        text += "e : exit\n";
-        text += "p : pause\n";
-        text += "h : help\n";
-        text += "n : mute sound\n";
-        text += "m : mute music\n";
-        text += "crtl+d : Devlopper mode\n";
+        text += "Arrow keys      : move\n";
+        text += "Space or up key : jump\n";
+        text += "Left shift      : attack\n";
+        text += "E               : exit\n";
+        text += "P               : pause\n";
+        text += "H               : help\n";
+        text += "N               : mute sound\n";
+        text += "M               : mute music\n";
+        text += "S               : statistics\n";
+        text += "Crtl+D          : Devlopper mode\n";
         if(devlopperMode === true){
-            text += "d : debug\n";
-            text += "a : ask for level name\n";
-            text += "f : force load level\n";
-            text += "o : print the level in png\n";
-            text += "q : quick object creation\n";
+            text += "D               : debug\n";
+            text += "A               : ask for level name\n";
+            text += "F               : force load level\n";
+            text += "O               : print the level in png\n";
+            text += "Q               : quick object creation\n";
         }
-        alert(text);
+        let modal = new ModalWindow("Help",text);
+        uiState = GAME_OFF;
+        goToModalState();
+        modal.open();
     }
 }
 function keyup(event) {
@@ -322,17 +391,25 @@ function keydownStart(event) {
     //key = enter
     if(event.keyCode === 13) {
         window.removeEventListener("keydown", keydownStart)
-        window.removeEventListener("keyup", keyupStart)
         uiState = GAME_OFF;
         window.addEventListener("keydown", keydown)
         window.addEventListener("keyup", keyup)
         loadLevel(currentLevel,false);
     }
 }
-function keyupStart(event){
+
+function keydownModal(event){
+    //key = enter or escape
+    if(event.keyCode === 13 || event.keyCode === 27) {
+        window.removeEventListener("keydown", keydownModal)
+        window.addEventListener("keydown", keydown)
+        window.addEventListener("keyup", keyup)
+        uiState = GAME_ON;
+    }
 }
 
-function loadLevel(levelpath,debug = false) {
+
+function loadLevel(levelpath) {
     uiState = GAME_OFF;
     loader.loadGame(levelpath,false).then((result)=>{
         if(result){
@@ -354,15 +431,11 @@ function loadLevel(levelpath,debug = false) {
 }   
 
 window.addEventListener("keydown", keydownStart)
-window.addEventListener("keyup", keyupStart)
-setInterval(loop,25);
-//load the start screen
+//setInterval(loop,25);
 loader.loadStartScreen("startScreen").then((result)=>{
     if(!result){
         console.error(loader.errors);
     }
 });
-
-
-
-
+animate();
+ 

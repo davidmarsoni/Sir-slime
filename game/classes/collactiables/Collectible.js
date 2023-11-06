@@ -9,7 +9,7 @@ class Collectable extends Object {
         super(x, y, width, height, texturepath,spriteSheetOffsetX,0,width,height);
         this.#isAlive = true;
         this.#sound = new Audio(soundPath);
-        this.#sound.volume = 0.3;
+        this.#sound.volume = 0.1;
         this.#sound.onerror = () => {
             console.log("failed to load sound for "+this.constructor.name);
             this.#sound = null;

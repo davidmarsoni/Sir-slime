@@ -246,7 +246,6 @@ class Patrolman extends Enemy{
 
         if(this.isAlive === false){
             this.#x_v += this.#values[this.#random];
-            console.log(this.#x_v);
             this.#y_v += 0.7;
 
             this.x = this.x + this.#x_v;

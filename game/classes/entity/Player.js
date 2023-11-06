@@ -206,7 +206,6 @@ class Player extends Entity{
     }
 
     takeDamage(value) {
-        this.addDamageTaken(value);
         if(value > 0){
             this.debug ? console.log("player take damage current health: "+this.#currenthealth+" damage taken: "+value+" new health: "+(this.#currenthealth - value)+"") : null;
             this.addDamageTaken(value);
@@ -356,7 +355,7 @@ class Player extends Entity{
         if(!this.isHit){
             this.#invicivibilityTimer = 0;
             this.isHit = true;
-            console.log("player hit");
+            this.debug ? console.log("player hit") :null;
             this.takeDamage(damage);
         }
         this.#preventMovement = true;
@@ -429,7 +428,6 @@ class Player extends Entity{
         if(this.maxX >= object.minX && this.minX <= object.maxX && this.maxY >= object.minY-height && this.minY <= object.maxY+height){
             return true;
         }
-       
         return false;
     }
 

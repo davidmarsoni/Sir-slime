@@ -1,4 +1,3 @@
-import {objects_list,ennemies_list} from "./constant.js";
 import Platform from "../Platform.js";
 import CollisionBlock from "../CollisionBlock.js";
 import Patrolman from "../entity/ennemy/Patrolman.js";
@@ -10,6 +9,7 @@ import ActivationPlatform from "../ActivationPlatform.js";
 
 
 class QuickObjectCreation{
+    objects_list = [Platform.name,ActivationPlatform.name,CollisionBlock.name,PassageWay.name,Coin.name,Heart.name];
     #canvas = document.getElementById('canvas');
     #type = "";
     #status = false;
@@ -112,19 +112,13 @@ class QuickObjectCreation{
         //create the select element
         const select = document.createElement('select');
 
-        // Populate the select element with options
-        objects_list.forEach(option => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option;
-            optionElement.text = option;
-            select.appendChild(optionElement);
-        });
-        ennemies_list.forEach(option => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option;
-            optionElement.text = option;
-            select.appendChild(optionElement);
-        });
+        //add the options to the select element
+        for (const object of this.objects_list){
+            const option = document.createElement('option');
+            option.value = object;
+            option.text = object;
+            select.appendChild(option);
+        }
 
         // Add an event listener 
         // get the x,y and the value of the input and some other data

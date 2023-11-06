@@ -1,5 +1,3 @@
-import {Information_list,player_list,objects_list,ennemies_list,startScreen_list} from "./constant.js";
-
 class LoaderManager{
     /**
      * This function loads a level from a JSON file
@@ -10,42 +8,22 @@ class LoaderManager{
         return new Promise((resolve) => {
             //parse the data into a JSON object
             this.loadFromJson(jsonFile).then((data) =>{
-                const level = JSON.parse(data);
+                const level = data;
                 //declare the 4 main categories
-                var Information =[];
-                var player_info = [];
-                var objects = [];
-                var ennemies = [];
-        
-                //get dynamically the data from the JSON file
-                for(let i = 0; i < level.length; i++){
-                    //get the name of the property
-                    const propertyNameFull = Object.keys(level[i])[0];
-                    const propertyName = propertyNameFull.replace(/[^a-zA-Z0-9 ]/g, '');
-                    //console.log(propertyName);
-                    if(Information_list.includes(propertyName)){
-                        Information.push(level[i]);  
-                    }
-                    if(player_list.includes(propertyName)){
-                        player_info.push(level[i]);
-                    }
-                    if(objects_list.includes(propertyName)){
-                        objects.push(level[i]);
-                    }
-                    if(ennemies_list.includes(propertyName)){
-                        ennemies.push(level[i]);
-                    }
-                }
+                var information = level.information;
+                var player_info = level.player_info;
+                var objects = level.objects;
+                var enemies = level.enemies;
+
                 if(debug){
-                    console.log(Information);
+                    console.log(information);
                     console.log(player_info);
                     console.log(objects);
-                    console.log(ennemies);
-
+                    console.log(enemies);
                 }
                 //resolve the promise with the data
-                resolve([Information,player_info,objects,ennemies]); 
-            })
+                resolve([information,player_info,objects,enemies]); 
+            });
         }); 
     }
 
@@ -54,20 +32,12 @@ class LoaderManager{
         return new Promise((resolve) => {
             //parse the data into a JSON object
             this.loadFromJson(jsonFile).then((data) =>{
-                const player_data = JSON.parse(data);
+                const player_data = data;
                 //declare the 4 main categories
                 var player_info = [];
                 
-                //get dynamically the data from the JSON file
-                for(let i = 0; i < player_data.length; i++){
-                    //get the name of the property
-                    const propertyNameFull = Object.keys(player_data[i])[0];
-                    const propertyName = propertyNameFull.replace(/[^a-zA-Z0-9 ]/g, '');
-                    //console.log(propertyName);
-                    if(player_list.includes(propertyName)){
-                        player_info.push(player_data[i]);
-                    }
-                }
+                player_info = data.player_info;
+
                 debug ? console.log(player_info) : null;
                 //resolve the promise with the data
                 resolve(player_info);
@@ -76,8 +46,10 @@ class LoaderManager{
         });
     }
 
-
-
+    /**
+     * 
+     * @deprecated need to be updated to the new JSON format and the new level format
+     */
     static saveLevelToJSON(levelName, levelAuthor,player,...elements) {
         const jsonData = [];
         jsonData.push({
@@ -124,55 +96,29 @@ class LoaderManager{
         return new Promise((resolve) => {
             //parse the data into a JSON object
             this.loadFromJson(filename).then((data) =>{
-                const startScreen_data = JSON.parse(data);
+                const startScreen_data = data;
                 //declare the 4 main categories
-                var startScreen_info = [];
-                
+                let information = data.information;
+                let objects = data.objects;
                 //get dynamically the data from the JSON file
-                for(let i = 0; i < startScreen_data.length; i++){
-                    //get the name of the property
-                    const propertyNameFull = Object.keys(startScreen_data[i])[0];
-                    const propertyName = propertyNameFull.replace(/[^a-zA-Z0-9 ]/g, '');
-                    //console.log(propertyName);
-                    if(startScreen_list.includes(propertyName)){
-                        startScreen_info.push(startScreen_data[i]);
-                    }
-                }
-                debug ? console.log(startScreen_info) : null;
+                
+                debug ? console.log(information) : null;
+                debug ? console.log(objects) : null;
                 //resolve the promise with the data
-                resolve(startScreen_info);
-            
+                resolve([information,objects]);
             });
+           
         });
 
     }
 
     static loadFromJson(jsonFile){
-
-        // TODO : add test if file existe 
-        // first keep only the folder path
-        // search for the file in the folder
-        // if the file doesn't exist return an error
-        
         return new Promise((resolve) => {
-            //create a new XMLHttpRequest to read the file
-            const xhr = new XMLHttpRequest();
-            //set the responseType to text
-            xhr.open('GET', jsonFile);
-            xhr.responseType = 'text';
-            //onload check if the status is 200 (susscesfull) get the data and parse it
-            xhr.onload = () => {
-                if(xhr.status === 200) {
-                    resolve(xhr.responseText);
-                }
-            }
-            xhr.onerror = () => {
-                //reject the promise with a error
-                reject(new Error(`Failed to load JSON file: ${jsonFile}`));
-            };
-
-            // send the request
-            xhr.send();
+            fetch(jsonFile)
+            .then((response) => response.json())
+            .then((json) => {
+                resolve(json);
+            });
         });
     }
 }

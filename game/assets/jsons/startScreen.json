@@ -1,7 +1,14 @@
-[
-    {
-        "Background": {
-            "path": "assets/images/StartScreenBG.png"
+{
+    "information":[
+        {
+            "Background": {
+                "path": "assets/images/StartScreenBG.png"
+            }
         }
-    }
-]
+    ],
+    "objects":[
+        {
+            "TODO": "Add objects here :)"
+        }
+    ]
+}
