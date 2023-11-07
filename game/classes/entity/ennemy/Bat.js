@@ -82,12 +82,14 @@ render(ctx) {
     }
     
     if(this.debug){
-        ctx.fillStyle = "rgba(100,100,100,0.15)"
+        ctx.fillStyle = "rgba(180,56,45,0.15)"
         ctx.fillRect(this.minX-this.triggerZone,this.minY-this.triggerZone,this.triggerZone*2+this.width,this.triggerZone*2+this.height)
         ctx.fillStyle = "rgba(67,34,67,0.25)"
         ctx.fillRect(this.x - this.width,this.y - this.height,this.width,this.height)
         ctx.fillStyle = "rgba(169,208,72,0.25)"
         ctx.fillRect(this.x - this.width + this.width/4,this.y - this.height,this.width/2,this.height)
+        ctx.strokeStyle = "rgba(255,0,0,0.3)"
+        ctx.strokeRect(this.minX-this.triggerZone,this.minY-this.triggerZone,this.triggerZone*2+this.width,this.triggerZone*2+this.height)
     }
 
     let spriteDirectionOffset;

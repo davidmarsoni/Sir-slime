@@ -22,6 +22,7 @@ class Loader{
 
     //for the game
     #levelName;
+    #levelDisplayName;
     #levelAuthor;
     #song;
     #player = null;
@@ -73,6 +74,7 @@ class Loader{
     }
     
     get levelName() { return this.#levelName;}
+    get levelDisplayName() { return this.#levelDisplayName;}
     get levelAuthor() { return this.#levelAuthor;}
 
     get player() { return this.#player;}
@@ -190,29 +192,36 @@ class Loader{
      * @param {*} Information a list of information about the level
      */
     setInformation(Information){
+        try  {
+            const { DisplayName } = Information[0];
+            this.#levelDisplayName = DisplayName;
+        }catch (e) {
+            this.#errors.push(`The import of the level display name failed | ${e.message}`);
+        }
+
         try {
-            const { Name } = Information[0];
+            const { Name } = Information[1];
             this.#levelName = Name;
         } catch (e) {
             this.#errors.push(`The import of the level name failed | ${e.message}`);
         }
     
         try {
-            const { Author } = Information[1];
+            const { Author } = Information[2];
             this.#levelAuthor = Author;
         } catch (e) {
             this.#errors.push(`The import of the author failed | ${e.message}`);
         }
     
         try {
-            const { path } = Information[2]["Background"];
+            const { path } = Information[3]["Background"];
             this.loadBackground(path);
         } catch (e) {
             this.#errors.push(`The import of the background failed | ${e.message}`);
         }
     
         try {
-            const { path } = Information[3]["Song"];
+            const { path } = Information[4]["Song"];
             this.#song = new Audio(path);
             this.#song.loop = true;
             this.#song.volume = 0.5;
@@ -359,7 +368,7 @@ class Loader{
                             elementData.texturepath,
                             elementData.spriteSheetOffsetX,
                             elementData.heal,
-                            elementData.hearthGain,
+                            elementData.heart_gain,
                             elementData.sound
                         );
                         collectibleObject.push(heart);
@@ -486,7 +495,7 @@ class Loader{
      * This function is used to load the background image only one time when the level is loaded
      */
     loadImage(path) {
-        const image = new Image();
+        let image = new Image();
         if (path != null) {
             image.src = path;
         } else {

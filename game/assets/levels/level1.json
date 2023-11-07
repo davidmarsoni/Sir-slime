@@ -1,6 +1,9 @@
 {
     "information": [
         {
+            "DisplayName": "Level 1"
+        },
+        {
             "Name": "level1"
         },
         {
@@ -56,7 +59,8 @@
                 "speed": 0,
                 "damage": 1,
                 "triggerZone": 200,
-                "texturepath": "assets/sprites/Bats.png"
+                "texturepath": "assets/sprites/Bats.png",
+                "sound" : "assets/sounds/enemy/bat/hit.wav"
             }
         }
     ],

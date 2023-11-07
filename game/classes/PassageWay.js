@@ -22,6 +22,7 @@ class PassageWay extends GameObjectLogic {
             && player.x - player.width < this.x + this.width
             && player.y > this.y
             && player.y - player.height <= this.y + this.height){
+            player.addLevelCompleted();
             return true;
         }
     }

@@ -133,18 +133,18 @@ class Render {
         let numberOfHearts = loader.player.health/2;
         maxHealth % 2 === 1 ? maxHealth++ : null;
         this.ctx.fillStyle = "rgba(0,0,0,1)";
-        width = 10+this.ctx.measureText(loader.levelName).width+24+16+10+this.ctx.measureText(coinsCollected).width+10+10+maxHealth/2*20+8; 
+        width = 10+this.ctx.measureText(loader.levelDisplayName).width+24+16+10+this.ctx.measureText(coinsCollected).width+10+10+maxHealth/2*20+8; 
         this.ctx.fillRect(x, y, width, height);
 
         this.ctx.fillStyle = "rgba(255,255,255,1)";
         this.ctx.font = "20px Consolas";
         x+=10;
         y+=25;
-        this.ctx.fillText(loader.levelName, x, y);
+        this.ctx.fillText(loader.levelDisplayName, x, y);
 
         // add the number of coins collected aside the title
 
-        x+=this.ctx.measureText(loader.levelName).width+24;
+        x+=this.ctx.measureText(loader.levelDisplayName).width+24;
         y-=15;
         this.collactible.spriteSheetOffsetX = 0;
         this.collactible.animStep = 0;

@@ -28,6 +28,7 @@ class CollisionBlock extends GameObjectLogic{
             } else  if (this.collisionSide === 3){
                 ctx.fillStyle = "rgba(255,255,0,0.50)";
             }
+            
             ctx.fillRect(this.x, this.y, this.width, this.height);
 
             ctx.fillStyle = "rgba(0,0,0,1)";

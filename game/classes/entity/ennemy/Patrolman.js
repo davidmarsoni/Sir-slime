@@ -120,10 +120,21 @@ class Patrolman extends Enemy{
 
     render(ctx) {
       if(this.debug){
-          ctx.fillStyle = "rgba(67,34,67,0.25)"
-          ctx.fillRect(this.x - this.width,this.y - this.height,this.width,this.height)
-          ctx.fillStyle = "rgba(169,208,72,0.25)"
-          ctx.fillRect(this.x - this.width + this.width/4,this.y - this.height,this.width/2,this.height)
+            ctx.fillStyle = "rgba(67,34,67,0.25)"
+            ctx.fillRect(this.x - this.width,this.y - this.height,this.width,this.height)
+            ctx.fillStyle = "rgba(169,208,72,0.25)"
+            ctx.fillRect(this.x - this.width + this.width/4,this.y - this.height,this.width/2,this.height)
+            //see path
+            ctx.fillStyle = "rgba(255,0,0,1)"
+            let startPath = this.path[0]-this.width;
+            let endPath  = this.path[1]-8;
+
+            ctx.fillRect(this.path[0]-this.width,this.y-4-this.height/2,8,8)
+            ctx.fillRect(this.path[1]-8,this.y-4-this.height/2,8,8)
+
+            ctx.fillStyle = "rgba(255,0,0,0.25)"
+            ctx.fillRect(startPath,this.y-4-this.height/2,endPath-startPath,8)
+
       }
 
       let spriteDirectionOffset;
@@ -197,7 +208,6 @@ class Patrolman extends Enemy{
                 player.y_v = -7;
                 this.#random = Math.round(Math.random());
                 this.#x_v = this.#default[this.#random];
-                console.log(500);
                 player.score += 500;
                 player.addEnemykilled();
                 player.addDamageDealt(1);

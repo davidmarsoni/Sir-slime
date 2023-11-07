@@ -167,24 +167,57 @@ class Player extends Entity{
     addCoinCollected() {this.#numberOfCoinsCollected++;}
     addDeath() {this.#numberOfDeaths++;}
     addLevelCompleted() {this.#numberOfLevelCompleted++;}
-    addDamageTaken(value) {this.#totalDamageTaken += value;}
-    addDamageDealt(value) {this.#totalDamageDealt += value;}
+    addDamageTaken(value) {
+        if (value > 0) {
+            this.#totalDamageTaken += value;
+        }
+    }
     
+    addDamageDealt(value) {
+        if (value > 0) {
+            this.#totalDamageDealt += value;
+        }
+    }
+    
+    addheal(value) {
+        if (value > 0) {
+            this.#totalheal += value;
+        }
+    }
+    
+    addScore(value) {
+        if (value > 0) {
+            this.#score += value;
+        }
+    }
+
     // #endregion
 
     // #region life methods
+    /**
+     * Heals the player by a specified value. If no value is provided, heals to max health.
+     * @param {number} value - The amount to heal the player. If null, heals to max health.
+     */
     heal(value = null){
         if(value === null){
+            this.addheal(this.#maxHealth - this.#currenthealth);
             value = this.#maxHealth;
         }
         if(value > 0){
+            this.addheal(value);
             this.#currenthealth += value;
             if(this.#currenthealth > this.#maxHealth){
                 this.#currenthealth = this.#maxHealth;
             }
+
+            this.debug ? console.log("player has gain:"+value+" health new health: "+this.#currenthealth) : null;
         }
     }
 
+    /**
+     * Adds hearts to the player's max health.
+     * @param {number} value - The number of hearts to add. By default it is 1 heart (2 health point).
+     */
     addHeart(value = 1){
         this.addHeartCollected();
         if(value > 0){
@@ -192,19 +225,32 @@ class Player extends Entity{
             if(this.#maxHealth > this.#maxPossibleHealth){
                 this.#maxHealth = this.#maxPossibleHealth;
             }
+
+            this.debug ? console.log("player has gain:"+value+" heart new max health: "+this.#maxHealth) : null;
         }
     }
 
+    /**
+     * Adds lives to the player.
+     * @param {number} value - The number of lives to add. By default it is 1.
+     */
     addLife(value = 1){
         this.addLevelCompleted();
         if(value > 0){
+           
             this.#maxLives += value;
             if(this.#maxLives > this.#maxPossibleLives){
                 this.#maxLives = this.#maxPossibleLives;
             }
+            this.debug ? console.log("player has gain:"+value+" lives new number of lives: "+this.#maxLives) : null;
         }
     }
 
+    
+    /**
+     * Reduces the player's health by a specified value.
+     * @param {number} value - The amount of damage to inflict on the player.
+     */
     takeDamage(value) {
         if(value > 0){
             this.debug ? console.log("player take damage current health: "+this.#currenthealth+" damage taken: "+value+" new health: "+(this.#currenthealth - value)+"") : null;
@@ -216,20 +262,33 @@ class Player extends Entity{
         }
     }
 
+    /**
+     * Handles the player's death, reducing lives and triggering respawn if lives remain.
+     */
     dead(){
         this.addDeath();
         this.#currentlives--;
         this.playSound && this.deadSound != null ? this.deadSound.play() : null;
         if(this.lifeRemains){
+            this.debug ? console.log("player is dead, number of life left : "+this.lives) : null;
             this.#currenthealth = this.#maxHealth;
             this.respawn();
         }
     }
 
+    
+    /**
+     * Checks if the player is dead, i.e., if the current health is less than 1.
+     * @returns {boolean} - True if the player is dead, false otherwise.
+     */
     isDead(){
         return this.#currenthealth < 1;
     }
 
+    
+    /**
+     * Respawns the player at the original coordinates and resets velocity.
+     */
     respawn(){
         this.x = this.#origin_x;
         this.y = this.#origin_y;
@@ -396,11 +455,18 @@ class Player extends Entity{
         return Math.abs(this.minY-object.maxY);
     }
 
+    /**
+     * Checks if the player is within a specified perimeter of an object.
+     * @param {Object} object - The object to check the player's proximity to.
+     * @param {number} width - The width of the perimeter around the object.
+     * @param {number} height - The height of the perimeter around the object.
+     * @returns {boolean} - True if the player is within the perimeter, false otherwise.
+     */
     InAPerimeter(object,width,height){ 
         //console.log(this.distanceToTheLeft(object),this.distanceToTheRight(object),this.distanceToTheTop(object),this.distanceToTheBottom(object));
         //console.log(width,height);
-        
-        /**
+
+       /**
          *  █▯█
          *  █▯█
          *  █▯█
@@ -411,7 +477,7 @@ class Player extends Entity{
         }
         if(this.distanceToTheLeft(object) <= width && this.distanceToTheBottom(object) <= height){
             return true;
-        };
+        }
         if(this.distanceToTheRight(object) <= width && this.distanceToTheTop(object) <= height){
             return true;
         }
@@ -428,6 +494,7 @@ class Player extends Entity{
         if(this.maxX >= object.minX && this.minX <= object.maxX && this.maxY >= object.minY-height && this.minY <= object.maxY+height){
             return true;
         }
+
         return false;
     }
 

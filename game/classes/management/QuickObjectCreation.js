@@ -9,7 +9,10 @@ import ActivationPlatform from "../ActivationPlatform.js";
 
 
 class QuickObjectCreation{
-    objects_list = [Platform.name,ActivationPlatform.name,CollisionBlock.name,PassageWay.name,Coin.name,Heart.name];
+    #objects_list;
+    #canvasWidth;
+    #textForTheObject;
+
     #canvas = document.getElementById('canvas');
     #type = "";
     #status = false;
@@ -30,6 +33,7 @@ class QuickObjectCreation{
     #coin; 
     #heart;
 
+    #textExplain;
     
 
     mouseDownHandler = (e) => { 
@@ -60,6 +64,18 @@ class QuickObjectCreation{
     };
 
     constructor(){
+        this.#objects_list = [Platform.name,ActivationPlatform.name,CollisionBlock.name,PassageWay.name,Coin.name,Heart.name,Bat.name,Patrolman.name];
+        this.#canvasWidth = this.#canvas.offsetWidth;
+        this.#textForTheObject = [
+            "Platform",
+            "ActivationPlatform : \t value 1 : width \t value 2 : height \t value 3 : triggerZoneX \t value 4 : triggerZoneY",
+            "CollisionBlock : \t value 1 : width \t value 2 : height \t value 3 : collisionSide \t",
+            "PassageWay : \t value 1 : width \t value 2 : height \t value 4 : passageWayTo \t",
+            "Coin : \t value 3 : value \t",
+            "Heart : \t value 3 : value \t",
+            "Bat : \t value 3 : damage \t value 2 : triggerZone \t",
+            "Patrolman : \t value 3 : damage \t value 4 : speed \t"
+        ]
     }
     open(){
         this.#status = true;
@@ -92,6 +108,10 @@ class QuickObjectCreation{
     }
 
     init(){
+        //change the background color of the page to white
+        document.body.style.backgroundColor = "white";
+        //change the cursor to crosshair on the canvas
+        this.canvas.style.cursor = "crosshair";
         //create object for the preview
         this.#platform = new Platform(0,0,96,16,"assets/sprites/DecorSheet.png",0,0,96,16);
         this.#activationPlatform = new ActivationPlatform(0,0,96,16,"assets/sprites/DecorSheet.png",96,0,96,16,10,10,200);
@@ -106,14 +126,22 @@ class QuickObjectCreation{
         const title = document.createElement('h2');
         title.style.fontFamily = "Montserrat,sans-serif,arial";
         title.innerHTML = "Quick object creation";
-        title.style.color = "white";
+        title.style.color = "black";
         this.canvas.parentNode.insertBefore(title, this.canvas);
+
+        //add a text to explain how to use the quick object creation
+        this.#textExplain = document.createElement('p');
+        this.#textExplain.style.fontFamily = "Montserrat,sans-serif,arial";
+        this.#textExplain.innerHTML = "Select an object and click on the canvas to create it";
+        this.#textExplain.style.color = "black";
+        this.canvas.parentNode.insertBefore(this.#textExplain, this.canvas);
+
 
         //create the select element
         const select = document.createElement('select');
 
         //add the options to the select element
-        for (const object of this.objects_list){
+        for (const object of this.#objects_list){
             const option = document.createElement('option');
             option.value = object;
             option.text = object;
@@ -124,6 +152,10 @@ class QuickObjectCreation{
         // get the x,y and the value of the input and some other data
         select.addEventListener('change', (event) => {
             this.type = event.target.value;
+            //update the text to explain how to use the quick object creation with the table above  
+            if(this.#textExplain !== undefined){
+                this.#textExplain.innerHTML = this.#textForTheObject[this.#objects_list.indexOf(this.type)];
+            }
         });
         
         //set the default value
@@ -137,7 +169,7 @@ class QuickObjectCreation{
         const input1 = document.createElement('input');
         input1.type = "text";
         input1.id = "input1";
-        input1.placeholder = "width";
+        input1.placeholder = "value1";
         //default value
         input1.value = "100";
         this.canvas.parentNode.insertBefore(input1, this.canvas);
@@ -146,7 +178,7 @@ class QuickObjectCreation{
         const input2 = document.createElement('input');
         input2.type = "text";
         input2.id = "input2";
-        input2.placeholder = "height";
+        input2.placeholder = "value2";
         //default value
         input2.value = "100";
         this.canvas.parentNode.insertBefore(input2, this.canvas);
@@ -165,6 +197,8 @@ class QuickObjectCreation{
         input4.placeholder = "text";
         this.canvas.parentNode.insertBefore(input4, this.canvas);
 
+        
+
         //add a div between the select and the canvas with a height of 10px
         const div = document.createElement('div');
         div.style.height = "7px";
@@ -181,6 +215,10 @@ class QuickObjectCreation{
      * remove the quick object creation to not interfere with the game
      */
     remove(){
+        //change the background color of the page to black 242424
+        document.body.style.backgroundColor = "#242424";
+        //change the cursor to default on the canvas
+        this.canvas.style.cursor = "default";
         document.getElementById("input1").remove();
         document.getElementById("input2").remove();
         document.getElementById("input3").remove();
@@ -188,6 +226,7 @@ class QuickObjectCreation{
         document.querySelector('select').remove();
         document.querySelector('h2').remove();
         document.querySelector('div').remove();
+        document.querySelector('p').remove();
         this.canvas.removeEventListener("mousedown", this.mouseDownHandler);
         this.canvas.removeEventListener("mousemove", this.mouseMoveHandler);
         
@@ -288,9 +327,10 @@ class QuickObjectCreation{
                             x-50,
                             x+50
                         ],
-                        "speed": 1,
+                        "speed": parseInt(value4) == 0 ? 2 :parseInt(value4),
                         "damage": parseInt(value3) == 0 ? 1 :parseInt(value3),
-                        "texturepath": "assets/sprites/Patrolman.png"
+                        "texturepath": "assets/sprites/Patrolman.png",
+                        "sound":"assets/sounds/ennemy/patrolman/hit.wav"
                     }
                 };
                 break;
@@ -330,9 +370,10 @@ class QuickObjectCreation{
                         "origin_x": x,
                         "origin_y": y,
                         "speed":2.5,
-                        "damage":parseInt(value3) == 0 ? 1 :parseInt(value3),
-                        "triggerZone" : parseInt(value3) == 0 ? 200 :parseInt(value3),
-                        "texturepath": "assets/sprites/Bats.png"
+                        "damage": parseInt(value3) == 0 ? 1 :parseInt(value3),
+                        "triggerZone" : parseInt(value2) == 0 ? 200 :parseInt(value2),
+                        "texturepath": "assets/sprites/Bats.png",
+                        "sound":"assets/sounds/ennemy/bat/hit.wav"  
                     }
                 };
                 break;
@@ -345,7 +386,8 @@ class QuickObjectCreation{
                         "width": 16,
                         "height": 16,
                         "value": parseInt(value3) == 0 ? 10 :parseInt(value3),
-                        "texturepath": "assets/sprites/Collectible.png"
+                        "texturepath": "assets/sprites/Collectible.png",
+                        "sound":"assets/sounds/collectible/coin.wav"
                     }
                 };
                 break;
@@ -358,7 +400,8 @@ class QuickObjectCreation{
                         "width": 16,
                         "height": 16,
                         "value": parseInt(value3) == 0 ? 1 :parseInt(value3),
-                        "texturepath": "assets/sprites/Collectible.png"
+                        "texturepath": "assets/sprites/Collectible.png",
+                        "sound":"assets/sounds/collectible/heart_gain.wav"
                     }
                 };
                 break;
@@ -396,14 +439,16 @@ class QuickObjectCreation{
                 this.#activationPlatform.height = parseInt(this.#value2);
                 this.#activationPlatform.triggerZoneX = parseInt(this.#value3) < 0 ? 10 :parseInt(this.#value3);
                 this.#activationPlatform.triggerZoneY = parseInt(this.#value4) < 0 ? 10 :parseInt(this.#value4);
-                console.log(this.#value3, this.#value4)
                 this.#activationPlatform.debug = true;
                 this.#activationPlatform.render(ctx);
                 break;
             case "Patrolman":
                 this.#patrolman.x = this.#x;
                 this.#patrolman.y = this.#y;
+                this.#patrolman.path = [this.#x - 50,this.#x + 50];
                 this.#patrolman.debug = true;
+                this.#patrolman.damage = parseInt(this.#value3) == 0 ? 1 :parseInt(this.#value3);
+                this.#patrolman.speed = parseInt(this.#value4) == 0 ? 1 :parseInt(this.#value4);
                 this.#patrolman.render(ctx);
                 break;
             case "CollisionBlock":
@@ -411,7 +456,7 @@ class QuickObjectCreation{
                 this.#collisionBlock.y = this.#y;
                 this.#collisionBlock.width = this.#value1;
                 this.#collisionBlock.height = this.#value2;
-                this.#collisionBlock.collisionSide = this.#value3;
+                this.#collisionBlock.collisionSide = parseInt(this.#value3) > 3 ? 0 :parseInt(this.#value3);
                 this.#collisionBlock.debug = true;
                 this.#collisionBlock.render(ctx);
                 break;
@@ -427,6 +472,8 @@ class QuickObjectCreation{
             case "Bat":
                 this.#bat.x = this.#x;
                 this.#bat.y = this.#y;
+                this.#bat.triggerZone = parseInt(this.#value2) == 0 ? 200 :parseInt(this.#value2);
+                this.#bat.damage = parseInt(this.#value1) == 0 ? 1 :parseInt(this.#value1);
                 this.#bat.debug = true;
                 this.#bat.render(ctx);
                 break;

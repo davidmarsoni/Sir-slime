@@ -1,6 +1,9 @@
 {
   "information": [
     {
+      "DisplayName": "Test Level"
+    },
+    {
       "Name": "Test Level"
     },
     {
@@ -23,9 +26,22 @@
     }
   ],
   "enemies": [
-    {"Bat":{"x":903,"y":353,"height":32,"width":32,"origin_x":903,"origin_y":353,"speed":2.5,"damage":1,"triggerZone":300,"texturepath":"assets/sprites/Bats.png"}}
+    {
+      "Bat": {
+        "x": 903,
+        "y": 353,
+        "height": 32,
+        "width": 32,
+        "origin_x": 903,
+        "origin_y": 353,
+        "speed": 2.5,
+        "damage": 1,
+        "triggerZone": 300,
+        "texturepath": "assets/sprites/Bats.png"
+      }
+    }
   ],
-  "objects":[
+  "objects": [
     {
       "CollisionBlock": {
         "x": 0,
@@ -34,21 +50,31 @@
         "height": 800,
         "collisionSide": 0
       }
-    }, {
+    },
+    {
       "ActivationPlatform": {
-          "x": 280,
-          "y": 200,
-          "width": 96,
-          "height": 48,
-          "spriteSheetOffsetX": 0,
-          "spriteSheetOffsetY": 48,
-          "spriteSheetWidth": 96,
-          "spriteSheetHeight": 48,
-          "triggerZoneX": 10,
-          "triggerZoneY": 10,
-          "activationTimer": 100,
-          "texturepath": "assets/sprites/DecorSheet.png"
+        "x": 280,
+        "y": 200,
+        "width": 96,
+        "height": 48,
+        "spriteSheetOffsetX": 0,
+        "spriteSheetOffsetY": 48,
+        "spriteSheetWidth": 96,
+        "spriteSheetHeight": 48,
+        "triggerZoneX": 10,
+        "triggerZoneY": 10,
+        "activationTimer": 100,
+        "texturepath": "assets/sprites/DecorSheet.png"
       }
-    },{"CollisionBlock":{"x":58,"y":280,"width":500,"height":100,"collisionSide":0}}
+    },
+    {
+      "CollisionBlock": {
+        "x": 58,
+        "y": 280,
+        "width": 500,
+        "height": 100,
+        "collisionSide": 0
+      }
+    }
   ]
 }

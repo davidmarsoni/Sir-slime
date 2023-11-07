@@ -211,7 +211,20 @@ function keydown(event) {
     if(event.keyCode === 39 ) {
         keys.right = true;
     }
+    //key o print the level in png (o = output)
+    if (event.keyCode === 79) {
+        const canvas = document.querySelector('canvas');
+        const dataURL = canvas.toDataURL('image/png');
+        const image = new Image();
+        //set the image source to current level
+        image.src = dataURL;
 
+        //create a link to download the image
+        const link = document.createElement('a');
+        link.download = currentLevel + " [" + new Date().toLocaleTimeString() + "]";
+        link.href = dataURL;
+        link.click();
+    }
     // key ctrl+shift+d (debug switch)
     if(event.shiftKey && event.keyCode === 68) {
         if(devlopperMode === false){
@@ -260,23 +273,6 @@ function keydown(event) {
             loadLevel(currentLevel,false);
             console.log("current level : " + currentLevel);
         }
-        //key o print the level in png (o = output)
-        if (event.keyCode === 79) {
-            // Get the canvas element
-            const canvas = document.querySelector('canvas');
-            // Convert the canvas to a data URL
-            const dataURL = canvas.toDataURL('image/png');
-            // Create a new Image object with the data URL as its source
-            const image = new Image();
-            image.src = dataURL;
-            // Create a new <a> element with the download attribute set to the desired filename
-            const link = document.createElement('a');
-            link.download = 'level.png';
-            // Set the href attribute of the <a> element to the data URL
-            link.href = dataURL;
-            // Simulate a click on the <a> element to download the file
-            link.click();
-        }
         // key q (quick object creation)
         if(event.keyCode === 81) {
             if(quickObjectCreation.status === false){
@@ -298,6 +294,7 @@ function keydown(event) {
         }
         text += "Current position           : x:" + player.x + " y:" + player.y + "\n";
         text += "Current life               : " + player.lives + "\n";
+        text += "Current health             : " + player.health + "\n";
         text += "Current score              : " + player.score + "\n";
         text += "Total damage taken         : " + player.totalDamageTaken + "\n";
         text += "Total damage dealt         : " + player.totalDamageDealt + "\n";
@@ -351,15 +348,15 @@ function keydown(event) {
         text += "E               : exit\n";
         text += "P               : pause\n";
         text += "H               : help\n";
-        text += "N               : mute sound\n";
         text += "M               : mute music\n";
+        text += "N               : mute sound\n";
+        text += "O               : print the level in png\n";
         text += "S               : statistics\n";
         text += "Crtl+D          : Devlopper mode\n";
         if(devlopperMode === true){
             text += "D               : debug\n";
             text += "A               : ask for level name\n";
             text += "F               : force load level\n";
-            text += "O               : print the level in png\n";
             text += "Q               : quick object creation\n";
         }
         let modal = new ModalWindow("Help",text);
@@ -419,7 +416,7 @@ function loadLevel(levelpath) {
             platforms = loader.platforms;
             collisionBlocks = loader.collisionBlocks;
             passageWays = loader.passageWays;
-            document.title =String.fromCodePoint(0x1F3AE) +" "+ loader.levelName + " by " + loader.levelAuthor;
+            document.title =String.fromCodePoint(0x1F3AE) +" "+ loader.levelDisplayName + " by " + loader.levelAuthor;
             currentLevel = loader.levelName;
             bats = loader.bats;
             collectibles = loader.collectibles;

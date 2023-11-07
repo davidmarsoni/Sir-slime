@@ -1,9 +1,9 @@
 import Collectable from "./Collectible.js";
 class Heart extends Collectable{
     #heal 
-    #hearthGain = 0;
+    #heart_gain = 0;
 
-    constructor(x, y, width, height, texturepath,spriteSheetOffsetX,heal,hearthGain,sound) {
+    constructor(x, y, width, height, texturepath,spriteSheetOffsetX,heal,heart_gain,sound) {
         if(spriteSheetOffsetX === undefined || spriteSheetOffsetX === null || spriteSheetOffsetX === 0){
             spriteSheetOffsetX = 7;
         }
@@ -12,15 +12,15 @@ class Heart extends Collectable{
             heal = null;
         }
         this.#heal = heal;
-        this.#hearthGain = hearthGain;
+        this.#heart_gain = heart_gain;
         
     }
-    get hearthGain() {
-        return this.#hearthGain;
+    get heart_gain() {
+        return this.#heart_gain;
     }
 
-    set hearthGain(value) {
-        this.#hearthGain = value;
+    set heart_gain(value) {
+        this.#heart_gain = value;
     }
 
     get heal() {
@@ -33,7 +33,7 @@ class Heart extends Collectable{
 
     collect(player) {
         this.debug ? console.log("heart collected") : null;
-        player.addHeart(this.#hearthGain);
+        player.addHeart(this.#heart_gain);
         player.heal(this.#heal);
     }
 }
