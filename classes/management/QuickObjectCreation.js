@@ -3,8 +3,8 @@ import CollisionBlock from "../CollisionBlock.js";
 import Patrolman from "../entity/ennemy/Patrolman.js";
 import PassageWay from "../PassageWay.js";
 import Bat from "../entity/ennemy/Bat.js";
-import Coin from "../collactiables/Coin.js";
-import Heart from "../collactiables/Heart.js";
+import Coin from "../collectibles/Coin.js";
+import Heart from "../collectibles/Heart.js";
 import ActivationPlatform from "../ActivationPlatform.js";
 
 

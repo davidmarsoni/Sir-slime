@@ -17,7 +17,7 @@ let uiState = START;
 // The game state
 let currentLevel = "level1";
 let devlopperMode = true;
-let debug = false;
+let debug = true;
 // The player character
 let player;
 // The status of the arrow keys
@@ -408,7 +408,7 @@ function keydownModal(event){
 
 function loadLevel(levelpath) {
     uiState = GAME_OFF;
-    loader.loadGame(levelpath,false).then((result)=>{
+    loader.loadGame(levelpath,true).then((result)=>{
         if(result){
             currentLevel = loader.levelname;
             player = loader.player;

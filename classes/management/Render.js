@@ -1,4 +1,4 @@
-import Heart from "../collactiables/Heart.js";
+import Heart from "../collectibles/Heart.js";
 class Render {
     canvas;
     ctx;

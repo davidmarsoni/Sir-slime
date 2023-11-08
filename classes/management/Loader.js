@@ -5,9 +5,9 @@ import CollisionBlock from "../CollisionBlock.js";
 import Patrolman from "../entity/ennemy/Patrolman.js";
 import PassageWay from "../PassageWay.js";
 import Bat from "../entity/ennemy/Bat.js";
-import Collectible from "../collactiables/Collectible.js";
-import Coin from "../collactiables/Coin.js";
-import Heart from "../collactiables/Heart.js";
+import Collectible from "../collectibles/Collectible.js";
+import Coin from "../collectibles/Coin.js";
+import Heart from "../collectibles/Heart.js";
 import ActivationPlatform from "../ActivationPlatform.js";
 
 /**
@@ -113,7 +113,7 @@ class Loader{
     loadGame(levelname, debug = false) {
         this.clean();
         return new Promise((resolve) => {
-            const levelFolder = "./assets/levels/";
+            const levelFolder = "assets/levels/";
             const levelExtension = ".json";
 
             this.findFile(levelFolder, levelname, levelExtension).then((result) => {
@@ -134,7 +134,7 @@ class Loader{
 
                         if (this.player == null || this.player == undefined) {
                             debug && console.log("player is empty");
-                            loaderManager.loadPlayerFromJSON("./assets/jsons/player.json", debug).then((player_info) => {
+                            loaderManager.loadPlayerFromJSON("assets/jsons/player.json", debug).then((player_info) => {
                                 this.setPlayer(player_info);
                                 finalizeLoading();
                             });
@@ -155,7 +155,7 @@ class Loader{
         this.clean();
         return new Promise((resolve) => {
             //set some constants for the function
-            const StartScreenFolder = "./assets/jsons/";
+            const StartScreenFolder = "assets/jsons/";
             const StartScreenExtension = ".json";
 
             //check if the level exists
@@ -528,7 +528,7 @@ class Loader{
 
     /**
      * This function is used to find a file in a folder
-     * @param {*} folder folder where the file is located exemple : "./levels/"
+     * @param {*} folder folder where the file is located exemple : "levels/"
      * @param {*} name name of the file exemple : "level1"
      * @param {*} extension extension of the file exemple : ".json"
      * @returns true if the file is found false otherwise
@@ -536,16 +536,16 @@ class Loader{
     findFile(folder, name, extension) {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', folder);
+            const fileUrl = `${folder}${name}${extension}`;
+            xhr.open('HEAD', fileUrl);
             xhr.onload = function () {
-                const parser = new DOMParser();
-                const htmlDoc = parser.parseFromString(xhr.responseText, 'text/html');
-                const links = Array.from(htmlDoc.getElementsByTagName('a'));
-                const fileExists = links.some(link => {
-                    const fileName = link.getAttribute('href');
-                    return fileName.endsWith(extension) && fileName.slice(0, -5) === name;
-                });
-                resolve(fileExists);
+                if (xhr.status === 200) {
+                    resolve(true);
+                } else if (xhr.status === 404) {
+                    resolve(false);
+                } else {
+                    reject(new Error(`Received unexpected status ${xhr.status}`));
+                }
             };
             xhr.onerror = function () {
                 reject(new Error("An error occurred while trying to find the file."));
