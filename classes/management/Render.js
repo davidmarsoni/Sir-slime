@@ -2,7 +2,7 @@ import Heart from "../collectibles/Heart.js";
 class Render {
     canvas;
     ctx;
-    siteURL = "http://localhost/";
+    siteURL = "";
     backgroundIMAGE = new Image();
     loadBackgroundFailed = false;
     counter = 0;
@@ -214,11 +214,25 @@ class Render {
         this.ctx.fillText(score, x, y);
     }
 
-    renderStart(backgroundImage){
-        
-        if (backgroundImage != null){
-            this.ctx.drawImage(backgroundImage, 0,0, this.ctx.canvas.width, this.ctx.canvas.height)  
-        } 
+    renderStart(loader){
+
+        if (loader.StartScreenBackgroundImage != null){
+            this.ctx.drawImage(loader.StartScreenBackgroundImage, 0,0, this.ctx.canvas.width, this.ctx.canvas.height)  
+        }
+        loader.startScreenButton.forEach(button => {
+            if(button.screen === "start"){
+                button.debug = true;
+                button.render(this.ctx);
+            }
+           
+        });
+      
+    }
+    renderCommand(loader){
+        console.log(loader + " Command info retrieved !");
+        if (loader.CommandBackground != null){
+            this.ctx.drawImage(loader.CommandBackground, 0,0, this.ctx.canvas.width, this.ctx.canvas.height)  
+        }
     }
 }
 

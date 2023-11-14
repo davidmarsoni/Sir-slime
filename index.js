@@ -13,7 +13,7 @@ const COMMAND = "command";
 const MODAL = "modal";
 const START = "start";
 let uiState = START;
-
+let areButtonsLoaded = false;
 // The game state
 let currentLevel = "level1";
 let devlopperMode = true;
@@ -91,7 +91,32 @@ function goToModalState(){
     window.addEventListener("keydown", keydownModal)
 }
 function start(){
-    render.renderStart(loader.backgroundStartScreenImage);
+    //render.renderStart(loader); 
+    render.renderStart(loader); 
+    
+       if (areButtonsLoaded === false) {
+            loader.setbuttonAction(0,startGame);
+            loader.setbuttonAction(1,commandScreen);
+            areButtonsLoaded = true;
+       }
+    
+}
+
+function commandScreen(){
+//commandloadstate = false;
+//if (commandloadstate == false){
+    window.removeEventListener("keydown", keydownStart);
+    uiState = GAME_OFF;
+    window.addEventListener("keydown", keydown);
+    window.addEventListener("keyup", keyup);
+    render.renderCommand(loader);
+   
+  //  commandloadstate = true;
+    
+//}else{
+ //   window.removeEventListener()
+ //}
+
 }
 
 function update() {
@@ -387,12 +412,16 @@ function keyup(event) {
 function keydownStart(event) {
     //key = enter
     if(event.keyCode === 13) {
-        window.removeEventListener("keydown", keydownStart)
-        uiState = GAME_OFF;
-        window.addEventListener("keydown", keydown)
-        window.addEventListener("keyup", keyup)
-        loadLevel(currentLevel,false);
+        startGame();
     }
+}
+
+function startGame(){
+    window.removeEventListener("keydown", keydownStart)
+    uiState = GAME_OFF;
+    window.addEventListener("keydown", keydown)
+    window.addEventListener("keyup", keyup)
+    loadLevel(currentLevel,false);
 }
 
 function keydownModal(event){
@@ -429,7 +458,7 @@ function loadLevel(levelpath) {
 
 window.addEventListener("keydown", keydownStart)
 //setInterval(loop,25);
-loader.loadStartScreen("startScreen").then((result)=>{
+loader.loadStartMenu("startMenu",true).then((result)=>{
     if(!result){
         console.error(loader.errors);
     }

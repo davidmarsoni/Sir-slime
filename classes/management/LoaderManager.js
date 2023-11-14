@@ -91,7 +91,7 @@ class LoaderManager{
         a.click();
     }
 
-    static loadStartScreenFromJSON(filename,debug = false){
+    static loadStartMenuFromJSON(filename,debug = false){
         // Load the level from a JSON file create a promise and return it
         return new Promise((resolve) => {
             //parse the data into a JSON object

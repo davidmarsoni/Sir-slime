@@ -9,6 +9,7 @@ import Collectible from "../collectibles/Collectible.js";
 import Coin from "../collectibles/Coin.js";
 import Heart from "../collectibles/Heart.js";
 import ActivationPlatform from "../ActivationPlatform.js";
+import Button from "../Button.js";
 
 /**
  * This class is used to load a level from a json file
@@ -35,8 +36,10 @@ class Loader{
     #bats = [];
 
     //for the startScreen
-    #backgroundStartScreen;
-    #backgroundStartScreenImage;
+    #StartScreenBackground;
+    #StartScreenBackgroundImage;
+    #CommandBackground;
+    #startScreenButton = [];
     // => getter row 98 
 
     /**
@@ -95,12 +98,23 @@ class Loader{
      */
     get backgroundImage() {return this.#backgroundImage;}
 
-  
 
     //startGame getters
 
-    get backgroundStartScreenImage(){
-    return this.#backgroundStartScreenImage
+    get StartScreenBackgroundImage(){
+    return this.#StartScreenBackgroundImage;
+    }
+
+    get CommandBackground(){
+        return this.#CommandBackground;
+    } 
+    
+    get startScreenButton(){
+        return this.#startScreenButton;
+    }
+
+    set startScreenButton(value){
+        this.#startScreenButton = value;
     }
 
 
@@ -151,27 +165,27 @@ class Loader{
         });
     }
 
-    loadStartScreen(fileName, debug = false) {
+    loadStartMenu(fileName, debug = false) {
         this.clean();
         return new Promise((resolve) => {
             //set some constants for the function
-            const StartScreenFolder = "assets/jsons/";
-            const StartScreenExtension = ".json";
+            const StartMenuFolder = "assets/jsons/";
+            const StartMenuExtension = ".json";
 
             //check if the level exists
-            this.findFile(StartScreenFolder, fileName, StartScreenExtension).then((result) => {
+            this.findFile(StartMenuFolder, fileName, StartMenuExtension).then((result) => {
                 if (result) {
-                    loaderManager.loadStartScreenFromJSON(`${StartScreenFolder}${fileName}${StartScreenExtension}`, debug).then(([information,objects]) => {
+                    loaderManager.loadStartMenuFromJSON(`${StartMenuFolder}${fileName}${StartMenuExtension}`, debug).then(([information,objects]) => {
                        
-                        this.setStartScreenInformation(information,debug);
-                        this.setStartScreenObjects(objects, debug);
+                        this.setStartMenuInformation(information,debug);
+                        this.setStartMenuObjects(objects, debug);
                         if (this.errors.size != 0 && debug) {
                             console.log(this.errors);
                         }
                         resolve(true);
                     });
                 } else {
-                    this.#errors.push(`The Start Screen ${fileName}${StartScreenExtension} could not be found in the folder ${StartScreenFolder} or the folder does not exist`);
+                    this.#errors.push(`The Start Screen ${fileName}${StartMenuExtension} could not be found in the folder ${StartMenuFolder} or the folder does not exist`);
                     resolve(false);
                 }
             });
@@ -477,52 +491,120 @@ class Loader{
         }
     }
 
-    setStartScreenInformation(information){
+    setStartMenuInformation(information, debug = false){
+        
+         //console.log(information);
         try {
-            this.#backgroundStartScreen = information[0]["Background"];
-            this.loadBackground();
+            this.#StartScreenBackground = information[0].StartScreenBackground;
+            this.#CommandBackground = information[0].CommandBackground;
+
+            debug ? console.log(this.#StartScreenBackground) : null;
+            debug ? console.log(this.#CommandBackground.path) : null;
+            
+            this.loadStartScreenBackground(this.#StartScreenBackground.path);
+            this.loadCommandBackground(this.#CommandBackground.path);
+            
+            debug ? console.log(this.#StartScreenBackground) : null;
+            debug ? console.log(this.#CommandBackground.path) : null;
         } catch (e) {
             this.#errors.push("The import of the background failed | " + e.message);
         }
-        this.loadBackgroundStartScreen();
+        
 
     }
 
-    setStartScreenObjects(objectsArray,debug = false){
+    setStartMenuObjects(objectsArray,debug = false){
         //TODO : code for the start screen objects
+
+        debug ? console.log(objectsArray) : null;
+
+        let buttonObject = [];
+        try {
+            for (let i = 0; i < objectsArray.length; i++) {
+                const element = objectsArray[i];
+                const elementType = Object.keys(element)[0];
+                const elementData = element[elementType];
+
+                switch (elementType) {
+                    case Button.name:
+                        const button = new Button(
+                            elementData.x,
+                            elementData.y,
+                            elementData.width,
+                            elementData.height,
+                            elementData.screen
+                           
+                        );
+                        buttonObject.push(button);
+                        break;
+
+                   
+
+                    default:
+                        this.#errors.push(`Unknown startScreen type: ${elementType}`);
+                        break;
+                }
+            }
+        } catch (e) {
+            this.#errors.push(`The import of the startScreen failed | ${e.message}`);
+            console.error(e);
+        } finally {
+           // set the startScreen object 
+        
+           this.#startScreenButton = buttonObject;
+
+
+        }
     }
     /**
      * This function is used to load the background image only one time when the level is loaded
      */
     loadImage(path) {
+        console.log(path);
         let image = new Image();
         if (path != null) {
             image.src = path;
         } else {
+            console.log(image);
             image = null;
         }
         image.onerror = () => {
-            image = null;
+            console.log(image);
             this.#errors.push("The background image could not be found");
+            return image;
         };
+      
         return image;
+        
     }
 
     loadBackground(path) {
         try {
             this.#backgroundImage = this.loadImage(path);
         } catch (e) {
-            this.#backgroundImage = null;
+            this.#backgroundImage = null
             this.#errors.push(`The import of the background image failed | ${e.message}`);
         }
     }
 
-    loadBackgroundStartScreen() {
+   loadStartScreenBackground(path) {
+        console.log(path);
         try {
-            this.#backgroundStartScreenImage = this.loadImage(this.#backgroundStartScreen.path);
+            this.#StartScreenBackgroundImage = this.loadImage(path);
+           
         } catch (e) {
-            this.#backgroundStartScreenImage = null;
-            this.#errors.push(`The import of the background image failed | ${e.message}`);
+            this.#StartScreenBackgroundImage = null;
+            this.#errors.push(`The import of the start background image failed | ${e.message}`);
+        }
+    }
+
+    loadCommandBackground(path){
+        try {
+            this.#CommandBackground = this.loadImage(path);
+           
+        } catch (e) {
+            this.#CommandBackground = null;
+            this.#errors.push(`The import of the command screen image failed | ${e.message}`);
         }
     }
 
@@ -603,6 +685,23 @@ class Loader{
             this.#song.pause();
         }
         this.#song = null;
+    }
+
+    setbuttonAction(intIndex, executed_function){
+
+        this.startScreenButton[intIndex].executed_function = executed_function;
+
+    
+        let canvas = document.getElementById("canvas");
+
+        canvas.addEventListener('click', (event) => {
+           
+            const mouseX = event.clientX - canvas.getBoundingClientRect().left;
+            const mouseY = event.clientY - canvas.getBoundingClientRect().top;
+        
+            this.startScreenButton[intIndex].handleClickEvent(event);
+        });
+
     }
 }
 
