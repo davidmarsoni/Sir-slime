@@ -1,0 +1,529 @@
+{
+    "information": [
+        {
+            "DisplayName": "Level 1"
+        },
+        {
+            "Name": "level1"
+        },
+        {
+            "Author": "Mathias"
+        },
+        {
+            "Background": {
+                "path": "assets/images/level1.png"
+            }
+        },
+        {
+            "Song": {
+                "path": "assets/songs/level1.mp3"
+            }
+        }
+    ],
+    "player_info": [
+        {
+            "Player": {
+                "x": 64,
+                "y": 450,
+                "origin_x": 64,
+                "origin_y": 450
+            }
+        }
+    ],
+    "enemies": [
+        {
+            "Patrolman": {
+                "x": 650,
+                "y": 501,
+                "origin_x": 650,
+                "origin_y": 450,
+                "height": 32,
+                "width": 32,
+                "path": [
+                    607,
+                    800
+                ],
+                "speed": 1,
+                "damage": 2,
+                "texturepath": "assets/sprites/Patrolman.png"
+            }
+        },
+        {
+            "Bat": {
+                "x": 1474,
+                "y": 280,
+                "height": 32,
+                "width": 32,
+                "origin_x": 64,
+                "origin_y": 450,
+                "speed": 0,
+                "damage": 1,
+                "triggerZone": 200,
+                "texturepath": "assets/sprites/Bats.png",
+                "soundPath" : "assets/sounds/enemy/bat/hit.wav"
+            }
+        }
+    ],
+    "objects":[
+        {
+            "PassageWay": {
+                "x": 1450,
+                "y": 245,
+                "width": 150,
+                "height": 125,
+                "passageWayTo": "level2"
+            }
+        },
+        {
+            "Platform": {
+                "x": 350,
+                "y": 475,
+                "width": 96,
+                "height": 48,
+                "spriteSheetOffsetX": 0,
+                "spriteSheetOffsetY": 48,
+                "spriteSheetWidth": 96,
+                "spriteSheetHeight": 48,
+                "texturepath": "assets/sprites/DecorSheet.png"
+            }
+        },
+        {
+            "Platform": {
+                "x": 875,
+                "y": 450,
+                "width": 96,
+                "height": 48,
+                "spriteSheetOffsetX": 0,
+                "spriteSheetOffsetY": 96,
+                "spriteSheetWidth": 96,
+                "spriteSheetHeight": 48,
+                "texturepath": "assets/sprites/DecorSheet.png"
+            }
+        },
+        {
+            "Platform": {
+                "x": 1050,
+                "y": 375,
+                "width": 96,
+                "height": 48,
+                "spriteSheetOffsetX": 0,
+                "spriteSheetOffsetY": 48,
+                "spriteSheetWidth": 96,
+                "spriteSheetHeight": 48,
+                "texturepath": "assets/sprites/DecorSheet.png"
+            }
+        },
+        {
+            "CollisionBlock": {
+                "x": 0,
+                "y": 500,
+                "width": 225,
+                "height": 80,
+                "collisionSide": 1
+            }
+        },
+        {
+            "CollisionBlock": {
+                "x": 0,
+                "y": 655,
+                "width": 225,
+                "height": 100,
+                "collisionSide": 0
+            }
+        },
+        {
+            "CollisionBlock": {
+                "x": 575,
+                "y": 500,
+                "width": 225,
+                "height": 300,
+                "collisionSide": 0
+            }
+        },
+        {
+            "CollisionBlock": {
+                "x": 1250,
+                "y": 369,
+                "width": 500,
+                "height": 800,
+                "collisionSide": 0
+            }
+        },
+        {
+            "CollisionBlock": {
+                "x": -50,
+                "y": 0,
+                "width": 50,
+                "height": 1000,
+                "collisionSide": 1
+            }
+        },
+        {
+            "Coin": {
+                "x": 202,
+                "y": 474,
+                "width": 16,
+                "height": 16,
+                "value": 10,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 386,
+                "y": 394,
+                "width": 16,
+                "height": 16,
+                "value": 10,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 681,
+                "y": 466,
+                "width": 16,
+                "height": 16,
+                "value": 10,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 1083,
+                "y": 350,
+                "width": 16,
+                "height": 16,
+                "value": 10,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 1347,
+                "y": 342,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 1381,
+                "y": 342,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "ActivationPlatform": {
+                "x": 225,
+                "y": 655,
+                "width": 32,
+                "height": 16,
+                "spriteSheetOffsetX": 96,
+                "spriteSheetOffsetY": 16,
+                "spriteSheetWidth": 96,
+                "spriteSheetHeight": 16,
+                "triggerZoneX": 10,
+                "triggerZoneY": 30,
+                "activationTimer": 500,
+                "texturepath": "assets/sprites/DecorSheet.png"
+            }
+        },
+        {
+            "ActivationPlatform": {
+                "x": 225,
+                "y": 565,
+                "width": 32,
+                "height": 16,
+                "spriteSheetOffsetX": 96,
+                "spriteSheetOffsetY": 16,
+                "spriteSheetWidth": 96,
+                "spriteSheetHeight": 16,
+                "triggerZoneX": 10,
+                "triggerZoneY": 30,
+                "activationTimer": 500,
+                "texturepath": "assets/sprites/DecorSheet.png"
+            }
+        },
+        {
+            "Coin": {
+                "x": 130,
+                "y": 630,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 110,
+                "y": 630,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 90,
+                "y": 630,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 50,
+                "y": 630,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 30,
+                "y": 630,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 10,
+                "y": 630,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 140,
+                "y": 610,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 120,
+                "y": 610,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 100,
+                "y": 610,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 60,
+                "y": 610,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 40,
+                "y": 610,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 20,
+                "y": 610,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 130,
+                "y": 590,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 110,
+                "y": 590,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 90,
+                "y": 590,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 50,
+                "y": 590,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 30,
+                "y": 590,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 10,
+                "y": 590,
+                "width": 16,
+                "height": 16,
+                "value": 100,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        },
+        {
+            "ActivationPlatform": {
+                "x": 1065,
+                "y": 285,
+                "width": 53,
+                "height": 10,
+                "spriteSheetOffsetX": 96,
+                "spriteSheetOffsetY": 0,
+                "spriteSheetWidth": 96,
+                "spriteSheetHeight": 16,
+                "triggerZoneX": 1,
+                "triggerZoneY": 20,
+                "activationTimer": 500,
+                "texturepath": "assets/sprites/DecorSheet.png"
+            }
+        },
+        {
+            "ActivationPlatform": {
+                "x": 1007,
+                "y": 225,
+                "width": 40,
+                "height": 10,
+                "spriteSheetOffsetX": 96,
+                "spriteSheetOffsetY": 0,
+                "spriteSheetWidth": 96,
+                "spriteSheetHeight": 16,
+                "triggerZoneX": 50,
+                "triggerZoneY": 30,
+                "activationTimer": 500,
+                "texturepath": "assets/sprites/DecorSheet.png"
+            }
+        },
+        {
+            "ActivationPlatform": {
+                "x": 842,
+                "y": 162,
+                "width": 96,
+                "height": 16,
+                "spriteSheetOffsetX": 96,
+                "spriteSheetOffsetY": 0,
+                "spriteSheetWidth": 96,
+                "spriteSheetHeight": 16,
+                "triggerZoneX": 100,
+                "triggerZoneY": 40,
+                "activationTimer": 500,
+                "texturepath": "assets/sprites/DecorSheet.png"
+            }
+        },
+        {
+            "Heart": {
+                "x": 884,
+                "y": 80,
+                "width": 16,
+                "height": 16,
+                "heal": 0,
+                "heart_gain" :1,
+                "texturepath": "assets/sprites/none.png",
+                "soundPath" : "assets/sounds/collectible/heart_gain.wav"
+            }
+        },
+        {
+            "Coin": {
+                "x": 1083,
+                "y": 258,
+                "width": 16,
+                "height": 16,
+                "value": 50,
+                "texturepath": "assets/sprites/Collectible.png",
+                "soundPath" : "assets/sounds/collectible/coin.wav"
+            }
+        }
+    ]
+}

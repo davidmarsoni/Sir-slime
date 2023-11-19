@@ -1,0 +1,21 @@
+{
+    "information":[
+        {
+            "StartScreenBackground": {
+                "path": "assets/images/StartScreenBackground.png"
+            },
+            "CommandBackground": {
+                "path": "assets/images/CommandBackground.png"
+            }
+        }
+    ],
+    "objects":[
+        {
+            "Button":{"x":1000,"y":350, "width":350, "height":200,"screen":"start"}
+        },
+
+        {
+            "Button":{"x":1000,"y":575, "width":350, "height":100,"screen":"start"}
+        }
+    ]
+}
