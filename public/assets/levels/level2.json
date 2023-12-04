@@ -53,7 +53,8 @@
         "origin_y": 450,
         "speed": 2.5,
         "damage": 1,
-        "triggerZone": 300,
+        "triggerZoneX": 300,
+         "triggerZoneY": 300,
         "texturepath": "assets/sprites/Bats.png",
         "soundPath": "assets/sounds/enemy/bat/hit.wav"
       }
@@ -68,7 +69,8 @@
         "origin_y": 450,
         "speed": 2.6,
         "damage": 1,
-        "triggerZone": 300,
+        "triggerZoneX": 300,
+         "triggerZoneY": 300,
         "texturepath": "assets/sprites/Bats.png",
         "soundPath": "assets/sounds/enemy/bat/hit.wav"
       }

@@ -4,6 +4,7 @@ import Loader from "./classes/management/Loader.js";
 import Render from "./classes/management/Render.js";
 import QuickObjectCreation from "./classes/management/QuickObjectCreation.js";
 import ModalWindow from "./classes/management/ModalWindow.js";
+import Fireballs from "./classes/entity/Utility/fireballs.js";
 
 // game variables
 const GAME_ON = "game_on";
@@ -35,6 +36,7 @@ let patrolmen = [];
 let bats = [];
 let collisionBlocks = [];
 let collectibles = [];
+let fireballs = [];
 
 //create the render object
 const render = new Render(debug,developerMode);
@@ -116,6 +118,7 @@ function update() {
 
     player.updatePosition(keys);
 
+    console.log(fireballs.length);
     // collision for the patrolmen
     for (const patrolman of patrolmen) {
         patrolman.move();
@@ -166,6 +169,21 @@ function update() {
         platform.move();
         platform.collide(player);
     }
+
+    for (let i = 0; i < fireballs.length; i++) {
+      fireballs[i].move(player); 
+      let collide = fireballs[i].collide(collisionBlocks, bats, patrolmen);
+      if(collide === true)
+      {
+         fireballs.splice(i,1);
+         console.log("fireball destroyed : " + i);
+      }
+
+      
+    }
+
+
+    
    
     // add the relative offset to the player position if there is one
     player.predictedX += player.relativeXoffset;
@@ -202,6 +220,9 @@ function keydown(event) {
     // Attack : left shift 
     if(event.keyCode === 16) {
         keys.attack = true;
+        let tempFireball = new Fireballs(0,0, 24,24,"assets/sprites/Fireball.png", 5, 1);
+        tempFireball.throw(player);
+        fireballs.push(tempFireball);    
     }
     // direction keys : left arrow or n
     if(event.keyCode === 37) {
@@ -434,6 +455,7 @@ function loadLevel(levelpath) {
             document.title =String.fromCodePoint(0x1F3AE) +" "+ loader.levelDisplayName + " by " + loader.levelAuthor;
             currentLevel = loader.levelName;
             bats = loader.bats;
+            fireballs = loader.fireballs
             collectibles = loader.collectibles;
             debug ? console.log("level loaded : " + currentLevel) : null;
             uiState = GAME_ON;

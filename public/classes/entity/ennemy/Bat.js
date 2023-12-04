@@ -6,15 +6,23 @@ class Bat extends Enemy{
     #animStep = 1;
     #animTimer = 0;
     #isIdle = true;
-    #triggerZone = 0;
+    #triggerZoneX = 0;
+    #triggerZoneY = 0;
+    #batMode = 0; //0 = default mode
+    #x_v = 0;
+    #y_v = -4;
+    #velocityIncrementation = [0.05,-0.05];
+    #defaultVelocity = [2, -2]
+    #chosenSide = 0;
    
 
 
-constructor(x, y, width, height, texturepath, origin_x, origin_y,speed,damage,triggerZone) {
+constructor(x, y, width, height, texturepath, origin_x, origin_y,speed,damage,triggerZoneX,triggerZoneY) {
     super(x, y, width, height, texturepath, speed, damage);
     this.#origin_x = origin_x;
     this.#origin_y = origin_y;
-    this.#triggerZone = triggerZone;
+    this.#triggerZoneX = triggerZoneX;
+    this.#triggerZoneY = triggerZoneY;
     this.hitSound = new Audio("assets/sounds/enemy/bat/hit.wav");
 }
 
@@ -66,13 +74,29 @@ set isIdle(value) {
     this.#isIdle = value;
 }
 
-get triggerZone() {
-    return this.#triggerZone;
+get triggerZoneX() {
+   return this.#triggerZoneX;
 }
 
-set triggerZone(value) {
-    this.#triggerZone = value;
+set triggerZoneX(value) {
+   this.#triggerZoneX = value;
 }
+
+get triggerZoneY() {
+   return this.#triggerZoneY;
+}
+
+set triggerZoneY(value) {
+   this.#triggerZoneY = value;
+}
+
+getTrampleBoxLeft(){
+        return this.x - this.width + this.width/4;
+    }
+
+getTrampleBoxRight(){
+        return this.x - this.width/4;
+    }
 
 
 
@@ -114,6 +138,9 @@ render(ctx) {
               this.animTimer = 0;
             }
         }
+        if(this.isAlive === false){
+            this.animStep = 4;
+        }
     }
     if(this.textureLoaded === true){
         ctx.drawImage(
@@ -140,7 +167,7 @@ render(ctx) {
 move(player){
     const playerDistance = Math.sqrt((player.x - this.x) ** 2 + (player.y - this.y) ** 2);
     
-    if(player.InAPerimeter(this, this.triggerZone, this.triggerZone)){
+    if(player.InAPerimeter(this, this.triggerZoneX, this.triggerZoneY)){
         this.#isIdle = false;
         const deltaX = player.x - this.x;
         const deltaY = player.y - this.y;
@@ -159,6 +186,14 @@ move(player){
             this.y += directionY * this.speed;
         }
     }
+
+    if(this.isAlive === false){
+            this.#x_v += this.#velocityIncrementation[this.#chosenSide];
+            this.#y_v += 0.7; 
+
+            this.x = this.x + this.#x_v;
+            this.y = this.y + this.#y_v;
+        }
 
 
     }
@@ -181,7 +216,25 @@ collide(player){
         playerBottom >= batTop &&
         playerTop <= batBottom
     ){
-        if(player.x <= this.x && !player.isHit){
+         if (player.y <= this.y
+                && player.predictedY <= this.y
+                && (
+                    player.getTrampleBoxLeft(true) <= this.getTrampleBoxRight()
+                    || player.getTrampleBoxRight(true) >= this.getTrampleBoxLeft()
+                ) && player.y_v > 0 && this.isAlive === true
+            ) {
+                this.debug ? console.log("trample") : null;
+                player.y_v = -7;
+                this.#chosenSide = Math.round(Math.random());
+                this.#x_v = this.#defaultVelocity[this.#chosenSide];
+                player.score += 500;
+                player.addEnemykilled();
+                player.addDamageDealt(1);
+                this.isAlive = false;
+            }
+
+
+        else if(player.x <= this.x && !player.isHit && this.isAlive === true){
             this.debug ? console.log("left") : null;
             player.x_v = -4;
             player.y_v = -3;
@@ -191,7 +244,7 @@ collide(player){
             player.hit(this.damage);
         }
         // Push the player right
-        else if(player.x >= this.x && !player.isHit){
+        else if(player.x >= this.x && !player.isHit && this.isAlive === true){
             this.debug ? console.log("right") : null;
             player.x_v = 4;
             player.y_v = -3;
@@ -200,6 +253,7 @@ collide(player){
             this.playSound ? this.hitSound.play() : null;
             player.hit(this.damage);
         }
+        
     }
     }
 

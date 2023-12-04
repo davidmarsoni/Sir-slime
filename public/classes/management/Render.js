@@ -1,4 +1,5 @@
 import Heart from "../collectible/Heart.js";
+import Fireballs from "../entity/Utility/fireballs.js";
 class Render {
     canvas;
     ctx;
@@ -9,7 +10,8 @@ class Render {
     timer = 0;
     debug = false;
     developerMode = false;
-    heart ;
+    heart ; 
+   
 
     constructor(debug = false,developerMode = false) {
         this.debug = debug;
@@ -25,11 +27,10 @@ class Render {
 
     render(loader,quickObjectCreation,keys){
         //if the song is not playing play it
-        
         this.renderCanvas(loader.backgroundImage);
         this.renderObjects(loader.platforms, loader.collisionBlocks, loader.passageWays, loader.collectibles,loader.spikes);
         this.renderPlayer(loader.player, keys);
-        this.renderEntities(loader.patrolmen, loader.bats);
+        this.renderEntities(loader.patrolmen, loader.bats, loader.fireballs);
         this.renderScorboard(loader);
 
         //render the quick object creation
@@ -81,7 +82,7 @@ class Render {
         player.render(this.ctx, keys);
     }
 
-    renderEntities(patrolmen, bats) {
+    renderEntities(patrolmen, bats, fireballs) {
         for (const patrolman of patrolmen) {
             patrolman.debug = this.debug;
             patrolman.render(this.ctx);
@@ -90,6 +91,12 @@ class Render {
             bat.debug = this.debug;
             bat.render(this.ctx);
         }
+
+        for (const fireball of fireballs){
+            fireball.debug = this.debug;
+            fireball.render(this.ctx);
+        }
+
     }
     renderScorboard(loader){
         this.ctx.textAlign = "left";

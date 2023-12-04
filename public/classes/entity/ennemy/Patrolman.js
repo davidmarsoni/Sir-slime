@@ -11,9 +11,9 @@ class Patrolman extends Enemy{
     #isAlive = true;
     #x_v = 0
     #y_v = -4;
-    #values = [0.05,-0.05];
-    #default = [2, -2]
-    #random = 0;
+    #velocityIncrementation = [0.05,-0.05];
+    #defaultVelocity = [2, -2]
+    #chosenSide = 0;
 
     constructor(x, y, width, height, texturepath, origin_x, origin_y, path,speed,damage) {
         super(x, y, width, height, texturepath,speed,damage);
@@ -95,7 +95,7 @@ class Patrolman extends Enemy{
     }
 
     get x_v() {
-        return this.#x_v[this.#random];
+        return this.#x_v[this.#chosenSide];
     }
 
     set x_v(value) {
@@ -207,8 +207,8 @@ class Patrolman extends Enemy{
             ) {
                 this.debug ? console.log("trample") : null;
                 player.y_v = -7;
-                this.#random = Math.round(Math.random());
-                this.#x_v = this.#default[this.#random];
+                this.#chosenSide = Math.round(Math.random());
+                this.#x_v = this.#defaultVelocity[this.#chosenSide];
                 player.score += 500;
                 player.addEnemykilled();
                 player.addDamageDealt(1);
@@ -256,7 +256,7 @@ class Patrolman extends Enemy{
         }
 
         if(this.isAlive === false){
-            this.#x_v += this.#values[this.#random];
+            this.#x_v += this.#velocityIncrementation[this.#chosenSide];
             this.#y_v += 0.7;
 
             this.x = this.x + this.#x_v;
