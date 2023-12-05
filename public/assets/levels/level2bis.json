@@ -87,8 +87,11 @@
         "origin_y": 450,
         "speed": 2.5,
         "damage": 2,
-        "triggerZoneX": 300,
-         "triggerZoneY": 300,
+        "triggerZoneWidth": 300,
+         "triggerZoneHeight": 300,
+         "triggerZoneX": 0,
+         "triggerZoneY": 0,
+         "batMode" : 0,
         "texturepath": "assets/sprites/Bats.png",
         "soundPath": "assets/sounds/ennemy/bat/hit.wav"
       }
@@ -103,8 +106,11 @@
         "origin_y": 450,
         "speed": 0,
         "damage": 0,
+        "triggerZoneWidth" : 0,
+        "triggerZoneHeight" : 0,
         "triggerZoneX": 0,
-        "triggerZone": 0,
+        "triggerZoneY": 0,
+        "batMode" : 0,
         "texturepath": "assets/sprites/Bats.png",
         "soundPath": "assets/sounds/ennemy/bat/hit.wav"
       }
@@ -119,8 +125,11 @@
         "origin_y": 450,
         "speed": 2.6,
         "damage": 1,
+        "triggerZoneWidth": 150,
+        "triggerZoneHeight": 150,
         "triggerZoneX": 150,
-         "triggerZoneY": 150,
+        "triggerZoneY": 150,
+        "batMode" : 0,
         "texturepath": "assets/sprites/Bats.png",
         "soundPath": "assets/sounds/ennemy/bat/hit.wav"
       }
@@ -135,8 +144,11 @@
         "origin_y": 434,
         "speed": 2.5,
         "damage": 1,
-        "triggerZoneX": 200,
-         "triggerZoneY": 200,
+        "triggerZoneWidth": 200,
+         "triggerZoneHeight": 200,
+         "triggerZoneX": 0,
+         "triggerZoneY": 0,
+         "batMode" : 0,
         "texturepath": "assets/sprites/Bats.png",
         "soundPath": "assets/sounds/ennemy/bat/hit.wav"
       }
@@ -151,8 +163,11 @@
         "origin_y": 573,
         "speed": 0,
         "damage": 0,
-        "triggerZoneX": 0,
+        "triggerZoneWidth": 0,
+         "triggerZoneHeight": 0,
+         "triggerZoneX": 0,
          "triggerZoneY": 0,
+         "batMode" : 0,
         "texturepath": "assets/sprites/Bats.png",
         "soundPath": "assets/sounds/ennemy/bat/hit.wav"
       }
@@ -167,8 +182,11 @@
         "origin_y": 332,
         "speed": 0,
         "damage": 0,
-        "triggerZoneX": 0,
+         "triggerZoneWidth": 0,
+        "triggerZoneHeight": 0,
+         "triggerZoneX": 0,
          "triggerZoneY": 0,
+         "batMode" : 0,
         "texturepath": "assets/sprites/Bats.png",
         "soundPath": "assets/sounds/ennemy/bat/hit.wav"
       }

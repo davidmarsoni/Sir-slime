@@ -549,6 +549,8 @@ class Player extends Entity {
       return false;
    }
 
+
+
    updatePosition(keys) {
       if (this.jump === false || this.isTransported === true) {
          this.x_v *= FRICTION;
