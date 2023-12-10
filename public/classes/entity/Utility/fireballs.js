@@ -80,7 +80,7 @@ class Fireballs extends Entity {
 
 
    throw(player) {
-      console.log(player.cooldown, player.cooldownTime);
+      this.debug && console.log(player.cooldown, player.cooldownTime);
 
       if (!player.cooldown) {
          // Action (throwing a fireball) is allowed
@@ -110,37 +110,18 @@ class Fireballs extends Entity {
          }, player.cooldownTime);
       } else {
          // Action is not allowed because cooldown is active
-         console.log("Action not allowed, cooldown is active.");
+         this.debug && console.log("Action not allowed, cooldown is active.");
       }
 
 
    }
 
-
-
-
-
-
-
-
-
-   move(player) {
-
-      console.log(player.cooldown);
-
-
-
-
+   move() {
+      //console.log(player.cooldown);
       if (this.#effective) {
-
          this.x += this.#x_v;
       }
    }
-
-
-
-
-
 
    collide(collisionblocks, bats, patrolmen) {
       let collide = false;
@@ -155,7 +136,7 @@ class Fireballs extends Entity {
          ) {
             bat.isAlive = false;
             this.#effective = false;
-            console.log("collision avec bat");
+            this.debug && console.log("collision avec bat");
             collide = true;
          }
       }
@@ -172,7 +153,7 @@ class Fireballs extends Entity {
             this.x = -100;
             this.y = -100;
             this.#effective = false;
-            console.log("collision avec patrolman");
+            this.debug && console.log("collision avec patrolman");
             collide = true;
          }
       }
@@ -187,7 +168,7 @@ class Fireballs extends Entity {
             this.#effective
          ) {
             this.#effective = false;
-            console.log("collision avec bloc");
+            this.debug && console.log("collision avec bloc");
             collide = true;
          }
       }

@@ -16,7 +16,7 @@
         },
         {
             "Song": {
-                "path": "assets/songs/level1.mp3"
+                "path": "assets/songs/world.mp3"
             }
         }
     ],
@@ -61,7 +61,7 @@
                 "triggerZoneWidth": 200,
                 "triggerZoneHeight": 200,
                 "triggerZoneX": 0,  
-                "triggerZoneY": 501,
+                "triggerZoneY": 0,
                 "batMode" : 0, 
                 "texturepath": "assets/sprites/Bats.png",
                 "soundPath" : "assets/sounds/enemy/bat/hit.wav"

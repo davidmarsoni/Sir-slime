@@ -1,5 +1,5 @@
 import Entity from "./Entity.js";
-import { FRICTION, GRAVITY } from "../management/constant.js";
+import { FRICTION, GRAVITY } from "../management/Default.js";
 class Player extends Entity {
    // life variables
    #maxPossibleHealth = 8;
@@ -186,9 +186,6 @@ class Player extends Entity {
    set cooldownTime(value) { this.#cooldownTime = value; }
 
 
-
-
-
    // #endregion
    // #region statistic methods
    addEnemykilled() { this.#numberOfEnemieskilled++; }
@@ -239,7 +236,7 @@ class Player extends Entity {
             this.#currenthealth = this.#maxHealth;
          }
 
-         this.debug ? console.log("player has gain:" + value + " health new health: " + this.#currenthealth) : null;
+         this.debug && console.log("player has gain:" + value + " health new health: " + this.#currenthealth);
       }
    }
 
@@ -255,7 +252,7 @@ class Player extends Entity {
             this.#maxHealth = this.#maxPossibleHealth;
          }
 
-         this.debug ? console.log("player has gain:" + value + " heart new max health: " + this.#maxHealth) : null;
+         this.debug && console.log("player has gain:" + value + " heart new max health: " + this.#maxHealth);
       }
    }
 
@@ -271,7 +268,7 @@ class Player extends Entity {
          if (this.#maxLives > this.#maxPossibleLives) {
             this.#maxLives = this.#maxPossibleLives;
          }
-         this.debug ? console.log("player has gain:" + value + " lives new number of lives: " + this.#maxLives) : null;
+         this.debug && console.log("player has gain:" + value + " lives new number of lives: " + this.#maxLives);
       }
    }
 
@@ -282,7 +279,7 @@ class Player extends Entity {
     */
    takeDamage(value) {
       if (value > 0) {
-         this.debug ? console.log("player take damage current health: " + this.#currenthealth + " damage taken: " + value + " new health: " + (this.#currenthealth - value) + "") : null;
+         this.debug && console.log("player take damage current health: " + this.#currenthealth + " damage taken: " + value + " new health: " + (this.#currenthealth - value) + "");
          this.addDamageTaken(value);
          this.#currenthealth -= value;
          if (this.isDead()) {
@@ -297,9 +294,9 @@ class Player extends Entity {
    dead() {
       this.addDeath();
       this.#currentlives--;
-      this.playSound && this.deadSound != null ? this.deadSound.play() : null;
+      this.playSound && this.deadSound != null && this.deadSound.play();
       if (this.lifeRemains) {
-         this.debug ? console.log("player is dead, number of life left : " + this.lives) : null;
+         this.debug && console.log("player is dead, number of life left : " + this.lives);
          this.#currenthealth = this.#maxHealth;
          this.respawn();
       }
@@ -326,7 +323,7 @@ class Player extends Entity {
       this.y_v = 0;
       this.x_v = 0;
 
-      this.debug ? console.log("respawn number of life left : " + this.lives) : null;
+      this.debug && console.log("respawn number of life left : " + this.lives);
    }
 
    get lifeRemains() {
@@ -450,26 +447,26 @@ class Player extends Entity {
    }
 
    hit(damage = 1, isPreventMovement = true) {
-      this.debug ? console.log("current helth of the player: " + this.#currenthealth) : null;
+      this.debug && console.log("current helth of the player: " + this.#currenthealth);
 
       if (!this.isHit) {
          this.#invicivibilityTimer = 0;
          this.isHit = true;
-         this.debug ? console.log("player hit") : null;
+         this.debug && console.log("player hit");
          this.takeDamage(damage);
       }
       if (isPreventMovement) {
          this.#preventMovement = true;
          this.#preventMovementTimer = 0;
       }
-      this.debug ? console.log("hit") : null;
+      this.debug && console.log("hit");
    }
 
    invicibilityFrames() {
       this.#invicivibilityTimer++;
       if (this.#invicivibilityTimer === 120) {
          this.isHit = false;
-         this.debug ? console.log("invicibility over") : null;
+         this.debug && console.log("invicibility over");
       }
    }
 
@@ -583,6 +580,75 @@ class Player extends Entity {
       this.jump = true;
    }
 
+   exportCurrentState() {
+      return {
+         maxPossibleLives: this.maxPossibleLives,
+         maxPossibleHealth: this.maxPossibleHealth,
+         maxHealth: this.maxHealth,
+         maxLives: this.maxLives,
+         currentlives: this.lives,
+         currenthealth: this.health,
+         score: this.score,
+         numberOfEnemieskilled: this.numberOfEnemieskilled,
+         numberOfHeartsCollected: this.numberOfHeartsCollected,
+         numberOfCoinsCollected: this.numberOfCoinsCollected,
+         numberOfDeaths: this.numberOfDeaths,
+         numberOfLevelCompleted: this.numberOfLevelCompleted,
+         totalDamageTaken: this.totalDamageTaken,
+         totalDamageDealt: this.totalDamageDealt,
+         totalheal: this.totalheal
+      };
+   }
+
+   updateCurrentState(state) {
+      this.#maxPossibleLives = state.maxPossibleLives;
+      this.#maxPossibleHealth = state.maxPossibleHealth;
+      this.#maxHealth = state.maxHealth;
+      this.#maxLives = state.maxLives;
+      this.#currentlives = state.currentlives;
+      this.#currenthealth = state.currenthealth;
+      this.#score = state.score;
+      this.#numberOfEnemieskilled = state.numberOfEnemieskilled;
+      this.#numberOfHeartsCollected = state.numberOfHeartsCollected;
+      this.#numberOfCoinsCollected = state.numberOfCoinsCollected;
+      this.#numberOfDeaths = state.numberOfDeaths;
+      this.#numberOfLevelCompleted = state.numberOfLevelCompleted;
+      this.#totalDamageTaken = state.totalDamageTaken;
+      this.#totalDamageDealt = state.totalDamageDealt;
+      this.#totalheal = state.totalheal;
+   }
+
+   exportCurrentStats() {
+      return {
+         score: this.score,
+         numberOfEnemieskilled: this.numberOfEnemieskilled,
+         numberOfHeartsCollected: this.numberOfHeartsCollected,
+         numberOfCoinsCollected: this.numberOfCoinsCollected,
+         numberOfDeaths: this.numberOfDeaths,
+         numberOfLevelCompleted: this.numberOfLevelCompleted,
+         totalDamageTaken: this.totalDamageTaken,
+         totalDamageDealt: this.totalDamageDealt,
+         totalheal: this.totalheal
+      };
+   }
+
+   restoreState(state) {
+      this.#maxPossibleLives = state.maxPossibleLives;
+      this.#maxPossibleHealth = state.maxPossibleHealth;
+      this.#maxHealth = state.maxHealth;
+      this.#maxLives = state.maxLives;
+      this.#currentlives = state.currentlives;
+      this.#currenthealth = state.currenthealth;
+      this.#score = state.score;
+      this.#numberOfEnemieskilled = state.numberOfEnemieskilled;
+      this.#numberOfHeartsCollected = state.numberOfHeartsCollected;
+      this.#numberOfCoinsCollected = state.numberOfCoinsCollected;
+      this.#numberOfDeaths = state.numberOfDeaths;
+      this.#numberOfLevelCompleted = state.numberOfLevelCompleted;
+      this.#totalDamageTaken = state.totalDamageTaken;
+      this.#totalDamageDealt = state.totalDamageDealt;
+      this.#totalheal = state.totalheal;
+   }
 }
 
 export default Player;

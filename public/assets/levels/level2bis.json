@@ -13,6 +13,11 @@
       "Background": {
         "path": "assets/images/level2bis.png"
       }
+    },
+    {
+      "Song": {
+        "path": "assets/songs/cave-v2.mp3"
+      }
     }
   ],
   "player_info": [
@@ -208,7 +213,7 @@
         "y": 0,
         "width": 100,
         "height": 75,
-        "passageWayTo": "level1"
+        "passageWayTo": "level3"
       }
     },
     {

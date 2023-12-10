@@ -1,5 +1,0 @@
-{
-    "key_player": "Arrow keys: move\nSpace or up key: jump\nLeft shift: attack\nE: exit\nP: pause\nH: help\nN: mute sound\nM: mute music\nS: statistics\nCrtl+D: Developer mode\n",
-    "key_dev": "Crtl+D: Developer mode\nD: debug\nA: ask for level name\nF: force load level\nO: print the level in png\nQ: quick object creation\n",
-    "dev_mode_note":"Informations\n\nyou're going to switch to developer mode please concider the folowing message :\n\nYou need to be in developer mode to use this key.\nThis mode is used to debug the game and create new levels and facilitate the development of the game.\nThis mode can be used to cheat and break the game. Please use it wisely.\nTo quit this mode, press ctrl+shift+d again.\nTo quit this page, press enter or escape."
-}

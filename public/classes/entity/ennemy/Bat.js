@@ -143,8 +143,15 @@ class Bat extends Enemy {
          ctx.fillRect(this.x - this.width, this.y - this.height, this.width, this.height)
          ctx.fillStyle = "rgba(169,208,72,0.25)"
          ctx.fillRect(this.x - this.width + this.width / 4, this.y - this.height, this.width / 2, this.height)
-         ctx.strokeStyle = "rgba(255,0,0,0.3)"
-         ctx.strokeRect(this.minX - this.triggerZone, this.minY - this.triggerZone, this.triggerZone * 2 + this.width, this.triggerZone * 2 + this.height)
+         //selon le mode de la chauve-souris, on affiche la zone de trigger ou le trigerArea
+         if (this.#batMode === 0) {
+            ctx.fillStyle = "rgba(169,208,72,0.25)"
+
+            ctx.fillRect(this.x - this.width-this.triggerZoneWidth, this.y - this.height-this.triggerZoneHeight, this.triggerZoneWidth * 2 + this.width, this.triggerZoneHeight * 2 + this.height)
+         } else if (this.#batMode === 1) {
+            ctx.fillStyle = "rgba(169,208,72,0.25)"
+            ctx.fillRect(this.#triggerZoneX, this.#triggerZoneY, this.triggerZoneWidth, this.triggerZoneHeight)
+         }
       }
 
       let spriteDirectionOffset;
@@ -199,6 +206,7 @@ class Bat extends Enemy {
 
       let deltaX;
       let deltaY;
+      
 
       if (this.#batMode === 1) {
          if (player.InAPerimeter(new TriggerArea(this.#triggerZoneX, this.#triggerZoneY), this.triggerZoneWidth, this.triggerZoneHeight)) {
@@ -274,7 +282,7 @@ class Bat extends Enemy {
                || player.getTrampleBoxRight(true) >= this.getTrampleBoxLeft()
             ) && player.y_v > 0 && this.isAlive === true
          ) {
-            this.debug ? console.log("trample") : null;
+            this.debug && console.log("trample");
             player.y_v = -7;
             this.#chosenSide = Math.round(Math.random());
             this.#x_v = this.#defaultVelocity[this.#chosenSide];
@@ -286,22 +294,22 @@ class Bat extends Enemy {
 
 
          else if (player.x <= this.x && !player.isHit && this.isAlive === true) {
-            this.debug ? console.log("left") : null;
+            this.debug && console.log("left") ;
             player.x_v = -4;
             player.y_v = -3;
             player.predictedX = this.x - this.width + player.x_v;
             player.jump = true;
-            this.playSound ? this.hitSound.play() : null;
+            this.playSound && this.hitSound.play();
             player.hit(this.damage);
          }
          // Push the player right
          else if (player.x >= this.x && !player.isHit && this.isAlive === true) {
-            this.debug ? console.log("right") : null;
+            this.debug && console.log("right");
             player.x_v = 4;
             player.y_v = -3;
             player.predictedX = this.x + player.width + player.x_v;
             player.jump = true;
-            this.playSound ? this.hitSound.play() : null;
+            this.playSound && this.hitSound.play();
             player.hit(this.damage);
          }
 

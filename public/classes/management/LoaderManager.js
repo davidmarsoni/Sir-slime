@@ -39,7 +39,7 @@ class LoaderManager{
                 
                 player_info = data.player_info;
 
-                debug ? console.log(player_info) : null;
+                debug && console.log(player_info);
                 //resolve the promise with the data
                 resolve(player_info);
             
@@ -102,9 +102,8 @@ class LoaderManager{
                 let information = data.information;
                 let objects = data.objects;
                 //get dynamically the data from the JSON file
-                
-                debug ? console.log(information) : null;
-                debug ? console.log(objects) : null;
+                debug && console.log(information);
+                debug && console.log(objects);
                 //resolve the promise with the data
                 resolve([information,objects]);
             });
@@ -114,7 +113,6 @@ class LoaderManager{
     }
 
     static loadFromJson(jsonFile){
-       
         return new Promise((resolve) => {
             fetch(jsonFile)
             .then((response) => response.json())

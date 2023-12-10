@@ -1,6 +1,6 @@
-import BasePlatform from "./BasePlatform.js";
+import Platform from './Platform.js';
 
-class MovablePlatform extends BasePlatform{
+class MovablePlatform extends Platform{
     #isInPath = false;
  
     #path; // 2 cordonates: {50,50},{100,100} or 1 cordonate: {50,50}
@@ -53,21 +53,12 @@ class MovablePlatform extends BasePlatform{
             }
         }
     }
-    get path() {
-        return this.#path;
-    }
 
-    set path(value) {
-        this.#path = value;
-    }
+    get path() { return this.#path; }
+    set path(value) { this.#path = value; }
 
-    get speed() {
-        return this.#speed;
-    }
-
-    set speed(value) {
-        this.#speed = value;
-    }
+    get speed() { return this.#speed; }
+    set speed(value) { this.#speed = value; }
 
     debugRender(ctx) {
         super.debugRender(ctx);
@@ -95,7 +86,7 @@ class MovablePlatform extends BasePlatform{
             // Predictive Y collision
             // [platform.y+3;platform.y+1] -> 1. tolerance for clip (define if goes through) | 2. hitbox
             if (player.y <= this.y + this.#speed*3 && player.predictedY >= this.y + this.#speed*1) {
-                this.debug ? console.log("on the platform") : null;
+                this.debug && console.log("on the platform");
                 // If the player was above the platform and now is within it vertically
                 player.predictedY = this.y + 1;
                 player.jump = false;

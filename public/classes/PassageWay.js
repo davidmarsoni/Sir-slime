@@ -1,21 +1,29 @@
 import GameObjectLogic from './GameObjectLogic.js';
+import firebase from './management/Firebase.js';
 
-class PassageWay extends GameObjectLogic {
+class PassageWay extends GameObjectLogic{
     #passageWayTo = "";
+    #title = "";
+    #content = "";
 
-    constructor(x, y, width, height, passageWayTo) {
+    constructor(x, y, width, height, passageWayTo, title, content) {
         super(x, y, width, height);
         this.#passageWayTo = passageWayTo;
         this.isAnimate = false;
+        this.#title = title;
+        this.#content = content;
+
     }
 
-    get passageWayTo() {
-        return this.#passageWayTo;
-    }
+    get passageWayTo() { return this.#passageWayTo; }
+    set passageWayTo(value) { this.#passageWayTo = value; }
 
-    set passageWayTo(value) {
-        this.#passageWayTo = value;
-    }
+    get title() { return this.#title; }
+    set title(value) { this.#title = value; }
+
+    get content() { return this.#content; }
+    set content(value) { this.#content = value; }
+    
 
     collide(player) {
         if(player.x >= this.x
@@ -26,7 +34,6 @@ class PassageWay extends GameObjectLogic {
             return true;
         }
     }
-
     render(ctx) {
         if(this.isRendered === false){
             return;

@@ -11,16 +11,11 @@ class Coin extends Collectable{
        
         this.#value = value;
     }
-    get value() {
-        return this.#value;
-    }
-
-    set value(value) {
-        this.#value = value;
-    }
+    get value() { return this.#value; }
+    set value(value) { this.#value = value;}
 
     collect(player) {
-        this.debug ? console.log("coin collected") : null;
+        this.debug && console.log("coin collected");
         player.score += this.#value;
         player.addCoinCollected();
     }

@@ -7,13 +7,6 @@ class TriggerArea extends GameObjectLogic {
       this.width = 32;
       this.height = 32;
    }
-
-
-
-
-
-
-
 }
 
 export default TriggerArea;

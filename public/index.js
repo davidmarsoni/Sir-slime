@@ -1,12 +1,16 @@
+// Sources:
 // https://www.educative.io/answers/how-to-make-a-simple-platformer-using-javascript
 
+//Imports
 import Loader from "./classes/management/Loader.js";
 import Render from "./classes/management/Render.js";
 import QuickObjectCreation from "./classes/management/QuickObjectCreation.js";
 import ModalWindow from "./classes/management/ModalWindow.js";
+import firebase from "./classes/management/Firebase.js";
 import Fireballs from "./classes/entity/Utility/fireballs.js";
+import { START_MENU_FILE_NAME, DEFAULT_LEVEL } from "./classes/management/Default.js";
 
-// game variables
+// Game variables
 const GAME_ON = "game_on";
 const GAME_OFF = "game_off";
 const COMMAND = "command";
@@ -15,13 +19,15 @@ const START = "start";
 let uiState = START;
 
 // The game state
-let currentLevel = "level1";
+let currentLevel = DEFAULT_LEVEL;
+let currentModalWindow = new ModalWindow("","");
 let developerMode = true;
-let debug = false;
-
-// The player character
+let debug = true;
+let onlyPlayerKeys = false;
+// The player
 let player;
-// The status of the arrow keys
+
+// The keys
 let keys = {
    right: false,
    left: false,
@@ -29,16 +35,7 @@ let keys = {
    attack: false
 };
 
-// The objects
-let passageWays = [];
-let platforms = [];
-let patrolmen = [];
-let bats = [];
-let collisionBlocks = [];
-let collectibles = [];
-let fireballs = [];
-
-//create the render object
+// Objects of the game
 const render = new Render(debug, developerMode);
 const loader = new Loader();
 const quickObjectCreation = new QuickObjectCreation();
@@ -50,6 +47,7 @@ let then = Date.now();
 let interval = 1000 / fps;
 let delta;
 
+// The game loop
 function animate() {
    requestAnimationFrame(animate);
    now = Date.now();
@@ -62,6 +60,7 @@ function animate() {
 }
 
 function loop() {
+   //console.log("state",uiState);
    switch (uiState) {
       case GAME_ON: "game_on"
          update();
@@ -71,6 +70,7 @@ function loop() {
       case COMMAND: "command"
          break;
       case MODAL: "modal"
+         render.renderModalWindow(currentModalWindow);
          break;
       case START: "start"
          start();
@@ -78,120 +78,161 @@ function loop() {
    }
 }
 function goToStartState() {
-   loader.reset();
-   currentLevel = "level1";
-   window.removeEventListener("keydown", keydown)
-   window.removeEventListener("keyup", keyup)
    uiState = START;
-   window.addEventListener("keydown", keydownStart)
+   if (firebase.isUserSignedIn()) {
+      if (loader.player.lives > 0) {
+         //firebase.saveCurrentLevel(loader.levelName,loader.player.exportCurrentState());
+         firebase.updateHighestStats(loader.player.exportCurrentState());
+         firebase.updateAllTimeStats(loader.player.exportCurrentStats());
+      }
+   }
+   loader.reset();
+   resetKeys();
+   currentLevel = DEFAULT_LEVEL;
+   removeGameKeys();
+   loadStartMenu();
 }
 function goToModalState() {
    uiState = MODAL;
-   window.removeEventListener("keydown", keydown)
-   window.removeEventListener("keyup", keyup)
-
-   window.addEventListener("keydown", keydownModal)
+   resetKeys();
+   console.log("go to modal state");
+   removeGameKeys();
+   window.addEventListener("keydown", keydownModal);
 }
-function start() {
-   //render.renderStart(loader); 
-   render.renderStart(loader);
+function resetKeys() {
+    //reset keys
+    keys = {
+      right: false,
+      left: false,
+      up: false,
+      attack: false
+   };
 }
 
-function commandScreen() {
-   //commandloadstate = false;
-   //if (commandloadstate == false){
-   window.removeEventListener("keydown", keydownStart);
-   uiState = GAME_OFF;
+function removeGameKeys() {
+   window.removeEventListener("keydown", keydown);
+   window.removeEventListener("keyup", keyup);
+   window.removeEventListener("keydown", utilityKeys);
+}
+function addGameKeys() {
    window.addEventListener("keydown", keydown);
    window.addEventListener("keyup", keyup);
-   render.renderCommand(loader);
-
-   //  commandloadstate = true;
-
-   //}else{
-   //   window.removeEventListener()
-   //}
-
+   if (onlyPlayerKeys === false) {
+      window.addEventListener("keydown", utilityKeys);
+   }
 }
-
+function start() {
+   render.renderStart(loader);
+}
+function commandScreen() {
+   window.removeEventListener("keydown", keydownStart);
+   uiState = GAME_OFF;
+   addGameKeys();
+   render.renderCommand(loader);
+}
 function update() {
-
+   //update the player position
    player.updatePosition(keys);
 
-
+   // Collision detection
    // collision for the patrolmen
-   for (const patrolman of patrolmen) {
+   for (const patrolman of loader.patrolmen) {
       patrolman.move();
       patrolman.collide(player);
    }
-
    // collision for the bats
-   for (const bat of bats) {
-
-      console.log("TriggerZoneX : " + bat.triggerZoneX, "TriggerZoneY : " + bat.triggerZoneY, "TriggerZoneWidth : " + bat.triggerZoneWidth, "TriggerZoneHeight : " + bat.triggerZoneHeight + "batmode : " + bat.batMode);
+   for (const bat of loader.bats) {
       bat.move(player);
       bat.collide(player);
    }
-
+   // collision for the spikes
    for (const spike of loader.spikes) {
       spike.collide(player);
    }
-
    // collision for the collectibles
-   for (const collactible of collectibles) {
+   for (const collactible of loader.collectibles) {
       collactible.collide(player);
    }
 
+
+   // Test if the player is dying
    // Death by falling
    if (player.predictedY > 1200) {
       player.takeDamage(2);
       player.respawn();
    }
-
    // game over if no life remains
    if (!player.lifeRemains) {
-      alert("Game Over");
-      goToStartState();
+      uiState = GAME_OFF;
+      goToModalState();
+      currentModalWindow = new ModalWindow("Game Over", 
+         "you died you will be redirected to the start menu",
+         true,
+         true,
+         function(){
+            goToStartState();
+         }
+      );
+      if (firebase.isUserSignedIn()) {
+         firebase.resetCurrentState();
+      }
    }
 
    // See if the player is colliding with the passage ways
-   for (const passageWay of passageWays) {
+   for (const passageWay of loader.passageWays) {
       if (passageWay.collide(player)) {
-         console.log("passage way to : " + passageWay.passageWayTo);
-         loadLevel(passageWay.passageWayTo);
-         break;
+         // slice the passage way to get the level name with | 
+         debug && console.log("passage way to : " + passageWay.passageWayTo);
+         debug && console.log("passage way title : " + passageWay.title);
+         if (firebase.isUserSignedIn()) {
+            firebase.saveCurrentLevel(passageWay.passageWayTo, player.exportCurrentState());
+         }
+         
+         if(passageWay.title === undefined || passageWay.title === ""){
+            loadLevel(passageWay.passageWayTo);
+            break;
+         }else{
+            goToModalState();
+            currentModalWindow = new ModalWindow(
+               passageWay.title,
+               passageWay.content,
+               true,
+               true,
+               function(){
+                  loadLevel(passageWay.passageWayTo);
+               }
+            );
+            break;
+         }  
       }
    }
+
 
    //notes : the platform and the collision block  must be place a the end of the code 
    // to be sure about the collision detection
 
    // See if the player is colliding with the platforms
-   for (const platform of platforms) {
+   for (const platform of loader.platforms) {
       platform.move();
       platform.collide(player);
    }
 
-   for (let i = 0; i < fireballs.length; i++) {
-      fireballs[i].move(player);
-      let collide = fireballs[i].collide(collisionBlocks, bats, patrolmen);
+   //fireballs
+   for (let i = 0; i < loader.fireballs.length; i++) {
+      loader.fireballs[i].move();
+      let collide = loader.fireballs[i].collide(loader.collisionBlocks, loader.bats, loader.patrolmen);
       if (collide === true) {
-         fireballs.splice(i, 1);
-         console.log("fireball destroyed : " + i);
+         loader.fireballs.splice(i, 1);
+         debug && console.log("fireball destroyed : " + i);
       }
-
-
    }
-
-
-
 
    // add the relative offset to the player position if there is one
    player.predictedX += player.relativeXoffset;
    player.relativeXoffset = 0;
 
    // See if the player is colliding with the collision blocks
-   for (const collisionBlock of collisionBlocks) {
+   for (const collisionBlock of loader.collisionBlocks) {
       collisionBlock.collide(player);
    }
 
@@ -202,6 +243,7 @@ function update() {
    player.y = player.predictedY;
    player.x = player.predictedX;
 
+   // Check status of the player
    // See if the player was hit
    if (player.isHit) {
       player.invicibilityFrames();
@@ -219,31 +261,122 @@ function update() {
 // Attack key listener
 function keydown(event) {
    // Attack : left shift 
-   if (event.keyCode === 16) {
+   if ((event.keyCode === 16 && event.code == "ShiftRight")|| event.keyCode === 69) {
       keys.attack = true;
       let tempFireball = new Fireballs(0, 0, 24, 24, "assets/sprites/Fireball.png", 5, 1);
       tempFireball.throw(player);
-      fireballs.push(tempFireball);
+      loader.fireballs.push(tempFireball);
    }
-   // direction keys : left arrow or n
-   if (event.keyCode === 37) {
+   // direction keys : left arrow or 'a'
+   if (event.keyCode === 37 || (onlyPlayerKeys && event.keyCode === 65)) {
       keys.left = true;
    }
-   // jump : up arrow or space
-   if (event.keyCode === 38 || event.keyCode === 32) {
+   // jump : up arrow, space, or 'w'
+   if (event.keyCode === 38 || event.keyCode === 32 || (onlyPlayerKeys && event.keyCode === 87)) {
       keys.up = true;
       // make the player jump, DO NOT REMOVE even if it looks useless
       if (!player.jump) {
          player.y_v = -10;
       }
    }
-   // direction keys 
-   if (event.keyCode === 39) {
+   // direction keys : right arrow or 'd'
+   if (event.keyCode === 39 || (onlyPlayerKeys && event.keyCode === 68)) {
       keys.right = true;
    }
+
+   //esc : exit  
+   if (event.keyCode === 27) {
+      console.log("exit");
+      goToStartState();
+
+   }
+   // key h (help)
+   if (event.keyCode === 72) {
+      let text = "You are on the help. Here you can find the keys to play the game. \n\n";
+
+      if (onlyPlayerKeys === false) {
+         text += "Current Mode    : ";
+         if (developerMode === true) {
+            text += "[developer mode]\n";
+         } else {
+            text += "[player mode]\n";
+         }
+         text += "Arrow keys      : move\n";
+         text += "Space or up key : jump\n";
+         text += "Left shift or e : attack\n";
+         text += "Esc             : exit\n";
+         text += "P               : pause\n";
+         text += "H               : help\n";
+         text += "M               : mute music\n";
+         text += "N               : mute sound\n";
+         text += "O               : print the level in png\n";
+         text += "S               : statistics\n";
+         text += "Shift+D         : Developer mode\n";
+         text += "Shift+P         : only player keys (wasd)\n";
+         if (developerMode === true) {
+            text += "D               : debug\n";
+            text += "A               : ask for level name\n";
+            text += "F               : force load level\n";
+            text += "Q               : quick object creation\n";
+         }
+      } else {
+         text += "You are in only player keys mode. This mode is use to play the game with only the player keys (wasd).\n";
+         text += "To quit this mode press shift+p again. \n";
+         text += "h              : help\n";
+         text += "w              : jump\n";
+         text += "a              : left\n";
+         text += "d              : right\n";
+         text += "e              : attack\n";
+         text += "ESC            : exit\n";
+      }
+      goToModalState();
+      currentModalWindow = new ModalWindow("Help", text);
+   }
+   // key p (pause)
+   if (event.keyCode === 80 && !event.shiftKey) {
+      if (uiState === GAME_ON) {
+         uiState = GAME_OFF;
+      } else {
+         uiState = GAME_ON;
+      }
+   }
+
+   // shif + p (only player keys)
+   if (event.shiftKey && event.keyCode === 80) {
+      onlyPlayerKeys = !onlyPlayerKeys;
+
+      removeGameKeys();
+      addGameKeys();
+      console.log("only player keys : " + onlyPlayerKeys);
+   }
+
+}
+function keyup(event) {
+   // Attack : left shift 
+   if (event.keyCode === 16) {
+      keys.attack = false;
+   }
+   // direction keys : left arrow or 'a'
+   if (event.keyCode === 37 || (onlyPlayerKeys && event.keyCode === 65)) {
+      keys.left = false;
+   }
+   // jump : up arrow, space, or 'w'
+   if (event.keyCode === 38 || event.keyCode === 32 || (onlyPlayerKeys && event.keyCode === 87)) {
+      if (player.y_v < -2) {
+         player.y_v = -3;
+      }
+   }
+   // direction keys : right arrow or 'd'
+   if (event.keyCode === 39 || (onlyPlayerKeys && event.keyCode === 68)) {
+      keys.right = false;
+   }
+}
+
+
+function utilityKeys(event) {
    //key o print the level in png (o = output)
    if (event.keyCode === 79) {
-      const canvas = document.querySelector('canvas');
+      const canvas = document.getElementById('canvas');
       const dataURL = canvas.toDataURL('image/png');
       const image = new Image();
       //set the image source to current level
@@ -266,10 +399,8 @@ function keydown(event) {
          text += "To quit this mode press ctrl+shift+d again. \n";
          text += "To quit this page press enter. or escape";
 
-         let modal = new ModalWindow("Developersnote", text);
-         uiState = GAME_OFF;
          goToModalState();
-         modal.open();
+         currentModalWindow = new ModalWindow("Developer Mode note", text);
       }
 
       developerMode = !developerMode;
@@ -287,7 +418,16 @@ function keydown(event) {
 
          // ask for level name
          let levelName = prompt("Please enter the level name", "level1");
+         if(levelName === null || levelName === ""|| levelName === undefined){
+            uiState = GAME_ON;
+            return;
+         }
          loader.findFile("./assets/levels/", levelName, ".json").then((result) => {
+            if (firebase.isUserSignedIn()) {
+               console.log("saving current level");
+               firebase.saveCurrentLevel(loader.levelName, loader.player.exportCurrentState());
+            }
+
             if (result) {
                loadLevel(levelName, false);
             } else {
@@ -335,9 +475,7 @@ function keydown(event) {
       text += "Number of deaths           : " + player.numberOfDeaths + "\n";
       text += "Number of level completed  : " + player.numberOfLevelCompleted + "\n";
       goToModalState();
-      let modal = new ModalWindow("Statistics", text);
-
-      modal.open();
+      currentModalWindow = new ModalWindow("Statistics", text);
 
    }
    // key n (mute sound)
@@ -348,80 +486,21 @@ function keydown(event) {
    if (event.keyCode === 77) {
       loader.playMusic = !loader.playMusic;
    }
-   // key p (pause)
-   if (event.keyCode === 80) {
-      if (uiState === GAME_ON) {
-         uiState = GAME_OFF;
-      } else {
-         uiState = GAME_ON;
-      }
-   }
-   //e : exit  
-   if (event.keyCode === 69) {
-      console.log("exit");
-      goToStartState();
 
-   }
-
-   // key h (help)
-   if (event.keyCode === 72) {
-      let text = "You are on the help page to quit press enter or escape\n\n";
-      text += "Current Mode    : ";
-      if (developerMode === true) {
-         text += "[developer mode]\n";
-      } else {
-         text += "[player mode]\n";
-      }
-      text += "Arrow keys      : move\n";
-      text += "Space or up key : jump\n";
-      text += "Left shift      : attack\n";
-      text += "E               : exit\n";
-      text += "P               : pause\n";
-      text += "H               : help\n";
-      text += "M               : mute music\n";
-      text += "N               : mute sound\n";
-      text += "O               : print the level in png\n";
-      text += "S               : statistics\n";
-      text += "Crtl+D          : Developer mode\n";
-      if (developerMode === true) {
-         text += "D               : debug\n";
-         text += "A               : ask for level name\n";
-         text += "F               : force load level\n";
-         text += "Q               : quick object creation\n";
-      }
-      let modal = new ModalWindow("Help", text);
-      uiState = GAME_OFF;
+   //key t (test)
+   if (event.keyCode === 84) {
+     
+      console.log("test");
       goToModalState();
-      modal.open();
-   }
-}
-function keyup(event) {
-   // left shift key
-   if (event.keyCode === 16) {
-      keys.attack = false;
-   }
-   // direction keys
-   if (event.keyCode === 37) {
-      keys.left = false;
-   }
-   if (event.keyCode === 38 || event.keyCode === 32) {
-      if (player.y_v < -2) {
-         player.y_v = -3;
-      }
-   }
-   if (event.keyCode === 39) {
-      keys.right = false;
+      currentModalWindow = new ModalWindow("Test", "test");   
+      
    }
 }
 
 function keydownStart(event) {
    //key = enter
    if (event.keyCode === 13) {
-      window.removeEventListener("keydown", keydownStart)
-      uiState = GAME_OFF;
-      window.addEventListener("keydown", keydown)
-      window.addEventListener("keyup", keyup)
-      loadLevel(currentLevel, false);
+      startGame();
    }
 }
 
@@ -429,52 +508,63 @@ function keydownModal(event) {
    //key = enter or escape
    if (event.keyCode === 13 || event.keyCode === 27) {
       window.removeEventListener("keydown", keydownModal)
-      window.addEventListener("keydown", keydown)
-      window.addEventListener("keyup", keyup)
       uiState = GAME_ON;
+      addGameKeys();
+      currentModalWindow.callback != undefined && currentModalWindow.callback();
    }
 }
 
 function startGame() {
-   window.removeEventListener("keydown", keydownStart)
+   debug && console.log("start game");
    uiState = GAME_OFF;
-   window.addEventListener("keydown", keydown)
-   window.addEventListener("keyup", keyup)
-   loadLevel(currentLevel, false);
+   loader.startScreenButton.forEach(button => {
+      button.executed_function = undefined;
+   });
+   window.removeEventListener("keydown", keydownStart);
+   if (firebase.isUserSignedIn()) {
+      firebase.getCurrentLevel().then((levelData) => {
+         if (levelData != null) {
+            currentLevel = levelData.name;
+         }
+         loadLevel(currentLevel, false);
+      });
+   } else {
+      loadLevel(currentLevel, false);
+   }
+   addGameKeys();
 }
 
 function loadLevel(levelpath) {
    uiState = GAME_OFF;
    loader.loadGame(levelpath, false).then((result) => {
       if (result) {
-         currentLevel = loader.levelname;
          player = loader.player;
-         patrolmen = loader.patrolmen;
-         platforms = loader.platforms;
-         collisionBlocks = loader.collisionBlocks;
-         passageWays = loader.passageWays;
          document.title = String.fromCodePoint(0x1F3AE) + " " + loader.levelDisplayName + " by " + loader.levelAuthor;
          currentLevel = loader.levelName;
-         bats = loader.bats;
-         fireballs = loader.fireballs
-         collectibles = loader.collectibles;
-         debug ? console.log("level loaded : " + currentLevel) : null;
          uiState = GAME_ON;
+         debug && console.log("level loaded : " + currentLevel);
       } else {
          console.error(loader.errors);
       }
    });
 }
 
-window.addEventListener("keydown", keydownStart)
-//setInterval(loop,25);
-loader.loadStartMenu("startMenu", true).then((result) => {
-   if (!result) {
-      console.error(loader.errors);
-   } else {
-      loader.setbuttonAction(0, startGame);
-      loader.setbuttonAction(1, commandScreen);
-   }
-});
+function loadStartMenu() {
+   loader.loadStartMenu(START_MENU_FILE_NAME, false).then((result) => {
+      if (!result) {
+         console.error(loader.errors);
+      } else {
+         //set the button action
+         loader.setbuttonAction(0, startGame);
+         loader.setbuttonAction(1, commandScreen);
+         window.addEventListener("keydown", keydownStart)
+         uiState = START;
+         debug && console.log("start menu loaded");
+      }
+   });
+}
+
+// Start the game
+loadStartMenu();
 animate();
 

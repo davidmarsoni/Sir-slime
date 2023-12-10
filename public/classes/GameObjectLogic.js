@@ -17,69 +17,29 @@ class GameObjectLogic {
         this.#isAnimated = true;
     }
 
-    get x() {
-        return this.#x;
-    }
+    get x(){ return this.#x; }
+    set x(value) { this.#x = value; }
 
-    set x(value) {
-        this.#x = value;
-    }
+    get y(){ return this.#y; }
+    set y(value) { this.#y = value; }
 
-    get y() {
-        return this.#y;
-    }
+    get width(){ return this.#width; }
+    set width(value) { this.#width = value; }
 
-    set y(value) {
-        this.#y = value;
-    }
+    get height(){ return this.#height; }
+    set height(value) { this.#height = value; }
 
-    get width() {
-        return this.#width;
-    }
+    get debug(){ return this.#debug; }
+    set debug(value) { this.#debug = value; }
 
-    set width(value) {
-        this.#width = value;
-    }
+    get playSound(){ return this.#playSound; }
+    set playSound(value) { this.#playSound = value; }
 
-    get height() {
-        return this.#height;
-    }
+    get isRendered(){ return this.#isRendered; }
+    set isRendered(value) { this.#isRendered = value; }
 
-    set height(value) {
-        this.#height = value;
-    }
-
-    get debug() {
-        return this.#debug;
-    }
-
-    set debug(value) {
-        this.#debug = value;
-    }
-
-    get playSound() {
-        return this.#playSound;
-    }
-
-    set playSound(value) {
-        this.#playSound = value;
-    }
-
-    get isRendered() {
-        return this.#isRendered;
-    }
-
-    set isRendered(value) {
-        this.#isRendered = value;
-    }
-
-    get isAnimated() {
-        return this.#isAnimated;
-    }
-
-    set isAnimated(value) {
-        this.#isAnimated = value;
-    }
+    get isAnimated(){ return this.#isAnimated; }
+    set isAnimated(value) { this.#isAnimated = value; }
 
     get center() {
         return {
@@ -88,21 +48,10 @@ class GameObjectLogic {
         };
     }
 
-    get maxX() {
-        return this.x + this.width;
-    }
-
-    get maxY() {
-        return this.y + this.height;
-    }
-
-    get minX() {
-        return this.x;
-    }
-
-    get minY() {
-        return this.y;
-    }
+    get maxX(){ return this.x + this.width; }
+    get maxY(){ return this.y + this.height; }
+    get minX(){ return this.x; }
+    get minY(){ return this.y; }
 
     render() {
     }

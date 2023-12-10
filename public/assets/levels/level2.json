@@ -13,6 +13,11 @@
       "Background": {
         "path": "assets/images/level2.png"
       }
+    },
+    {
+      "Song": {
+        "path": "assets/songs/cave-v2.mp3"
+      }
     }
   ],
   "player_info": [
@@ -89,7 +94,7 @@
         "y": 0,
         "width": 100,
         "height": 75,
-        "passageWayTo": "level1"
+        "passageWayTo": "level3"
       }
     },
     {
@@ -375,7 +380,9 @@
         "y": 676,
         "width": 170,
         "height": 50,
-        "passageWayTo": "level2bis"
+        "passageWayTo": "level2bis",
+        "title": "Secret Level",
+        "content": "You found a secret level ! (this level is harder than the normal level 2) \n If you want to go back to the normal level 2, walk back a the start of the level"
       }
     }
   ]

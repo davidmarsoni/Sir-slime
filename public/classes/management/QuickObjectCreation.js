@@ -7,6 +7,7 @@ import Coin from "../collectible/Coin.js";
 import Heart from "../collectible/Heart.js";
 import ActivationPlatform from "../platform/ActivationPlatform.js";
 import MovablePlatform from "../platform/MovablePlatform.js";
+import Spike from "../entity/Spike.js";
 
 
 class QuickObjectCreation{
@@ -34,7 +35,8 @@ class QuickObjectCreation{
     #bat; 
     #coin; 
     #heart;
-
+    #spike;
+    
     #textExplain;
     
 
@@ -66,7 +68,7 @@ class QuickObjectCreation{
     };
 
     constructor(){
-        this.#objects_list = [Platform.name,ActivationPlatform.name,MovablePlatform.name,CollisionBlock.name,PassageWay.name,Coin.name,Heart.name,Bat.name,Patrolman.name];
+        this.#objects_list = [Platform.name,ActivationPlatform.name,MovablePlatform.name,CollisionBlock.name,PassageWay.name,Coin.name,Heart.name,Bat.name,Patrolman.name,Spike.name];
         this.#canvasWidth = this.#canvas.offsetWidth;
         this.#textForTheObject = [
             "Platform",
@@ -77,7 +79,8 @@ class QuickObjectCreation{
             "Coin : \t value 3 : value \t",
             "Heart : \t value 3 : value \t",
             "Bat : \t value 3 : damage \t value 2 : triggerZone \t",
-            "Patrolman : \t value 3 : damage \t value 4 : speed \t"
+            "Patrolman : \t value 3 : damage \t value 4 : speed \t",
+            "Spike : \t value 1 : downTime \t value 2 : upTime \t value 3 : damage \t value 4 : facing \t"
         ]
     }
     open(){
@@ -135,6 +138,7 @@ class QuickObjectCreation{
         this.#bat = new Bat(0,0,32,32,"assets/sprites/Bats.png",0,0,32,32);
         this.#coin = new Coin(0,0,16,16,"assets/sprites/Collectible.png",0,0);
         this.#heart = new Heart(0,0,16,16,"assets/sprites/Collectible.png",0,0);
+        this.#spike = new Spike(0,0,32,32,"assets/sprites/spike.png",1,1,0,false,0,0);
 
         //add a title to the quick object creation
         const title = document.createElement('h2');
@@ -435,8 +439,8 @@ class QuickObjectCreation{
                         "texturepath": "assets/sprites/DecorSheet.png",
                         "path": [
                             {
-                                "x": parseInt(this.#value1) == 0 ? this.#x-parseInt(this.#value1): parseInt(this.#value1),
-                                "y": parseInt(this.#value2) == 0 ? this.#y-parseInt(this.#value2): parseInt(this.#value2)
+                                        "x": parseInt(this.#value1) == 0 ? this.#x-parseInt(this.#value1): parseInt(this.#value1),
+                        "y": parseInt(this.#value2) == 0 ? this.#y-parseInt(this.#value2): parseInt(this.#value2)
                             },
                             {
                                 "x": parseInt(this.#value3) == 0 ? this.#x+parseInt(this.#value3): parseInt(this.#value3),
@@ -447,6 +451,22 @@ class QuickObjectCreation{
                     }
                 };
                 break;
+            case "Spike":
+                console.log("Spike created");
+                json = {
+                    "Spike":{
+                        "x": x,
+                        "y": y,
+                        "width": 32,
+                        "height": 32,
+                        "texturepath": "assets/sprites/spike.png",
+                        "damage": parseInt(value3) == 0 ? 1 :parseInt(value3),
+                        "facing": 0,
+                        "fixed": false,
+                        "upTime": parseInt(value2) == 0 ? 1 :parseInt(value2),
+                        "downTime": parseInt(value1) == 0 ? 1 :parseInt(value1)
+                    }
+                };
     
         }
         //add the "," to the json object to make it easier to copy paste
@@ -548,6 +568,16 @@ class QuickObjectCreation{
                 this.#heart.y = this.#y-8;
                 
                 this.#heart.render(ctx);
+                break;
+            case "Spike":
+                this.#spike.x = this.#x;
+                this.#spike.y = this.#y;
+                this.#spike.upTime = parseInt(this.#value2) == 0 ? 1 :parseInt(this.#value2);
+                this.#spike.downTime = parseInt(this.#value1) == 0 ? 1 :parseInt(this.#value1);
+                this.#spike.damage = parseInt(this.#value3) == 0 ? 1 :parseInt(this.#value3);
+                this.#spike.facing = parseInt(this.#value4) == 0 ? 1 :parseInt(this.#value4);
+                this.#spike.debug = true;
+                this.#spike.render(ctx);
                 break;
         }
     }

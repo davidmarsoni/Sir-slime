@@ -12,18 +12,10 @@ class Heart extends Collectable{
         this.#heart_gain = heart_gain;
         
     }
-    get heart_gain() {
-        return this.#heart_gain;
-    }
+    get heart_gain() { return this.#heart_gain;}
+    set heart_gain(value) { this.#heart_gain = value;}
 
-    set heart_gain(value) {
-        this.#heart_gain = value;
-    }
-
-    get heal() {
-        return this.#heal;
-    }
-
+    get heal() { return this.#heal;}
     set heal(value) {
         if(value === undefined || value === 0){
             this.#heal = null;
@@ -33,7 +25,7 @@ class Heart extends Collectable{
     }
 
     collect(player) {
-        this.debug ? console.log("heart collected") : null;
+        this.debug && console.log("heart collected");
         player.addHeart(this.#heart_gain);
         player.heal(this.#heal);
     }

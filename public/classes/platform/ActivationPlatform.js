@@ -1,5 +1,5 @@
-import BasePlatform from './BasePlatform.js';
-class ActivationPlatform extends BasePlatform{
+import Platform from './Platform.js';
+class ActivationPlatform extends Platform{
     #triggerZoneX;
     #triggerZoneY;
     #activationTimer;

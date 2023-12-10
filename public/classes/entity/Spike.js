@@ -35,13 +35,12 @@ class Spike extends Entity {
     // hitbox position
     #hitBox = [];
 
-    constructor(x, y, width, height, texturepath, speed, damage,facing,isStatic = true,upTime = 0,downTime = 0) {
-        super(x, y, width, height, texturepath, speed, damage);
+    constructor(x, y, width, height, texturepath, damage,facing,isStatic = true,upTime = 0,downTime = 0) {
+        super(x, y, width, height, texturepath, damage);
         this.#facing = facing;
         this.#isStatic = isStatic;
         this.#upTime = upTime;
         this.#downTime = downTime;
-
         this.hitBox = new GameObjectLogic(0,0,0,0);
     }
 
@@ -160,7 +159,7 @@ class Spike extends Entity {
     }
     collide(player){
         if(player.InAPerimeter(this.#hitBox,0,0)){
-            this.debug ? console.log("collide") : null;
+            this.debug && console.log("collide") ;
             
             player.jump = true;
             player.hit(this.damage,false);

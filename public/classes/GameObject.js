@@ -35,7 +35,6 @@ class GameObject extends GameObjectLogic{
     loadTexture(){
         this.texture = new Image();
         this.texture.src = this.texturepath;
-      
         this.texture.onload = () => {
             this.#textureLoaded = true;
         };

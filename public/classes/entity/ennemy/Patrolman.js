@@ -197,7 +197,7 @@ class Patrolman extends Enemy{
             playerBottom >= patrolmanTop &&
             playerTop <= patrolmanBottom
         ) {
-            this.debug ? console.log("collision") : null;
+            this.debug && console.log("collision");
             if (player.y <= this.y+3
                 && player.predictedY <= this.y
                 && (
@@ -205,7 +205,7 @@ class Patrolman extends Enemy{
                     || player.getTrampleBoxRight(true) >= this.getTrampleBoxLeft()
                 ) && player.y_v > 0 && this.isAlive === true
             ) {
-                this.debug ? console.log("trample") : null;
+                this.debug && console.log("trample");
                 player.y_v = -7;
                 this.#chosenSide = Math.round(Math.random());
                 this.#x_v = this.#defaultVelocity[this.#chosenSide];
@@ -216,7 +216,7 @@ class Patrolman extends Enemy{
             }
             // Push the player left
             else if(player.x <= this.x && this.isAlive === true){
-                this.debug ? console.log("left") : null;
+                this.debug && console.log("left");
                 player.x_v = -5;
                 player.y_v = -3;
                 player.predictedX = this.x - this.width + player.x_v;
@@ -225,14 +225,14 @@ class Patrolman extends Enemy{
             }
             // Push the player right
             else if(player.x >= this.x && this.isAlive === true){
-                this.debug ? console.log("right") : null;
+                this.debug && console.log("right");
                 player.x_v = 5;
                 player.y_v = -3;
                 player.predictedX = this.x + player.width + player.x_v;
                 player.jump = true;
                 player.hit(this.damage);
             } else {
-                this.debug ? console.log("an error in collision was made, oops !!") : null;
+                this.debug && console.log("an error in collision was made, oops !!") ;
             }
         }
     }
