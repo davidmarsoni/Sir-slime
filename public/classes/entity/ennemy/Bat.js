@@ -1,5 +1,5 @@
-import TriggerArea from "./TriggerArea.js";
 import Enemy from "./Enemy.js";
+import GameObjectLogic from "../../GameObjectLogic.js";
 class Bat extends Enemy {
    #origin_x = 64;
    #origin_y = 64;
@@ -7,29 +7,45 @@ class Bat extends Enemy {
    #animStep = 1;
    #animTimer = 0;
    #isIdle = true;
-   #triggerZoneWidth;
-   #triggerZoneHeight;
-   #triggerZoneX;
-   #triggerZoneY;
-   #batMode; //0 = activation mode //1 = customizable trigger zone
+   #triggerZone;
    #x_v = 0;
    #y_v = -4;
    #velocityIncrementation = [0.05, -0.05];
    #defaultVelocity = [2, -2]
    #chosenSide = 0;
+   #triggeredMode = false;
+   #isTriggered = false;
+   #triggerZoneFollow = false;
+   #triggerZoneWidth;
+   #triggerZoneHeight;
 
 
 
-   constructor(x, y, width, height, texturepath, origin_x, origin_y, speed, damage, triggerZoneWidth, triggerZoneHeight, triggerZoneX, triggerZoneY, batMode) {
+   constructor(x, y, width, height, texturepath, origin_x, origin_y, speed, damage, triggerZoneWidth, triggerZoneHeight, triggerZoneX, triggerZoneY, triggeredMode = false, triggerZoneFollow = false) {
       super(x, y, width, height, texturepath, speed, damage);
       this.#origin_x = origin_x;
       this.#origin_y = origin_y;
+      this.#triggeredMode = triggeredMode;
       this.#triggerZoneWidth = triggerZoneWidth;
       this.#triggerZoneHeight = triggerZoneHeight;
-      this.#triggerZoneX = triggerZoneX;
-      this.#triggerZoneY = triggerZoneY;
-      this.#batMode = batMode;
       this.hitSound = new Audio("assets/sounds/enemy/bat/hit.wav");
+      this.triggerZoneFollow = triggerZoneFollow;
+      if (triggerZoneX === null || triggerZoneX === undefined) {
+         this.updateTriggerZone();
+      }
+      else {
+         this.#triggerZone = new GameObjectLogic(triggerZoneX, triggerZoneY, triggerZoneWidth, triggerZoneHeight);
+      }
+   }
+
+
+   updateTriggerZone() {
+      let tmpTriggerZoneX = this.minX - this.#triggerZoneWidth;
+      let tmpTriggerZoneY = this.minY - this.#triggerZoneHeight;
+      let tmpTriggerZoneWidth = this.#triggerZoneWidth * 2 + this.width;
+      let tmpTriggerZoneHeight = this.#triggerZoneHeight * 2 + this.height;
+
+      this.#triggerZone = new GameObjectLogic(tmpTriggerZoneX, tmpTriggerZoneY, tmpTriggerZoneWidth, tmpTriggerZoneHeight);
    }
 
    get animTimer() {
@@ -80,44 +96,28 @@ class Bat extends Enemy {
       this.#isIdle = value;
    }
 
-   get triggerZoneWidth() {
-      return this.#triggerZoneWidth;
+   get triggeredMode() {
+      return this.#triggeredMode;
    }
 
-   set triggerZoneWidth(value) {
-      this.#triggerZoneWidth = value;
+   set triggeredMode(value) {
+      this.#triggeredMode = value;
    }
 
-   get triggerZoneHeight() {
-      return this.#triggerZoneHeight;
+   get isTriggered() {
+      return this.#isTriggered;
    }
 
-   set triggerZoneHeight(value) {
-      this.#triggerZoneHeight = value;
+   set isTriggered(value) {
+      this.#isTriggered = value;
    }
 
-   get triggerZoneX() {
-      return this.#triggerZoneX;
+   get triggerZone() {
+      return this.#triggerZone;
    }
 
-   set triggerZoneX(value) {
-      this.#triggerZoneX = value;
-   }
-
-   get triggerZoneY() {
-      return this.#triggerZoneY;
-   }
-
-   set triggerZoneY(value) {
-      this.#triggerZoneY = value;
-   }
-
-   get batMode() {
-      return this.#batMode;
-   }
-
-   set batMode(value) {
-      this.#batMode = value;
+   set triggerZone(value) {
+      this.#triggerZone = value;
    }
 
 
@@ -138,20 +138,13 @@ class Bat extends Enemy {
 
       if (this.debug) {
          ctx.fillStyle = "rgba(180,56,45,0.15)"
-         ctx.fillRect(this.minX - this.triggerZone, this.minY - this.triggerZone, this.triggerZone * 2 + this.width, this.triggerZone * 2 + this.height)
-         ctx.fillStyle = "rgba(67,34,67,0.25)"
-         ctx.fillRect(this.x - this.width, this.y - this.height, this.width, this.height)
+         ctx.fillRect(this.x - this.width, this.y - this.height, this.width, this.height);
          ctx.fillStyle = "rgba(169,208,72,0.25)"
-         ctx.fillRect(this.x - this.width + this.width / 4, this.y - this.height, this.width / 2, this.height)
+         ctx.fillRect(this.x - this.width + this.width / 4, this.y - this.height, this.width / 2, this.height);
          //selon le mode de la chauve-souris, on affiche la zone de trigger ou le trigerArea
-         if (this.#batMode === 0) {
-            ctx.fillStyle = "rgba(169,208,72,0.25)"
-
-            ctx.fillRect(this.x - this.width-this.triggerZoneWidth, this.y - this.height-this.triggerZoneHeight, this.triggerZoneWidth * 2 + this.width, this.triggerZoneHeight * 2 + this.height)
-         } else if (this.#batMode === 1) {
-            ctx.fillStyle = "rgba(169,208,72,0.25)"
-            ctx.fillRect(this.#triggerZoneX, this.#triggerZoneY, this.triggerZoneWidth, this.triggerZoneHeight)
-         }
+         ctx.fillStyle = "rgba(169,208,72,0.25)"
+         ctx.fillStyle = "rgba(0,255,0,0.25)"
+         ctx.fillRect(this.#triggerZone.x, this.#triggerZone.y, this.#triggerZone.width, this.#triggerZone.height);
       }
 
       let spriteDirectionOffset;
@@ -162,7 +155,7 @@ class Bat extends Enemy {
 
       }
       else {
-         if (this.direction) {
+         if (this.#direction) {
             spriteDirectionOffset = 0;
          } else {
             spriteDirectionOffset = 32;
@@ -204,31 +197,32 @@ class Bat extends Enemy {
 
    move(player) {
 
+      this.#triggerZoneFollow && this.updateTriggerZone();
       let deltaX;
       let deltaY;
-      
 
-      if (this.#batMode === 1) {
-         if (player.InAPerimeter(new TriggerArea(this.#triggerZoneX, this.#triggerZoneY), this.triggerZoneWidth, this.triggerZoneHeight)) {
-            this.#isIdle = false;
-            deltaX = player.x - this.x;
-            deltaY = player.y - this.y;
-            this.triggerZoneWidth = 5000;
-            this.triggerZoneHeight = 5000;
+
+
+      if (this.#triggeredMode === true) {
+         //si dans le périmètre de trigger
+         if (player.InAPerimeter(this.#triggerZone)) {
+            this.debug && console.log("triggered");
+            this.isTriggered = true;
          }
-      } else if (this.#batMode === 0) {
-
-         if (player.InAPerimeter(this, this.#triggerZoneWidth, this.triggerZoneHeight)) {
+         if (this.isTriggered === true) {
             this.#isIdle = false;
             deltaX = player.x - this.x;
             deltaY = player.y - this.y;
-            this.triggerZoneWidth = 5000;
-            this.triggerZoneheight = 5000;
          }
       }
 
-
-
+      else {
+         if (player.InAPerimeter(this.#triggerZone)) {
+            this.#isIdle = false;
+            deltaX = player.x - this.x;
+            deltaY = player.y - this.y;
+         }
+      }
 
       // Calculer la distance entre la chauve-souris et le personnage
       const space = Math.sqrt(deltaX ** 2 + deltaY ** 2);
@@ -252,6 +246,7 @@ class Bat extends Enemy {
          this.x = this.x + this.#x_v;
          this.y = this.y + this.#y_v;
       }
+
 
 
    }
@@ -294,7 +289,7 @@ class Bat extends Enemy {
 
 
          else if (player.x <= this.x && !player.isHit && this.isAlive === true) {
-            this.debug && console.log("left") ;
+            this.debug && console.log("left");
             player.x_v = -4;
             player.y_v = -3;
             player.predictedX = this.x - this.width + player.x_v;

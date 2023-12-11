@@ -502,7 +502,7 @@ class Player extends Entity {
     * @param {number} height - The height of the perimeter around the object.
     * @returns {boolean} - True if the player is within the perimeter, false otherwise.
     */
-   InAPerimeter(object, width, height) {
+   InAPerimeter(object, width = 0, height = 0) {
       //console.log(this.distanceToTheLeft(object),this.distanceToTheRight(object),this.distanceToTheTop(object),this.distanceToTheBottom(object));
       //console.log(width,height);
 

@@ -56,13 +56,14 @@
                 "width": 32,
                 "origin_x": 64,
                 "origin_y": 450,
-                "speed": 0,
+                "speed": 2,
                 "damage": 1,
                 "triggerZoneWidth": 200,
-                "triggerZoneHeight": 200,
+                "triggerZoneHeight": 600,
                 "triggerZoneX": 0,  
                 "triggerZoneY": 0,
-                "batMode" : 0, 
+                "triggerZoneFollow" : false,
+                "triggeredMode" : false, 
                 "texturepath": "assets/sprites/Bats.png",
                 "soundPath" : "assets/sounds/enemy/bat/hit.wav"
             }
