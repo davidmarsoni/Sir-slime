@@ -24,8 +24,8 @@ class Render {
         //if the song is not playing play it
         this.renderCanvas(loader.backgroundImage);
         this.renderObjects(loader.platforms, loader.collisionBlocks, loader.passageWays, loader.collectibles,loader.spikes);
+        this.renderEntities(loader.patrolmen, loader.bats,loader.fireballs, loader.boss);
         this.renderPlayer(loader.player, keys);
-        this.renderEntities(loader.patrolmen, loader.bats,loader.fireballs);
         this.renderScorboard(loader);
 
         //render the quick object creation
@@ -77,7 +77,7 @@ class Render {
         player.render(this.ctx, keys);
     }
 
-    renderEntities(patrolmen, bats,fireballs) {
+    renderEntities(patrolmen, bats, fireballs, boss) {
         for (const patrolman of patrolmen) {
             patrolman.debug = this.debug;
             patrolman.render(this.ctx);
@@ -89,6 +89,10 @@ class Render {
         for (const fireball of fireballs){
             fireball.debug = this.debug;
             fireball.render(this.ctx);
+        }
+        if (boss != null){
+            boss.debugCascade(this.debug);
+            boss.render(this.ctx);
         }
     }
     renderScorboard(loader){

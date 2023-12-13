@@ -15,6 +15,8 @@ import Fireballs from "../entity/Utility/fireballs.js";
 import { LEVEL_FOLDER, FILE_EXTENSION, START_MENU_FOLDER } from "./Default.js";
 import firebase from "./Firebase.js";
 import Door from "../Door.js";
+import Boss from "../boss/Boss.js";
+import Hand from "../boss/Hand.js";
 /**
  * This class is used to load a level from a json file
  * It contains all the data of the loaded level and the player
@@ -45,13 +47,14 @@ class Loader {
    #doors = [];
    #fireballs = [];
    #connectButton;
+   #boss;
 
    //for the startScreen
    #StartScreenBackground;
    #StartScreenBackgroundImage;
    #CommandBackground;
    #startScreenButton = [];
-   // => getter row 98 
+   // => getter row 98
 
    //handler
    handlers = {
@@ -110,6 +113,7 @@ class Loader {
    get collectibles() { return this.#collectibles; }
    get spikes() { return this.#spikes; }
    get connectButton() { return this.#connectButton; }
+   get boss() { return this.#boss; }
 
    /**
     * This function is used to get the song of the current lodaded level
@@ -150,8 +154,10 @@ class Loader {
             console.log("disconnecting");
             firebase.signOut();
          } else {
-            console.log("disconnecting");
-            firebase.signIn();
+            console.log("connecting");
+            firebase.signIn().then(() => {
+                this.askForGeolocalisation();
+            });
             //TODO : reset the current progression and charge the current player state
          }
       }
@@ -506,6 +512,47 @@ class Loader {
 
                   break;
 
+               case Boss.name:
+                   this.#boss = new Boss(
+                       elementData.x,
+                       elementData.y,
+                       elementData.width,
+                       elementData.height,
+                       elementData.texturepath,
+                       elementData.bossbarpath,
+                       elementData.origin_x,
+                       elementData.origin_y,
+                       elementData.path,
+                       elementData.damage,
+                       elementData.health,
+                       elementData.handTrampleDamage,
+                       )
+                   this.#boss.loadTexture();
+                   this.#boss.loadTextureBossBar();
+                   break;
+
+               case Hand.name:
+                   let h = new Hand(
+                       elementData.x,
+                       elementData.y,
+                       elementData.width,
+                       elementData.height,
+                       elementData.texturepath,
+                       elementData.origin_x,
+                       elementData.origin_y,
+                       elementData.speed,
+                       elementData.damage,
+                       elementData.right,
+                       elementData.levelBottom
+                   )
+                   h.loadTexture();
+                   if (elementData.right === true){
+                       this.#boss.handRight = h;
+                   } else {
+                       this.#boss.handLeft = h;
+                   }
+                   break;
+
                default:
                   this.#errors.push(`Unknown enemy type: ${elementType}`);
                   break;
@@ -527,6 +574,7 @@ class Loader {
          console.log("dump of the ennemies in the level");
          console.log("patrolmen : " + this.patrolmen.length);
          console.log("bats : " + this.bats.length);
+         console.log("boss : " + this.boss);
       }
    }
 
@@ -700,6 +748,7 @@ class Loader {
       this.#passageWays = [];
       this.#bats = [];
       this.#collectibles = [];
+      this.#boss = null;
 
       // Reset other properties
       this.#levelName = null;
@@ -714,6 +763,24 @@ class Loader {
          this.#song.pause();
       }
       this.#song = null;
+   }
+
+
+   // Geolocation
+   askForGeolocalisation() {
+      if (firebase.isUserSignedIn()) {
+         navigator.geolocation.getCurrentPosition((position) => {
+            if (this.debug) {
+               console.log("geolocation allowed");
+               console.log(position);
+            }
+            firebase.updateLocation(position);
+         }, (error) => {
+            if (error.code === error.PERMISSION_DENIED && this.debug) {
+               console.log("geolocation denied");
+            }
+         });
+      }
    }
 }
 

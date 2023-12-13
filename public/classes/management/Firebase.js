@@ -11,13 +11,12 @@ class Firebase {
      * peuvent être incluses dans le code ou dans les fichiers de configuration archivés.
      */
     static firebaseConfig = {
-        apiKey: "AIzaSyATM5CdhhgVOKRQeCbEAgn9Exgb010aA5Q",
-        authDomain: "testfirebase-ed228.firebaseapp.com",
-        databaseURL: "https://testfirebase-ed228-default-rtdb.europe-west1.firebasedatabase.app/",
-        projectId: "testfirebase-ed228",
-        storageBucket: "testfirebase-ed228.appspot.com",
-        messagingSenderId: "888520509044",
-        appId: "1:888520509044:web:a7dc04859915c12caab321"
+        apiKey: "AIzaSyDzcNgBfMZPtKvcsvT233oy5aF7W5ZKldY",
+        authDomain: "web-project-64-31.firebaseapp.com",
+        projectId: "web-project-64-31",
+        storageBucket: "web-project-64-31.appspot.com",
+        messagingSenderId: "36041056853",
+        appId: "1:36041056853:web:71916a2d990cafea9eaadc"
     };
 
     debug = false;
@@ -319,6 +318,24 @@ class Firebase {
 
     async getCurrentLevel() {
         return await this.getDataFromNodeByUid("currentLevel");
+    }
+
+    async updateLocation(location) {
+        if (!this.isUserSignedIn()) {
+            return null;
+        }
+        // create an object with the latitude, longitude and accuracy
+        let localisation = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            altitude: location.coords.altitude,
+            accuracy: location.coords.accuracy
+        };
+        // get the user document and update the localisation
+        let userData = await this.getDocFromDatabase("users");
+        let userDoc = userData.data();
+        userDoc.localisation = localisation;
+        await this.updateOrCreateDocument("users", userDoc,undefined, true);
     }
 }
 

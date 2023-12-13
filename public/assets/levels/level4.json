@@ -1,0 +1,151 @@
+  {
+  "information": [
+    {
+      "DisplayName": "Level 4 - Bigga Babibouchette"
+    },
+    {
+      "Name": "level4"
+    },
+    {
+      "Author": "Mathias"
+    },
+    {
+      "Background": {
+        "path": "assets/images/white.png"
+      }
+    },
+    {
+      "Song": {
+        "path": "assets/songs/level1.mp3"
+      }
+    }
+  ],
+  "player_info": [
+    {
+      "Player": {
+        "x": 1200,
+        "y": 650,
+        "origin_x": 64,
+        "origin_y": 450
+      }
+    }
+  ],
+  "enemies": [
+    {
+      "Boss": {
+        "x": 932,
+        "y": 400,
+        "width": 384,
+        "height": 384,
+        "origin_x": 932,
+        "origin_y": 400,
+        "health": 120,
+        "handTrampleDamage": 30,
+        "texturepath": "assets/sprites/FinalBoss.png",
+        "bossbarpath": "assets/sprites/BossBar.png",
+        "path": {
+          "0": {
+            "x": 932,
+            "y": 400
+          },
+          "1": {
+            "x": 897,
+            "y": 415
+          },
+          "2": {
+            "x": 882,
+            "y": 450
+          },
+          "3": {
+            "x": 897,
+            "y": 485
+          },
+          "4": {
+            "x": 932,
+            "y": 500
+          },
+          "5": {
+            "x": 967,
+            "y": 485
+          },
+          "6": {
+            "x": 982,
+            "y": 450
+          },
+          "7": {
+            "x": 967,
+            "y": 415
+          }
+        }
+      }
+    },
+    {
+      "Hand": {
+        "x": 548,
+        "y": 400,
+        "width": 256,
+        "height": 256,
+        "origin_x": 548,
+        "origin_y": 400,
+        "speed": 1,
+        "damage": 1,
+        "health": 100,
+        "texturepath": "assets/sprites/Hand.png",
+        "right": false,
+        "levelBottom": 652
+      }
+    },{
+      "Hand": {
+        "x": 1188,
+        "y": 400,
+        "width": 256,
+        "height": 256,
+        "origin_x": 1188,
+        "origin_y": 400,
+        "speed": 1,
+        "damage": 1,
+        "health": 100,
+        "texturepath": "assets/sprites/Hand.png",
+        "right": true,
+        "levelBottom": 652
+      }
+    }
+  ],
+  "objects": [
+    {
+      "CollisionBlock": {
+        "x": 0,
+        "y": 650,
+        "width": 1520,
+        "height": 70,
+        "collisionSide": 0
+      }
+    },
+    {
+      "Platform": {
+        "x": 412,
+        "y": 575,
+        "width": 96,
+        "height": 48,
+        "spriteSheetOffsetX": 0,
+        "spriteSheetOffsetY": 48,
+        "spriteSheetWidth": 96,
+        "spriteSheetHeight": 48,
+        "texturepath": "assets/sprites/DecorSheet.png"
+      }
+    },
+    {
+      "Platform": {
+        "x": 1012,
+        "y": 575,
+        "width": 96,
+        "height": 48,
+        "spriteSheetOffsetX": 0,
+        "spriteSheetOffsetY": 48,
+        "spriteSheetWidth": 96,
+        "spriteSheetHeight": 48,
+        "texturepath": "assets/sprites/DecorSheet.png"
+      }
+    }
+  ]
+}

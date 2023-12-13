@@ -153,6 +153,27 @@ function update() {
    for (const collactible of loader.collectibles) {
       collactible.collide(player);
    }
+    // collision for the boss + hands && overall boss movement
+    if (loader.boss != null){
+        if (loader.boss.isAlive === false){
+           if (firebase.isUserSignedIn()) {
+              firebase.saveCurrentLevel(DEFAULT_LEVEL, player.exportCurrentState());
+           }
+           goToModalState();
+           currentModalWindow = new ModalWindow("You vanquished the boss",
+               "however, the princess is in another castle ;)\n your score is : " + player.score + ".",
+               true,
+               true,
+               function(){
+                  loadLevel(DEFAULT_LEVEL);
+               }
+           );
+        }
+        loader.boss.enactAI(player);
+        loader.boss.move()
+        loader.boss.moveHands()
+        loader.boss.collide(player, loader.fireballs);
+    }
 
 
    // Test if the player is dying
@@ -222,8 +243,7 @@ function update() {
       loader.fireballs[i].move();
       let collide = loader.fireballs[i].collide(loader.collisionBlocks, loader.bats, loader.patrolmen);
       if (collide === true) {
-         loader.fireballs.splice(i, 1);
-         debug && console.log("fireball destroyed : " + i);
+         Fireballs.removeFireball(loader.fireballs, i)
       }
    }
 

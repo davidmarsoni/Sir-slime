@@ -174,13 +174,12 @@ class Fireballs extends Entity {
       }
       return collide;
    }
+
+   // TODO - Refactor or Remove
+   static removeFireball(ArrayOfFireballs, indexPos, num = 1) {
+      ArrayOfFireballs.splice(indexPos, num);
+      this.debug && console.log("fireball destroyed : " + i);
+   }
 }
-
-
-
-
-
-
-
 
 export default Fireballs;

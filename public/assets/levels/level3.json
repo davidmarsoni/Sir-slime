@@ -636,9 +636,9 @@
         "y": 80,
         "width": 50,
         "height": 145,
-        "passageWayTo": "level1",
-        "title": "Not finished yet",
-        "content": "The next level (boss level) is not finished yet, please come back later \n You will be redirected to the first level"
+        "passageWayTo": "level4",
+        "title": "Boss level",
+        "content": "Save the princess adventurer !"
       }
     },
     {
