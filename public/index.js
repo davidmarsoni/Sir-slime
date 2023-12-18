@@ -7,7 +7,6 @@ import Render from "./classes/management/Render.js";
 import QuickObjectCreation from "./classes/management/QuickObjectCreation.js";
 import ModalWindow from "./classes/management/ModalWindow.js";
 import firebase from "./classes/management/Firebase.js";
-import Fireballs from "./classes/entity/Utility/fireballs.js";
 import { START_MENU_FILE_NAME, DEFAULT_LEVEL } from "./classes/management/Default.js";
 
 // Game variables
@@ -20,7 +19,7 @@ let uiState = START;
 
 // The game state
 let currentLevel = DEFAULT_LEVEL;
-let currentModalWindow = new ModalWindow("","");
+let currentModalWindow = new ModalWindow("", "");
 let developerMode = true;
 let debug = true;
 let onlyPlayerKeys = false;
@@ -100,8 +99,8 @@ function goToModalState() {
    window.addEventListener("keydown", keydownModal);
 }
 function resetKeys() {
-    //reset keys
-    keys = {
+   //reset keys
+   keys = {
       right: false,
       left: false,
       up: false,
@@ -153,27 +152,28 @@ function update() {
    for (const collectible of loader.collectibles) {
       collectible.collide(player);
    }
-    // collision for the boss + hands && overall boss movement
-    if (loader.boss != null){
-        if (loader.boss.isAlive === false){
-           if (firebase.isUserSignedIn()) {
-              firebase.saveCurrentLevel(DEFAULT_LEVEL, player.exportCurrentState());
-           }
-           goToModalState();
-           currentModalWindow = new ModalWindow("You vanquished the boss",
-               "however, the princess is in another castle ;)\n your score is : " + player.score + ".",
-               true,
-               true,
-               function(){
-                  loadLevel(DEFAULT_LEVEL);
-               }
-           );
-        }
-        loader.boss.enactAI(player);
-        loader.boss.move()
-        loader.boss.moveHands()
-        loader.boss.collide(player, loader.fireballs);
-    }
+   // collision for the boss + hands && overall boss movement
+   if (loader.boss != null) {
+      if (loader.boss.isAlive === false) {
+         if (firebase.isUserSignedIn()) {
+            firebase.saveCurrentLevel(DEFAULT_LEVEL, player.exportCurrentState());
+         }
+         goToModalState();
+         currentModalWindow = new ModalWindow("You vanquished the boss",
+            "however, the princess is in another castle ;)\n your score is : " + player.score + ".",
+            true,
+            true,
+            function () {
+               loadLevel(DEFAULT_LEVEL);
+            }
+         );
+      }
+      loader.boss.enactAI(player);
+      loader.boss.move()
+      loader.boss.moveHands()
+      loader.boss.collide(player);
+
+   }
 
 
    // Test if the player is dying
@@ -186,11 +186,11 @@ function update() {
    if (!player.lifeRemains) {
       uiState = GAME_OFF;
       goToModalState();
-      currentModalWindow = new ModalWindow("Game Over", 
+      currentModalWindow = new ModalWindow("Game Over",
          "you died you will be redirected to the start menu",
          true,
          true,
-         function(){
+         function () {
             goToStartState();
          }
       );
@@ -208,22 +208,22 @@ function update() {
          if (firebase.isUserSignedIn()) {
             firebase.saveCurrentLevel(passageWay.passageWayTo, player.exportCurrentState());
          }
-         if(passageWay.title === undefined || passageWay.title === ""){
+         if (passageWay.title === undefined || passageWay.title === "") {
             loadLevel(passageWay.passageWayTo);
             break;
-         }else{
+         } else {
             goToModalState();
             currentModalWindow = new ModalWindow(
                passageWay.title,
                passageWay.content,
                true,
                true,
-               function(){
+               function () {
                   loadLevel(passageWay.passageWayTo);
                }
             );
             break;
-         }  
+         }
       }
    }
 
@@ -242,13 +242,7 @@ function update() {
    }
 
    //fireballs
-   for (let i = 0; i < loader.fireballs.length; i++) {
-      loader.fireballs[i].move();
-      let collide = loader.fireballs[i].collide(loader.collisionBlocks, loader.bats, loader.patrolmen);
-      if (collide === true) {
-         Fireballs.removeFireball(loader.fireballs, i)
-      }
-   }
+   player.updateFireball(loader.collisionBlocks, loader.bats, loader.patrolmen);
 
    // add the relative offset to the player position if there is one
    player.predictedX += player.relativeXoffset;
@@ -284,11 +278,9 @@ function update() {
 // Attack key listener
 function keydown(event) {
    // Attack : left shift 
-   if ((event.keyCode === 16 && event.code == "ShiftRight")|| event.keyCode === 69) {
+   if ((event.keyCode === 16 && event.code == "ShiftRight") || event.keyCode === 69) {
       keys.attack = true;
-      let tempFireball = new Fireballs(0, 0, 24, 24, "assets/sprites/Fireball.png", 5, 1);
-      tempFireball.throw(player);
-      loader.fireballs.push(tempFireball);
+      player.throwFireball();
    }
    // direction keys : left arrow or 'a'
    if (event.keyCode === 37 || (onlyPlayerKeys && event.keyCode === 65)) {
@@ -441,7 +433,7 @@ function utilityKeys(event) {
 
          // ask for level name
          let levelName = prompt("Please enter the level name", "level1");
-         if(levelName === null || levelName === ""|| levelName === undefined){
+         if (levelName === null || levelName === "" || levelName === undefined) {
             uiState = GAME_ON;
             return;
          }
@@ -454,7 +446,7 @@ function utilityKeys(event) {
             if (result) {
                loadLevel(levelName, false);
             } else {
-               currentModalWindow = new ModalWindow("Error - Level not found", "The level \"" + levelName + "\" doesn't exist",true,true);
+               currentModalWindow = new ModalWindow("Error - Level not found", "The level \"" + levelName + "\" doesn't exist", true, true);
                goToModalState();
             }
          });
@@ -503,12 +495,12 @@ function utilityKeys(event) {
 
    }
    // key t (heighest statistics)
-   if(event.keyCode === 84){
-      if(!firebase.isUserSignedIn()){
+   if (event.keyCode === 84) {
+      if (!firebase.isUserSignedIn()) {
          return;
       }
-      firebase.getHighestStats().then((result)=>{
-         if(result != null){
+      firebase.getHighestStats().then((result) => {
+         if (result != null) {
             let text = "You are on the heighest statistics page\n";
             text += "here you can see the highest score game ever made\n\n"
 

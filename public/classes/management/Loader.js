@@ -11,7 +11,7 @@ import Coin from "../collectible/Coin.js";
 import Heart from "../collectible/Heart.js";
 import Spike from "../entity/Spike.js";
 import Button from "../Button.js";
-import Fireballs from "../entity/Utility/fireballs.js";
+import Fireballs from "../entity/Utility/Fireball.js";
 import { LEVEL_FOLDER, FILE_EXTENSION, START_MENU_FOLDER, DEFAULT_LEVEL } from "./Default.js";
 import firebase from "./Firebase.js";
 import Door from "../Door.js";
@@ -45,7 +45,6 @@ class Loader {
    #bats = [];
    #spikes = [];
    #doors = [];
-   #fireballs = [];
    #connectButton;
    #boss;
 
@@ -103,8 +102,6 @@ class Loader {
    get levelAuthor() { return this.#levelAuthor; }
 
    get player() { return this.#player; }
-   get fireballs() { return this.#fireballs; }
-   set fireballs(value) { this.#fireballs = value; }
    get patrolmen() { return this.#patrolmen; }
    get platforms() { return this.#platforms; }
    get collisionBlocks() { return this.#collisionBlocks; }
@@ -151,8 +148,8 @@ class Loader {
    loadConnectButton() {
       this.#connectButton = new Button(0, 0, 0, 0, "");
       this.#connectButton.executed_function = () => {
-        
-      
+
+
          if (firebase.isUserSignedIn()) {
             this.#connectButton.isAlive = false;
             console.log("disconnecting");
@@ -165,7 +162,7 @@ class Loader {
             });
             //TODO : reset the current progression and charge the current player state
          }
-      
+
       }
       this.#connectButton.debug = this.debug;
    }
@@ -349,6 +346,8 @@ class Loader {
             playerObject.deadSoundPath,
          );
          playertmp.loadTexture();
+         let fireballObject = player_info[1][Fireballs.name];
+         playertmp.defaultFireball = fireballObject;
          this.#player = playertmp;
       } catch (e) {
          this.errors.push("The import of the player failed | " + e.message);
@@ -359,7 +358,6 @@ class Loader {
          console.log("dump of the player");
          console.log("player : " + this.player);
       }
-      this.#fireballs.push(new Fireballs(0, 0, 24, 24, "assets/sprites/Fireball.png", 5, 1));
 
    }
    /**
@@ -454,7 +452,7 @@ class Loader {
                      elementData.title,
                      elementData.content
                   );
-                  
+
                   door.loadTexture();
                   this.#doors.push(door);
 
@@ -539,45 +537,45 @@ class Loader {
                   break;
 
                case Boss.name:
-                   this.#boss = new Boss(
-                       elementData.x,
-                       elementData.y,
-                       elementData.width,
-                       elementData.height,
-                       elementData.texturepath,
-                       elementData.bossbarpath,
-                       elementData.origin_x,
-                       elementData.origin_y,
-                       elementData.path,
-                       elementData.damage,
-                       elementData.health,
-                       elementData.handTrampleDamage,
-                       )
-                   this.#boss.loadTexture();
-                   this.#boss.loadTextureBossBar();
-                   break;
+                  this.#boss = new Boss(
+                     elementData.x,
+                     elementData.y,
+                     elementData.width,
+                     elementData.height,
+                     elementData.texturepath,
+                     elementData.bossbarpath,
+                     elementData.origin_x,
+                     elementData.origin_y,
+                     elementData.path,
+                     elementData.damage,
+                     elementData.health,
+                     elementData.handTrampleDamage,
+                  )
+                  this.#boss.loadTexture();
+                  this.#boss.loadTextureBossBar();
+                  break;
 
                case Hand.name:
-                   let h = new Hand(
-                       elementData.x,
-                       elementData.y,
-                       elementData.width,
-                       elementData.height,
-                       elementData.texturepath,
-                       elementData.origin_x,
-                       elementData.origin_y,
-                       elementData.speed,
-                       elementData.damage,
-                       elementData.right,
-                       elementData.levelBottom
-                   )
-                   h.loadTexture();
-                   if (elementData.right === true){
-                       this.#boss.handRight = h;
-                   } else {
-                       this.#boss.handLeft = h;
-                   }
-                   break;
+                  let h = new Hand(
+                     elementData.x,
+                     elementData.y,
+                     elementData.width,
+                     elementData.height,
+                     elementData.texturepath,
+                     elementData.origin_x,
+                     elementData.origin_y,
+                     elementData.speed,
+                     elementData.damage,
+                     elementData.right,
+                     elementData.levelBottom
+                  )
+                  h.loadTexture();
+                  if (elementData.right === true) {
+                     this.#boss.handRight = h;
+                  } else {
+                     this.#boss.handLeft = h;
+                  }
+                  break;
 
                default:
                   this.#errors.push(`Unknown enemy type: ${elementType}`);

@@ -1,6 +1,6 @@
 import Entity from "../Entity.js";
 
-class Fireballs extends Entity {
+class Fireball extends Entity {
 
    #effective = false;
    #x_v = 0;
@@ -180,4 +180,4 @@ class Fireballs extends Entity {
    }
 }
 
-export default Fireballs;
+export default Fireball;

@@ -21,6 +21,18 @@
                 "walkSoundPath": "assets/sounds/player/walk.wav",
                 "deadSoundPath": "assets/sounds/player/dead.wav"
             }
+        },
+        {
+            "Fireball" :{
+            "x": 0,
+            "y": 0,
+            "height": 24,
+            "width": 24,
+            "texturepath": "assets/sprites/Fireball.png",
+            "damage": 1,
+            "speed": 5
         }
+        }
+       
     ]
 }

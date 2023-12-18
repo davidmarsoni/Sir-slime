@@ -1,5 +1,6 @@
 import Entity from "./Entity.js";
 import { FRICTION, GRAVITY } from "../management/Default.js";
+import Fireball from "./Utility/Fireball.js";
 class Player extends Entity {
    // life variables
    #maxPossibleHealth = 8;
@@ -55,6 +56,8 @@ class Player extends Entity {
    //Fireball
    #cooldown = false;
    #cooldownTime = 5000;
+   #fireballs = [];
+   #defaultFireball;
 
 
    constructor(x, y, width, height, texturepath, origin_x, origin_y, maxLives, maxPossibleLives, maxHealth, maxPossibleHealth, speed, damage, cooldownTime, walkSoundPath, deadSounPath) {
@@ -89,6 +92,31 @@ class Player extends Entity {
       this.#invicivibilityTimer = 120;
       this.#preventMovement = false;
       this.#preventMovementTimer = 15;
+      this.#fireballs = [];
+      this.x_v = 0;
+      this.y_v = 0;
+   }
+
+   throwFireball() {
+      //clone default fireball and throw it
+      console.log(this.#defaultFireball)
+      let fireball = new Fireball(this.#defaultFireball.x, this.#defaultFireball.y, this.#defaultFireball.width, this.#defaultFireball.height, this.#defaultFireball.texturepath, this.#defaultFireball.speed, this.#defaultFireball.damage)
+      fireball.loadTexture();
+      fireball.throw(this);
+      this.fireballs.push(fireball);
+   }
+
+   updateFireball(collisionBlocks, bats, patrolmen) {
+      for (let i = 0; i < this.#fireballs.length; i++) {
+         this.#fireballs[i].move();
+         let collide = this.#fireballs[i].collide(collisionBlocks, bats, patrolmen);
+         if (collide === true) {
+            Fireball.removeFireball(this.#fireballs, i)
+         }
+         if (this.#fireballs[i].x > 2000 || this.#fireballs[i].x < -20) {
+            Fireball.removeFireball(this.#fireballs, i)
+         }
+      }
    }
 
    // #region getters and setters
@@ -161,6 +189,13 @@ class Player extends Entity {
    get totalheal() { return this.#totalheal; }
    get walkSound() { return this.#walkSound; }
    get deadSound() { return this.#deadSound; }
+   get cooldown() { return this.#cooldown; }
+   get cooldownTime() { return this.#cooldownTime; }
+   get fireballs() { return this.#fireballs; }
+   get defaultFireball() { return this.#defaultFireball; }
+
+
+
 
 
    set walkSound(value) {
@@ -184,6 +219,8 @@ class Player extends Entity {
    set cooldown(value) { this.#cooldown = value; }
    get cooldownTime() { return this.#cooldownTime; }
    set cooldownTime(value) { this.#cooldownTime = value; }
+   set fireballs(value) { this.#fireballs = value; }
+   set defaultFireball(value) { this.#defaultFireball = value; }
 
 
    // #endregion
@@ -351,6 +388,9 @@ class Player extends Entity {
    // #endregion
 
    render(ctx, keys) {
+
+
+
       if (this.isRendered === false) {
          return;
       }
@@ -444,6 +484,10 @@ class Player extends Entity {
 
       }
 
+      this.#fireballs.forEach(fireball => {
+         fireball.render(ctx);
+      });
+
    }
 
    hit(damage = 1, isPreventMovement = true) {
@@ -514,7 +558,7 @@ class Player extends Entity {
          return false;
       }
 
-      
+
 
       /**
         *  █▯█
@@ -522,8 +566,8 @@ class Player extends Entity {
         *  █▯█
         */
 
-      if(height != 0 && width != 0){
-      
+      if (height != 0 && width != 0) {
+
          if (this.distanceToTheLeft(object) <= width && this.distanceToTheTop(object) <= height) {
             return true;
          }
