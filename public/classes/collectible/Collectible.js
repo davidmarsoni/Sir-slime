@@ -21,6 +21,7 @@ class Collectable extends Object {
     set sound(value) { this.#sound = value; }
 
     get soundPath() { return this.#soundPath; }
+    
     set soundPath(value) {
         this.#soundPath = value;
         this.#sound = new Audio(value);

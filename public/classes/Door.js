@@ -1,42 +1,86 @@
 import Object from "./Object.js";
+import GameObjectLogic from "./GameObjectLogic.js";
 
 class Door extends Object{
-    #triggerZoneX = 0;
-    #triggerZoneY = 0;
-    #triggerZoneWidth = 0;
-    #triggerZoneHeight = 0;
+    #triggerZone ;
+    #trigrerZoneImage = null;
+    #isTriggerZoneImageLoaded = false;
     #timeToOpen = 0;
     #timerToOpen = 0;
     #passageWayTo = "";
+    #title = "";
+    #content = "";
+    #doorIsOpen = false;
 
-    constructor(x, y, width, height,texturepath,spriteSheetOffsetX,spriteSheetOffsetY,spriteSheetWidth,spriteSheetHeight, trrigerZoneX, trrigerZoneY, trrigerZoneWidth, trrigerZoneHeight, timeToOpen, passageWayTo) {
+    constructor(x, y, width, height,texturepath,spriteSheetOffsetX,spriteSheetOffsetY,spriteSheetWidth,spriteSheetHeight, trrigerZoneX, trrigerZoneY, trrigerZoneWidth, trrigerZoneHeight,trigerZoneImagePath,timeToOpen,passageWayTo,title,content) {
         super(x, y, width, height,texturepath,spriteSheetOffsetX,spriteSheetOffsetY,spriteSheetWidth,spriteSheetHeight);
+        this.#trigrerZoneImage = new Image();
+        this.#trigrerZoneImage.src = trigerZoneImagePath;
 
-        this.#triggerZoneX = trrigerZoneX;
-        this.#triggerZoneY = trrigerZoneY;
-        this.#triggerZoneWidth = trrigerZoneWidth;
-        this.#triggerZoneHeight = trrigerZoneHeight;
+        this.#trigrerZoneImage.onload = () => {
+            this.#isTriggerZoneImageLoaded = true;
+        };
+        this.#triggerZone = new GameObjectLogic(trrigerZoneX,trrigerZoneY,trrigerZoneWidth,trrigerZoneHeight);
+
         this.#timeToOpen = timeToOpen;
+        this.#timerToOpen = timeToOpen;
         this.#passageWayTo = passageWayTo;
+        this.#title = title;
+        this.#content = content;
+
     }
 
-    get passageWayTo() {
-        return this.#passageWayTo;
-    }
-    set passageWayTo(value) {
-        this.#passageWayTo = value;
-    }
+    get passageWayTo() {return this.#passageWayTo;}
+    set passageWayTo(value) {this.#passageWayTo = value;}
+
+    get timeToOpen() {return this.#timeToOpen;}
+    set timeToOpen(value) {this.#timeToOpen = value;}
+
+    get timerToOpen() {return this.#timerToOpen;}
+    set timerToOpen(value) {this.#timerToOpen = value;}
+
+    get title() {return this.#title;}
+    set title(value) {this.#title = value;}
+
+    get content() {return this.#content;}
+    set content(value) {this.#content = value;}
+
+
+    
 
     collide(player) {
-        if(player.x >= this.#triggerZoneX
-            && player.x - player.width < this.#triggerZoneX + this.#triggerZoneWidth
-            && player.y > this.#triggerZoneY
-            && player.y - player.height <= this.#triggerZoneY + this.#triggerZoneHeight){
-            this.timerToOpen++;
+        //if the player is in the trigger zone
+        if(player.InAPerimeter(this.#triggerZone) && this.#timerToOpen > 0){
+            //if the door is not already open
+           
+            this.#timerToOpen--;
+            if(this.#timerToOpen === 0){
+                this.#doorIsOpen = true;
+            }
+        }
 
-            if(this.timerToOpen >= this.timeToOpen){
-                player.addLevelCompleted();
-                return true;
+        if(this.#doorIsOpen === false){
+            if(
+                (player.predictedX >= this.x
+                && player.predictedX - player.width < this.x + this.width
+                && player.predictedY > this.y
+                && player.predictedY - player.height <= this.y + this.height + 1)){
+                
+                // If the player come from the top
+                if(player.y <= this.y + 1){
+                    player.y_v = 0;
+                    player.predictedY = this.y + 1;
+                    player.jump = false;
+                } else {
+                    // If the player is coming from the left
+                    if(player.x <= this.x){
+                        player.predictedX = this.x;
+                    }
+                    // If the player is coming from the right
+                    else {
+                        player.predictedX = this.x + this.width + player.width;
+                    }
+                }
             }
         }
     }
@@ -60,17 +104,44 @@ class Door extends Object{
             );
         }
 
+        if(this.#isTriggerZoneImageLoaded === true){
+            ctx.drawImage(
+                this.#trigrerZoneImage,
+                0,
+                0,
+                this.#triggerZone.width,
+                this.#triggerZone.height,
+                this.#triggerZone.x,
+                this.#triggerZone.y,
+                this.#triggerZone.width,
+                this.#triggerZone.height
+            );
+        }
+
         if(this.debug){
             //render the door in purple
-            ctx.fillStyle = 'rgba(255,0,255,0.75)';
+            ctx.fillStyle = 'rgba(255,0,255,0.5)';
             ctx.fillRect(this.x, this.y, this.width, this.height);
+            //add the anchor point in black
+            ctx.fillStyle = 'rgba(0,0,0,1)';
+            ctx.fillRect(this.x, this.y, 8, 8);
 
             //render the trigger zone in green and show the remaining time upper the door
-            ctx.fillStyle = 'rgba(0,255,0,0.75)';
-            ctx.fillRect(this.#triggerZoneX, this.#triggerZoneY, this.#triggerZoneWidth, this.#triggerZoneHeight);
-            ctx.fillStyle = 'rgba(0,0,0,1)';
-            ctx.font = "12px Arial";
-            ctx.fillText(this.#timeToOpen - this.#timerToOpen + "/"+this.#timeToOpen, this.#triggerZoneX, this.#triggerZoneY - 10);
+            ctx.fillStyle = 'rgba(0,255,0,0.5)';
+            ctx.fillRect(this.#triggerZone.x, this.#triggerZone.y, this.#triggerZone.width, this.#triggerZone.height);
+           
+            ctx.fillStyle = 'black';
+            ctx.font = "16px Arial";
+            ctx.textAlign = "center";
+            let text = (this.#timerToOpen / this.#timeToOpen) * 100;
+            text = Math.round(text);
+            if(text <= 0){
+                text = "Door open";
+            }else{
+                text = text + "%";
+            }
+           
+            ctx.fillText(text, this.x + this.width/2, this.y - 5);
 
 
         }

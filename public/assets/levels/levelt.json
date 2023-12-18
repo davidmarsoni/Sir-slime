@@ -11,7 +11,7 @@
     },
     {
       "Background": {
-        "path": "assets/images/levelt.png"
+        "path": "assets/images/white.png"
       }
     }
   ],
@@ -28,23 +28,22 @@
   "enemies": [
     {
       "Bat": {
-          "x": 474,
-          "y": 280,
-          "height": 32,
-          "width": 32,
-          "origin_x": 64,
-          "origin_y": 450,
-          "speed": 0,
-          "damage": 1,
-          "triggerZoneWidth": 200,
-          "triggerZoneHeight": 200,
-          "triggerZoneX": 300,  
-          "triggerZoneY": 300,
-          "batMode" : 0, 
-          "texturepath": "assets/sprites/Bats.png",
-          "soundPath" : "assets/sounds/enemy/bat/hit.wav"
+        "x": 900,
+        "y": 332,
+        "height": 32,
+        "width": 32,
+        "origin_x": 64,
+        "origin_y": 450,
+        "speed": 2,
+        "damage": 1,
+        "triggerZoneWidth": 200,
+        "triggerZoneHeight": 100,
+        "triggeredMode": false,
+        "triggerZoneFollow": true,
+        "texturepath": "assets/sprites/Bats.png",
+        "soundPath": "assets/sounds/enemy/bat/hit.wav"
       }
-  }
+    }
   ],
   "objects": [
     {
@@ -111,43 +110,25 @@
       }
     },
     {
-      "MovablePlatform": {
-        "width": 400,
-        "height": 16,
+      "Door": {
+        "x": 400,
+        "y": 180,
+        "width": 100,
+        "height": 100,
+        "texturepath": "assets/images/white.png",
         "spriteSheetOffsetX": 0,
-        "spriteSheetOffsetY": 48,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 16,
-        "triggerZoneX": 50,
-        "triggerZoneY": 30,
-        "activationTimer": 500,
-        "texturepath": "assets/sprites/DecorSheet.png",
-        "path": [
-          {
-            "x": 300,
-            "y": 300
-          },
-          {
-            "x": 800,
-            "y": 300
-          }
-        ],
-        "speed": 1
-      }
-    },
-    {
-      "Spike": {
-        "x": 300,
-        "y": 280,
-        "width": 32,
-        "height": 32,
-        "texturepath": "assets/sprites/spike.png",
-        "speed": 0,
-        "damage": 1,
-        "facing": 0,
-        "fixed": false,
-        "timeOn": 0,
-        "timeOff": 0
+        "spriteSheetOffsetY": 0,
+        "spriteSheetWidth": 100,
+        "spriteSheetHeight": 100,
+        "trrigerZoneX": 50,
+        "trrigerZoneY": 30,
+        "trrigerZoneWidth": 100,
+        "trrigerZoneHeight": 100,
+        "trigerZoneImagePath": "assets/images/white.png",
+        "timeToOpen": 50,
+        "passageWayTo": "level4",
+        "title": "Door",
+        "content": "This is a door"
       }
     }
   ]

@@ -124,7 +124,6 @@ class Firebase {
         let updateTime = false;
         if (doc) {
             data = doc.data();
-            console.log(data.score, currentPlayerStats.score, data.score < currentPlayerStats.score);
             if(data.score < currentPlayerStats.score) {
                 data = currentPlayerStats;
                 updateTime = true;
@@ -258,7 +257,6 @@ class Firebase {
         if (!this.isUserSignedIn()) {
             return null;
         }
-    
         const nodeCollection = firestore.collection(this.db, node);
         const query = firestore.query(nodeCollection, firestore.where("uid", "==", this.auth.currentUser.uid));
         const querySnapshot = await firestore.getDocs(query);
@@ -336,6 +334,14 @@ class Firebase {
         let userDoc = userData.data();
         userDoc.localisation = localisation;
         await this.updateOrCreateDocument("users", userDoc,undefined, true);
+    }
+    async getCurrentScore() {
+        const data = await this.getDataFromNodeByUid("currentPlayerState");
+        return data ? data.currentPlayerState.score : 0;
+    }
+    
+    async getHighestStats() {
+        return await this.getDataFromNodeByUid("highestStats");
     }
 }
 

@@ -12,7 +12,7 @@ import Heart from "../collectible/Heart.js";
 import Spike from "../entity/Spike.js";
 import Button from "../Button.js";
 import Fireballs from "../entity/Utility/fireballs.js";
-import { LEVEL_FOLDER, FILE_EXTENSION, START_MENU_FOLDER } from "./Default.js";
+import { LEVEL_FOLDER, FILE_EXTENSION, START_MENU_FOLDER, DEFAULT_LEVEL } from "./Default.js";
 import firebase from "./Firebase.js";
 import Door from "../Door.js";
 import Boss from "../boss/Boss.js";
@@ -114,6 +114,7 @@ class Loader {
    get spikes() { return this.#spikes; }
    get connectButton() { return this.#connectButton; }
    get boss() { return this.#boss; }
+   get doors() { return this.#doors; }
 
    /**
     * This function is used to get the song of the current lodaded level
@@ -150,16 +151,21 @@ class Loader {
    loadConnectButton() {
       this.#connectButton = new Button(0, 0, 0, 0, "");
       this.#connectButton.executed_function = () => {
+        
+      
          if (firebase.isUserSignedIn()) {
+            this.#connectButton.isAlive = false;
             console.log("disconnecting");
             firebase.signOut();
          } else {
             console.log("connecting");
+            this.#connectButton.isAlive = false;
             firebase.signIn().then(() => {
-                this.askForGeolocalisation();
+               this.askForGeolocalisation();
             });
             //TODO : reset the current progression and charge the current player state
          }
+      
       }
       this.#connectButton.debug = this.debug;
    }
@@ -373,7 +379,6 @@ class Loader {
             const element = objectsArray[i];
             const elementType = Object.keys(element)[0];
             const elementData = element[elementType];
-
             switch (elementType) {
                case Platform.name:
                   const platform = Object.assign(new Platform(), elementData);
@@ -428,7 +433,28 @@ class Loader {
                   spike.loadTexture();
                   spikeObject.push(spike);
                case Door.name:
-                  const door = Object.assign(new Door(), elementData);
+                  // use the constructor of the door instead of the object assign because the door has important logic in the constructor
+                  const door = new Door(
+                     elementData.x,
+                     elementData.y,
+                     elementData.width,
+                     elementData.height,
+                     elementData.texturepath,
+                     elementData.spriteSheetOffsetX,
+                     elementData.spriteSheetOffsetY,
+                     elementData.spriteSheetWidth,
+                     elementData.spriteSheetHeight,
+                     elementData.trrigerZoneX,
+                     elementData.trrigerZoneY,
+                     elementData.trrigerZoneWidth,
+                     elementData.trrigerZoneHeight,
+                     elementData.trigerZoneImagePath,
+                     elementData.timeToOpen,
+                     elementData.passageWayTo,
+                     elementData.title,
+                     elementData.content
+                  );
+                  
                   door.loadTexture();
                   this.#doors.push(door);
 
@@ -749,6 +775,7 @@ class Loader {
       this.#bats = [];
       this.#collectibles = [];
       this.#boss = null;
+      this.#doors = [];
 
       // Reset other properties
       this.#levelName = null;

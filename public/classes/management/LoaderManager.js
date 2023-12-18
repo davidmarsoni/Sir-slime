@@ -47,51 +47,6 @@ class LoaderManager{
         });
     }
 
-    /**
-     * 
-     * @deprecated need to be updated to the new JSON format and the new level format
-     */
-    static saveLevelToJSON(levelName, levelAuthor,player,...elements) {
-        const jsonData = [];
-        jsonData.push({
-            name: levelName
-        });
-        jsonData.push({
-            levelAuthor: levelAuthor
-        });
-        jsonData.push({
-            player: player
-        });
-
-        for (let i = 0; i < elements[0].length; i++) {
-            jsonData.push({
-                platform: elements[0][i]
-            });
-        }
-        for(let i = 0; i < elements[1].length; i++){
-            jsonData.push({
-                patrolman: elements[1][i]
-            });
-        }
-        for(let i = 0; i < elements[2].length; i++){
-            jsonData.push({
-                colisionBlock: elements[2][i]
-            });
-        }
-        //TODO : add the other objects in this code juste to create a JSON file rapidly
-    
-        const jsonFile = JSON.stringify(jsonData);
-        console.log(jsonFile);
-        
-        //save by creating a donloaded file
-        const file =  new Blob([jsonFile], {type: "application/json"})
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(file);
-        console.log(a);
-        a.download = levelName+".json";
-        a.click();
-    }
-
     static loadStartMenuFromJSON(filename,debug = false){
         // Load the level from a JSON file create a promise and return it
         return new Promise((resolve) => {

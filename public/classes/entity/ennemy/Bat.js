@@ -120,6 +120,14 @@ class Bat extends Enemy {
       this.#triggerZone = value;
    }
 
+   get triggerZoneFollow() {
+      return this.#triggerZoneFollow;
+   }
+
+   set triggerZoneFollow(value) {
+      this.#triggerZoneFollow = value;
+   }
+
 
    getTrampleBoxLeft() {
       return this.x - this.width + this.width / 4;
@@ -135,6 +143,15 @@ class Bat extends Enemy {
       if (this.isRendered === false) {
          return;
       }
+      if(this.isAlive === true){
+         //show the trigger zone boder in ligh red but realy thin and transparent
+         if(this.#isTriggered === false){
+            ctx.fillStyle = "rgba(180,56,45,0.10)"
+            ctx.fillRect(this.#triggerZone.x, this.#triggerZone.y, this.#triggerZone.width, this.#triggerZone.height);
+            ctx.strokeStyle = "rgba(180,56,45,0.10)";
+            ctx.strokeRect(this.#triggerZone.x, this.#triggerZone.y, this.#triggerZone.width, this.#triggerZone.height);
+         }
+      }
 
       if (this.debug) {
          ctx.fillStyle = "rgba(180,56,45,0.15)"
@@ -143,8 +160,14 @@ class Bat extends Enemy {
          ctx.fillRect(this.x - this.width + this.width / 4, this.y - this.height, this.width / 2, this.height);
          //selon le mode de la chauve-souris, on affiche la zone de trigger ou le trigerArea
          ctx.fillStyle = "rgba(169,208,72,0.25)"
-         ctx.fillStyle = "rgba(0,255,0,0.25)"
-         ctx.fillRect(this.#triggerZone.x, this.#triggerZone.y, this.#triggerZone.width, this.#triggerZone.height);
+
+         if(this.isAlive === true){
+            ctx.fillStyle = "rgba(255,0,0,0.25)"
+            ctx.fillRect(this.#triggerZone.x, this.#triggerZone.y, this.#triggerZone.width, this.#triggerZone.height);
+            //add a border in dark red
+            ctx.strokeStyle = "rgba(180,56,45,0.75)";
+            ctx.strokeRect(this.#triggerZone.x, this.#triggerZone.y, this.#triggerZone.width, this.#triggerZone.height);
+         }
       }
 
       let spriteDirectionOffset;
@@ -196,8 +219,6 @@ class Bat extends Enemy {
    }
 
    move(player) {
-
-      this.#triggerZoneFollow && this.updateTriggerZone();
       let deltaX;
       let deltaY;
 
@@ -215,12 +236,12 @@ class Bat extends Enemy {
             deltaY = player.y - this.y;
          }
       }
-
       else {
          if (player.InAPerimeter(this.#triggerZone)) {
             this.#isIdle = false;
             deltaX = player.x - this.x;
             deltaY = player.y - this.y;
+            this.#triggerZoneFollow && this.updateTriggerZone();
          }
       }
 

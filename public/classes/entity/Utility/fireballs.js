@@ -1,7 +1,5 @@
 import Entity from "../Entity.js";
 
-
-
 class Fireballs extends Entity {
 
    #effective = false;

@@ -135,7 +135,7 @@ class QuickObjectCreation{
         this.#patrolman = new Patrolman(0,0,32,32,"assets/sprites/Patrolman.png",0,0,32,32);
         this.#collisionBlock = new CollisionBlock(0,0,100,100,0);
         this.#passageWay = new PassageWay(0,0,100,100,"");
-        this.#bat = new Bat(0,0,32,32,"assets/sprites/Bats.png",0,0,32,32);
+        this.#bat = new Bat(0,0,32,32,"assets/sprites/Bats.png",0,0,2,1,200,200,0,0,false,false);
         this.#coin = new Coin(0,0,16,16,"assets/sprites/Collectible.png",0,0);
         this.#heart = new Heart(0,0,16,16,"assets/sprites/Collectible.png",0,0);
         this.#spike = new Spike(0,0,32,32,"assets/sprites/spike.png",1,1,0,false,0,0);
@@ -379,19 +379,24 @@ class QuickObjectCreation{
                 break;
             case "Bat":
                 console.log("bat created");
-                json = {
+                json ={
                     "Bat": {
                         "x": x,
                         "y": y,
                         "height": 32,
                         "width": 32,
-                        "origin_x": x,
-                        "origin_y": y,
-                        "speed":2.5,
-                        "damage": parseInt(value3) == 0 ? 1 :parseInt(value3),
-                        "triggerZone" : parseInt(value2) == 0 ? 200 :parseInt(value2),
+                        "origin_x": 64,
+                        "origin_y": 450,
+                        "speed": 2,
+                        "damage": 1,
+                        "triggerZoneWidth": parseInt(value1) == 0 ? 200 :parseInt(value1),
+                        "triggerZoneHeight": parseInt(value1) == 0 ? 200 :parseInt(value1),
+                        "triggerZoneX": 0,  
+                        "triggerZoneY": 0,
+                        "triggerZoneFollow" : false,
+                        "triggeredMode" : false, 
                         "texturepath": "assets/sprites/Bats.png",
-                        "sound":"assets/sounds/ennemy/bat/hit.wav"  
+                        "soundPath" : "assets/sounds/enemy/bat/hit.wav"
                     }
                 };
                 break;

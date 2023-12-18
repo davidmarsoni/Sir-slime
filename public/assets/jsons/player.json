@@ -17,7 +17,7 @@
                 "maxPossibleHealth": 16,
                 "damage": 1,
                 "speed": 5,
-                "cooldownTime" : 750,
+                "cooldownTime" : 250,
                 "walkSoundPath": "assets/sounds/player/walk.wav",
                 "deadSoundPath": "assets/sounds/player/dead.wav"
             }

@@ -150,8 +150,8 @@ function update() {
       spike.collide(player);
    }
    // collision for the collectibles
-   for (const collactible of loader.collectibles) {
-      collactible.collide(player);
+   for (const collectible of loader.collectibles) {
+      collectible.collide(player);
    }
     // collision for the boss + hands && overall boss movement
     if (loader.boss != null){
@@ -208,7 +208,6 @@ function update() {
          if (firebase.isUserSignedIn()) {
             firebase.saveCurrentLevel(passageWay.passageWayTo, player.exportCurrentState());
          }
-         
          if(passageWay.title === undefined || passageWay.title === ""){
             loadLevel(passageWay.passageWayTo);
             break;
@@ -228,6 +227,10 @@ function update() {
       }
    }
 
+   for (const door of loader.doors) {
+      door.collide(player);
+      //TODO : add the same code ass the passage way to change level
+   }
 
    //notes : the platform and the collision block  must be place a the end of the code 
    // to be sure about the collision detection
@@ -330,7 +333,7 @@ function keydown(event) {
          text += "M               : mute music\n";
          text += "N               : mute sound\n";
          text += "O               : print the level in png\n";
-         text += "S               : statistics\n";
+         text += "S / T           : S for statistics and T heighest statisitcs sver (work only if connected)\n";
          text += "Shift+D         : Developer mode\n";
          text += "Shift+P         : only player keys (wasd)\n";
          if (developerMode === true) {
@@ -451,7 +454,8 @@ function utilityKeys(event) {
             if (result) {
                loadLevel(levelName, false);
             } else {
-               alert("level doesn't exist");
+               currentModalWindow = new ModalWindow("Error - Level not found", "The level \"" + levelName + "\" doesn't exist",true,true);
+               goToModalState();
             }
          });
       }
@@ -498,6 +502,31 @@ function utilityKeys(event) {
       currentModalWindow = new ModalWindow("Statistics", text);
 
    }
+   // key t (heighest statistics)
+   if(event.keyCode === 84){
+      if(!firebase.isUserSignedIn()){
+         return;
+      }
+      firebase.getHighestStats().then((result)=>{
+         if(result != null){
+            let text = "You are on the heighest statistics page\n";
+            text += "here you can see the highest score game ever made\n\n"
+
+            text += "Current score              : " + result.score + "\n";
+            text += "Total damage taken         : " + result.totalDamageTaken + "\n";
+            text += "Total damage dealt         : " + result.totalDamageDealt + "\n";
+            text += "Total heal                 : " + result.totalheal + "\n";
+            text += "Number of enemies killed   : " + result.numberOfEnemieskilled + "\n";
+            text += "Number of hearts collected : " + result.numberOfHeartsCollected + "\n";
+            text += "Number of coins collected  : " + result.numberOfCoinsCollected + "\n";
+            text += "Number of deaths           : " + result.numberOfDeaths + "\n";
+            text += "Number of level completed  : " + result.numberOfLevelCompleted + "\n";
+            goToModalState();
+            currentModalWindow = new ModalWindow("Heighest Statistics", text);
+         }
+      });
+
+   }
    // key n (mute sound)
    if (event.keyCode === 78) {
       loader.playSound = !loader.playSound;
@@ -505,15 +534,6 @@ function utilityKeys(event) {
    // key m (mute music)
    if (event.keyCode === 77) {
       loader.playMusic = !loader.playMusic;
-   }
-
-   //key t (test)
-   if (event.keyCode === 84) {
-     
-      console.log("test");
-      goToModalState();
-      currentModalWindow = new ModalWindow("Test", "test");   
-      
    }
 }
 

@@ -45,7 +45,6 @@ class MovablePlatform extends Platform{
             this.x += this.#currentXspeed;
             this.y += this.#currentYspeed;
             
-            //this.x = Math.round(this.x);
             // Check if the platform has reached the end of the path
             if (Math.abs(this.x - this.#path[1].x) < this.#speed && Math.abs(this.y - this.#path[1].y) < this.#speed) {
                 // Swap path start and end

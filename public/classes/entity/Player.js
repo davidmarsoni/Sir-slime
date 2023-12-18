@@ -514,23 +514,28 @@ class Player extends Entity {
          return false;
       }
 
+      
+
       /**
         *  █▯█
         *  █▯█
         *  █▯█
         */
 
-      if (this.distanceToTheLeft(object) <= width && this.distanceToTheTop(object) <= height) {
-         return true;
-      }
-      if (this.distanceToTheLeft(object) <= width && this.distanceToTheBottom(object) <= height) {
-         return true;
-      }
-      if (this.distanceToTheRight(object) <= width && this.distanceToTheTop(object) <= height) {
-         return true;
-      }
-      if (this.distanceToTheRight(object) <= width && this.distanceToTheBottom(object) <= height) {
-         return true;
+      if(height != 0 && width != 0){
+      
+         if (this.distanceToTheLeft(object) <= width && this.distanceToTheTop(object) <= height) {
+            return true;
+         }
+         if (this.distanceToTheLeft(object) <= width && this.distanceToTheBottom(object) <= height) {
+            return true;
+         }
+         if (this.distanceToTheRight(object) <= width && this.distanceToTheTop(object) <= height) {
+            return true;
+         }
+         if (this.distanceToTheRight(object) <= width && this.distanceToTheBottom(object) <= height) {
+            return true;
+         }
       }
 
       /**

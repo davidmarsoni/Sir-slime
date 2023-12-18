@@ -102,7 +102,7 @@ class ModalWindow{
         this.#ctx.fillStyle = "rgba(255,255,255,1)";
         this.#ctx.textAlign = "left";
         this.#ctx.font = "bold 20px Consolas";
-        this.#ctx.fillText("press ESC to close",this.#ctx.canvas.width-220,30);
+        this.#ctx.fillText("press ESC or ENTER to close",this.#ctx.canvas.width-320,30);
     }    
 }
 export default ModalWindow;
