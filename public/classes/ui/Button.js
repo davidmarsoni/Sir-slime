@@ -1,4 +1,4 @@
-import GameObjectLogic from "./GameObjectLogic.js";
+import GameObjectLogic from "../GameObjectLogic.js";
 
 class Button extends GameObjectLogic {
   //the action method I want my button to do when clicked
@@ -9,7 +9,7 @@ class Button extends GameObjectLogic {
 
   // x , y, widht and height are the spriteSheet. the others are the buttons parametters
 
-  constructor(x, y, width, height, screen) {
+  constructor(x, y, width, height) {
     super(x, y, width, height);
     this.#screen = screen;
   }

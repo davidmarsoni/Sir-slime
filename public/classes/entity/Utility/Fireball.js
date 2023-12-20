@@ -121,7 +121,7 @@ class Fireball extends Entity {
       }
    }
 
-   collide(collisionblocks, bats, patrolmen) {
+   collide(player,collisionblocks, bats, patrolmen) {
       let collide = false;
       // Check for collision with each bat
       for (const bat of bats) {
@@ -132,6 +132,9 @@ class Fireball extends Entity {
             this.y + this.height > bat.y &&
             this.#effective
          ) {
+            player.addDamageDealt(this.damage);
+            player.addEnemykilled();
+            player.score += 500;
             bat.isAlive = false;
             this.#effective = false;
             this.debug && console.log("collision avec bat");
@@ -173,7 +176,6 @@ class Fireball extends Entity {
       return collide;
    }
 
-   // TODO - Refactor or Remove
    static removeFireball(ArrayOfFireballs, indexPos, num = 1) {
       ArrayOfFireballs.splice(indexPos, num);
       this.debug && console.log("fireball destroyed : " + i);

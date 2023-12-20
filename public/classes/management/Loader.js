@@ -10,13 +10,16 @@ import Bat from "../entity/ennemy/Bat.js";
 import Coin from "../collectible/Coin.js";
 import Heart from "../collectible/Heart.js";
 import Spike from "../entity/Spike.js";
-import Button from "../Button.js";
+import Button from "../ui/Button.js";
 import Fireballs from "../entity/Utility/Fireball.js";
 import { LEVEL_FOLDER, FILE_EXTENSION, START_MENU_FOLDER, DEFAULT_LEVEL } from "./Default.js";
 import firebase from "./Firebase.js";
 import Door from "../Door.js";
-import Boss from "../boss/Boss.js";
-import Hand from "../boss/Hand.js";
+import Boss from "../entity/boss/Boss.js";
+import Hand from "../entity/boss/Hand.js";
+import DraggableObject from "../ui/DraggableObject.js";
+import DraggableZone from "../ui/DraggableZone.js";
+import GameObject from "../GameObject.js";
 /**
  * This class is used to load a level from a json file
  * It contains all the data of the loaded level and the player
@@ -48,17 +51,20 @@ class Loader {
    #connectButton;
    #boss;
 
-   //for the startScreen
-   #StartScreenBackground;
-   #StartScreenBackgroundImage;
-   #CommandBackground;
-   #startScreenButton = [];
-   // => getter row 98
+
+   #mainBackground;
+   #skinBackground;
+
+   #startMenuButtons = [];
+   #draggableObjects = [];
+   #draggableZones = [];
+   #currentSkinPreview = null;
+   #currentSkinPath = null;
 
    //handler
    handlers = {
       handleClick: (intIndex, event) => {
-         this.startScreenButton[intIndex].handleClickEvent(event);
+         this.startScreenButtons[intIndex].handleClickEvent(event);
       }
    };
 
@@ -98,6 +104,7 @@ class Loader {
    }
 
    get levelName() { return this.#levelName; }
+   set levelName(value) { this.#levelName = value; }
    get levelDisplayName() { return this.#levelDisplayName; }
    get levelAuthor() { return this.#levelAuthor; }
 
@@ -112,35 +119,30 @@ class Loader {
    get connectButton() { return this.#connectButton; }
    get boss() { return this.#boss; }
    get doors() { return this.#doors; }
-
-   /**
-    * This function is used to get the song of the current lodaded level
-    */
    get song() { return this.#song; }
-
-   /**
-    * This function is used to get the background image of the level
-    */
    get backgroundImage() { return this.#backgroundImage; }
-
-
+   get draggableObjects() { return this.#draggableObjects; }
+   get draggableZones() { return this.#draggableZones; }
+   get currentSkinPreview() { return this.#currentSkinPreview; }
+   get currentSkinPath() { return this.#currentSkinPath; }
+   set currentSkinPath(value) { this.#currentSkinPath = value; }
 
    //startMenu getters and setter
 
-   get StartScreenBackgroundImage() {
-      return this.#StartScreenBackgroundImage;
+   get mainBackground() {
+      return this.#mainBackground;
    }
 
-   get CommandBackground() {
-      return this.#CommandBackground;
+   get skinBackground() {
+      return this.#skinBackground;
    }
 
-   get startScreenButton() {
-      return this.#startScreenButton;
+   get startMenuButtons() {
+      return this.#startMenuButtons;
    }
 
-   set startScreenButton(value) {
-      this.#startScreenButton = value;
+   set startMenuButtons(value) {
+      this.#startMenuButtons = value;
    }
 
 
@@ -161,6 +163,7 @@ class Loader {
                this.askForGeolocalisation();
             });
             //TODO : reset the current progression and charge the current player state
+            //OR : add a modal to ask the user if he wants to reset his progression
          }
 
       }
@@ -177,7 +180,6 @@ class Loader {
    loadGame(levelname, debug = false) {
       this.debug = debug;
       this.clean();
-      this.loadConnectButton();
       //promise principle
       return new Promise((resolve) => {
          //On cherche le fichier du niveau si il existe
@@ -240,6 +242,7 @@ class Loader {
 
    loadStartMenu(fileName) {
       this.clean();
+      this.loadConnectButton();
       return new Promise((resolve) => {
          //set some constants for the function
 
@@ -270,6 +273,23 @@ class Loader {
    updatePlayer(player_info) {
       let playerObject = player_info[0][Player.name];
       this.#player.update(playerObject.x, playerObject.y, playerObject.origin_x, playerObject.origin_y);
+      if(firebase.isUserSignedIn()){
+         firebase.getPlayerSkinPath().then((skinpath) => {
+            console.log(skinpath);
+            if(skinpath != null || skinpath != undefined){
+               this.#player.texturepath = skinpath;
+               this.#player.loadTexture();
+            }else{
+               this.#player.texturepath = this.#currentSkinPath;
+               this.#player.loadTexture();
+               
+            }
+         });
+       
+      }else{
+         this.#player.texturepath = this.#currentSkinPath;
+         this.#player.loadTexture();
+      }
    }
 
    /**
@@ -430,6 +450,7 @@ class Loader {
                   const spike = Object.assign(new Spike(), elementData);
                   spike.loadTexture();
                   spikeObject.push(spike);
+                  break;
                case Door.name:
                   // use the constructor of the door instead of the object assign because the door has important logic in the constructor
                   const door = new Door(
@@ -455,7 +476,7 @@ class Loader {
 
                   door.loadTexture();
                   this.#doors.push(door);
-
+                  break;
                default:
                   this.#errors.push(`Unknown object type: ${elementType}`);
                   break;
@@ -606,17 +627,14 @@ class Loader {
 
       //console.log(information);
       try {
-         this.#StartScreenBackground = information[0].StartScreenBackground;
-         this.#CommandBackground = information[0].CommandBackground;
 
-         this.debug && console.log(this.#StartScreenBackground);
-         this.debug && console.log(this.#CommandBackground.path);
 
-         this.loadStartScreenBackground(this.#StartScreenBackground.path);
-         this.loadCommandBackground(this.#CommandBackground.path);
+         this.debug && console.log(information[0].mainBackground.path);
+         this.debug && console.log(information[0].skinBackground.path);
 
-         this.debug && console.log(this.#StartScreenBackground);
-         this.debug && console.log(this.#CommandBackground.path);
+         this.loadStartScreenBackground(information[0].mainBackground.path);
+         this.loadCommandBackground(information[0].skinBackground.path);
+
       } catch (e) {
          this.#errors.push("The import of the background failed | " + e.message);
       }
@@ -628,7 +646,10 @@ class Loader {
 
       this.debug && console.log(objectsArray);
 
-      let buttonObject = [];
+      let buttonObjects = [];
+      let draggableObjects = [];
+      let draggableZones = [];
+      let currentSkinPreview = null;
       try {
          for (let i = 0; i < objectsArray.length; i++) {
             const element = objectsArray[i];
@@ -638,8 +659,21 @@ class Loader {
             switch (elementType) {
                case Button.name:
                   const button = Object.assign(new Button(), elementData);
-                  buttonObject.push(button);
+                  buttonObjects.push(button);
                   break;
+               case DraggableObject.name:
+                  const draggableObject = Object.assign(new DraggableObject(), elementData);
+                  draggableObject.loadTexture();
+                  draggableObjects.push(draggableObject);
+                  break;
+               case DraggableZone.name:
+                  const draggableZone = Object.assign(new DraggableZone(), elementData);
+                  draggableZones.push(draggableZone);
+                  break;
+
+               case GameObject.name:
+                  const gameObject = Object.assign(new GameObject(), elementData);
+                  currentSkinPreview = gameObject;
                default:
                   this.#errors.push(`Unknown startScreen type: ${elementType}`);
                   break;
@@ -650,10 +684,15 @@ class Loader {
          console.error(e);
       } finally {
          // set the startScreen object 
+         this.#startMenuButtons = buttonObjects;
+         this.#draggableObjects = draggableObjects;
+         this.#draggableZones = draggableZones;
+         this.#currentSkinPreview = currentSkinPreview;
 
-         this.#startScreenButton = buttonObject;
-
-
+         currentSkinPreview.texturepath = this.#draggableObjects[0].texturepath;
+         currentSkinPreview.loadTexture();
+         
+        
       }
    }
    /**
@@ -684,20 +723,20 @@ class Loader {
 
    loadStartScreenBackground(path) {
       try {
-         this.#StartScreenBackgroundImage = this.loadImage(path);
+         this.#mainBackground = this.loadImage(path);
 
       } catch (e) {
-         this.#StartScreenBackgroundImage = null;
+         this.#mainBackground = null;
          this.#errors.push(`The import of the start background image failed | ${e.message}`);
       }
    }
 
    loadCommandBackground(path) {
       try {
-         this.#CommandBackground = this.loadImage(path);
+         this.#skinBackground = this.loadImage(path);
 
       } catch (e) {
-         this.#CommandBackground = null;
+         this.#skinBackground = null;
          this.#errors.push(`The import of the command screen image failed | ${e.message}`);
       }
    }
@@ -750,7 +789,7 @@ class Loader {
    }
 
    setbuttonAction(intIndex, executed_function) {
-      this.startScreenButton[intIndex].executed_function = executed_function;
+      this.#startMenuButtons[intIndex].executed_function = executed_function;
    }
 
    /**

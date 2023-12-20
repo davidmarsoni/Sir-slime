@@ -335,6 +335,39 @@ class Firebase {
         userDoc.localisation = localisation;
         await this.updateOrCreateDocument("users", userDoc,undefined, true);
     }
+
+    async updatePlayerSkinPath(skinPath) {
+        if (!this.isUserSignedIn()) {
+            return null;
+        }
+        // get the user document and update the localisation
+        let userData = await this.getDocFromDatabase("users");
+        let userDoc = userData.data();
+        userDoc.skinPath = skinPath;
+        await this.updateOrCreateDocument("users", userDoc,undefined, true);
+    }
+
+    async getPlayerSkinPath() {
+        if (!this.isUserSignedIn()) {
+            return null;
+        }
+        // get the user document and update the localisation
+        let userData = await this.getDocFromDatabase("users");
+        let userDoc = userData.data();
+        return userDoc.skinPath;
+    }
+
+    async updateSkinColor(skinColor) {
+        if (!this.isUserSignedIn()) {
+            return null;
+        }
+        // get the user document and update the localisation
+        let userData = await this.getDocFromDatabase("users");
+        let userDoc = userData.data();
+        userDoc.skinColor = skinColor;
+        await this.updateOrCreateDocument("users", userDoc,undefined, true);
+    }
+    
     async getCurrentScore() {
         const data = await this.getDataFromNodeByUid("currentPlayerState");
         return data ? data.currentPlayerState.score : 0;

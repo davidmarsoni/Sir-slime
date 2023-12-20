@@ -7,12 +7,9 @@ class Door extends Object{
     #isTriggerZoneImageLoaded = false;
     #timeToOpen = 0;
     #timerToOpen = 0;
-    #passageWayTo = "";
-    #title = "";
-    #content = "";
     #doorIsOpen = false;
 
-    constructor(x, y, width, height,texturepath,spriteSheetOffsetX,spriteSheetOffsetY,spriteSheetWidth,spriteSheetHeight, trrigerZoneX, trrigerZoneY, trrigerZoneWidth, trrigerZoneHeight,trigerZoneImagePath,timeToOpen,passageWayTo,title,content) {
+    constructor(x, y, width, height,texturepath,spriteSheetOffsetX,spriteSheetOffsetY,spriteSheetWidth,spriteSheetHeight, trrigerZoneX, trrigerZoneY, trrigerZoneWidth, trrigerZoneHeight,trigerZoneImagePath,timeToOpen) {
         super(x, y, width, height,texturepath,spriteSheetOffsetX,spriteSheetOffsetY,spriteSheetWidth,spriteSheetHeight);
         this.#trigrerZoneImage = new Image();
         this.#trigrerZoneImage.src = trigerZoneImagePath;
@@ -24,14 +21,9 @@ class Door extends Object{
 
         this.#timeToOpen = timeToOpen;
         this.#timerToOpen = timeToOpen;
-        this.#passageWayTo = passageWayTo;
-        this.#title = title;
-        this.#content = content;
-
     }
 
-    get passageWayTo() {return this.#passageWayTo;}
-    set passageWayTo(value) {this.#passageWayTo = value;}
+    
 
     get timeToOpen() {return this.#timeToOpen;}
     set timeToOpen(value) {this.#timeToOpen = value;}
@@ -39,14 +31,6 @@ class Door extends Object{
     get timerToOpen() {return this.#timerToOpen;}
     set timerToOpen(value) {this.#timerToOpen = value;}
 
-    get title() {return this.#title;}
-    set title(value) {this.#title = value;}
-
-    get content() {return this.#content;}
-    set content(value) {this.#content = value;}
-
-
-    
 
     collide(player) {
         //if the player is in the trigger zone

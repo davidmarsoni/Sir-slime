@@ -1,4 +1,4 @@
-import Button from "../Button.js";
+import Button from "../ui/Button.js";
 import Heart from "../collectible/Heart.js";
 import firebase from "./Firebase.js";
 class Render {
@@ -141,9 +141,14 @@ class Render {
       let x = this.ctx.canvas.width;
       let y = this.ctx.canvas.height - 20;
       height = 34;
+      this.#drawConnexionButton(loader,x, y);
 
+     
+   }
+   #drawConnexionButton(loader,x,y){
+      let height = 34;
       let pseudo = firebase.isUserSignedIn() ? firebase.getUserInfo() : "Guest";
-      width = this.#drawText(pseudo, x, y, true);
+      let width = this.#drawText(pseudo, x, y, true);
       x -= width + 10;
 
       let buttonText = firebase.isUserSignedIn() ? "Disconnect" : "Connect";
@@ -197,21 +202,48 @@ class Render {
    }
 
    renderStart(loader) {
-      if (loader.StartScreenBackgroundImage != null) {
-         this.ctx.drawImage(loader.StartScreenBackgroundImage, 0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
+      if (loader.mainBackground != null) {
+         this.ctx.drawImage(loader.mainBackground, 0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
       }
-      loader.startScreenButton.forEach(button => {
-         if (button.screen === "start") {
-            button.debug = true;
-            button.render(this.ctx);
-         }
-      });
+
+      //draw connexion button
+      this.#drawConnexionButton(loader,this.ctx.canvas.width, 34);
+      
+      for (const startMenuButton of loader.startMenuButtons) {
+         startMenuButton.debug = this.debug;
+         startMenuButton.render(this.ctx);
+      }
 
    }
-   renderCommand(loader) {
-      console.log(loader + " Command info retrieved !");
-      if (loader.CommandBackground != null) {
-         this.ctx.drawImage(loader.CommandBackground, 0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
+
+   renderSkinPage(loader) {
+      
+      if (loader.skinBackground != null) {
+         this.ctx.drawImage(loader.skinBackground, 0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
+      }
+
+      //draw a title
+      this.ctx.fillStyle = "rgba(255,255,255,1)";
+      this.ctx.textAlign = "left";
+      this.ctx.font = "bold 40px Consolas";
+      this.ctx.fillText("Choose your skin", 100, 130);
+     
+      loader.currentSkinPreview.debug = this.debug;
+      loader.currentSkinPreview.render(this.ctx);
+      
+      for (const startMenuButton of loader.startMenuButtons) {
+         startMenuButton.debug = this.debug;
+         startMenuButton.render(this.ctx);
+      }
+
+      for (const draggableObject of loader.draggableObjects) {
+         draggableObject.debug = this.debug;
+         draggableObject.render(this.ctx);
+      }
+
+      for (const draggableZone of loader.draggableZones) {
+         draggableZone.debug = this.debug;
+         draggableZone.render(this.ctx);
       }
    }
 

@@ -1,4 +1,4 @@
-import Entity from "../entity/Entity.js";
+import Entity from "../Entity.js"
 class Boss extends Entity {
    // Logic vars
    frame_WAIT_BETWEEN_CYCLE = 10;

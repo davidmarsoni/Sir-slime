@@ -99,7 +99,6 @@ class Player extends Entity {
 
    throwFireball() {
       //clone default fireball and throw it
-      console.log(this.#defaultFireball)
       let fireball = new Fireball(this.#defaultFireball.x, this.#defaultFireball.y, this.#defaultFireball.width, this.#defaultFireball.height, this.#defaultFireball.texturepath, this.#defaultFireball.speed, this.#defaultFireball.damage)
       fireball.loadTexture();
       fireball.throw(this);
@@ -109,12 +108,14 @@ class Player extends Entity {
    updateFireball(collisionBlocks, bats, patrolmen) {
       for (let i = 0; i < this.#fireballs.length; i++) {
          this.#fireballs[i].move();
-         let collide = this.#fireballs[i].collide(collisionBlocks, bats, patrolmen);
+         let collide = this.#fireballs[i].collide(this,collisionBlocks, bats, patrolmen);
          if (collide === true) {
             Fireball.removeFireball(this.#fireballs, i)
+            return;
          }
          if (this.#fireballs[i].x > 2000 || this.#fireballs[i].x < -20) {
             Fireball.removeFireball(this.#fireballs, i)
+            return;
          }
       }
    }

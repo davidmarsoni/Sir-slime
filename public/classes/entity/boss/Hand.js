@@ -1,6 +1,6 @@
-import Entity from "../entity/Entity.js";
-import GameObjectLogic from "../GameObjectLogic.js";
-import Fireball from "../entity/Utility/Fireball.js";
+import Entity from "../Entity.js";
+import GameObjectLogic from "../../GameObjectLogic.js";
+import Fireball from "../Utility/Fireball.js";
 class Hand extends Entity {
    /*
    * state: idle, translating to target, preparing attack, attacking, on the ground, returning to origin, hand jump, die

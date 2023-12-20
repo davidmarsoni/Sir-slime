@@ -1,38 +1,37 @@
 {
-    "player_info":[
+    "player_info": [
         {
             "Player": {
                 "x": 64,
                 "y": 450,
                 "height": 32,
                 "width": 32,
-                "texturepath": "assets/sprites/PlayerSheet.png",
+                "texturepath": "assets/sprites/skins/player-skin-blue.png",
                 "x_v": 0,
                 "y_v": 0,
                 "origin_x": 64,
                 "origin_y": 450,
-                "maxLives": 3,
+                "maxLives": 40,
                 "maxPossibleLives": 99,
-                "maxHealth": 6,
+                "maxHealth": 20,
                 "maxPossibleHealth": 16,
                 "damage": 1,
                 "speed": 5,
-                "cooldownTime" : 250,
+                "cooldownTime": 250,
                 "walkSoundPath": "assets/sounds/player/walk.wav",
                 "deadSoundPath": "assets/sounds/player/dead.wav"
             }
         },
         {
-            "Fireball" :{
-            "x": 0,
-            "y": 0,
-            "height": 24,
-            "width": 24,
-            "texturepath": "assets/sprites/Fireball.png",
-            "damage": 1,
-            "speed": 5
+            "Fireball": {
+                "x": 0,
+                "y": 0,
+                "height": 24,
+                "width": 24,
+                "texturepath": "assets/sprites/Fireball.png",
+                "damage": 1,
+                "speed": 5
+            }
         }
-        }
-       
     ]
 }

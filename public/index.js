@@ -8,11 +8,12 @@ import QuickObjectCreation from "./classes/management/QuickObjectCreation.js";
 import ModalWindow from "./classes/management/ModalWindow.js";
 import firebase from "./classes/management/Firebase.js";
 import { START_MENU_FILE_NAME, DEFAULT_LEVEL } from "./classes/management/Default.js";
+import DraggableObject from "./classes/ui/DraggableObject.js";
 
 // Game variables
 const GAME_ON = "game_on";
 const GAME_OFF = "game_off";
-const COMMAND = "command";
+const SKINS = "skins";
 const MODAL = "modal";
 const START = "start";
 let uiState = START;
@@ -61,21 +62,70 @@ function animate() {
 function loop() {
    //console.log("state",uiState);
    switch (uiState) {
-      case GAME_ON: "game_on"
+      case GAME_ON: uiState
          update();
          break;
-      case GAME_OFF: "game_off"
+      case GAME_OFF: uiState
          break;
-      case COMMAND: "command"
+      case SKINS: uiState
+         updatePageSkin();
          break;
-      case MODAL: "modal"
+      case MODAL: uiState
          render.renderModalWindow(currentModalWindow);
          break;
-      case START: "start"
+      case START: uiState
          start();
          break;
    }
 }
+
+function updatePageSkin() {
+   for(const draggableZone of loader.draggableZones){
+      for(const draggableObject of loader.draggableObjects){
+         let collide = draggableZone.collide(draggableObject);
+          if(collide && draggableObject.isDragging === false){
+           
+            draggableObject.x = draggableObject.originX;
+            draggableObject.y = draggableObject.originY;
+
+            console.log(draggableObject.texturepath);
+            loader.currentSkinPreview.texturepath = draggableObject.texturepath;
+            loader.currentSkinPreview.textureLoaded = false;
+            loader.currentSkinPreview.loadTexture();
+            
+            let texturePart = draggableObject.texturepath.split("-");
+           
+            loader.currentSkinPath =  texturePart[0] + "-" + texturePart[1]+"-"+texturePart[3];
+            if(firebase.isUserSignedIn()){
+               firebase.updatePlayerSkinPath(loader.currentSkinPath);
+            }
+            console.log(loader.currentSkinPath);
+         }else if(collide){
+            draggableObject.colorStroke = DraggableObject.STROKE_GREEN;
+         }else{
+            if( draggableObject.colorStroke === DraggableObject.STROKE_GREEN){
+               draggableObject.colorStroke = DraggableObject.STROKE_ORANGE;
+            }
+         }
+      }
+   }
+   render.renderSkinPage(loader);
+}
+
+function goToSkinPage() {
+   uiState = SKINS;
+   firebase.getPlayerSkinPath().then((skinpath) => {
+      if(skinpath != null || skinpath != undefined){
+         let skinParts = skinpath.split("-");
+         loader.currentSkinPreview.texturepath = skinParts[0]+"-"+skinParts[1]+"-preview-"+skinParts[2];
+         loader.currentSkinPreview.loadTexture();
+      }else{
+         this.currentSkinPath = loader.draggableObjects[0].texturepath;
+      }
+   });
+   addSkinKeys();
+}
+
 function goToStartState() {
    uiState = START;
    if (firebase.isUserSignedIn()) {
@@ -120,14 +170,35 @@ function addGameKeys() {
       window.addEventListener("keydown", utilityKeys);
    }
 }
+function addSkinKeys() {
+   window.addEventListener("mousedown", skinMouseDown);
+   window.addEventListener("mouseup", skinMouseUp);
+   window.addEventListener("mousemove", skinMouseMove);
+}
+function removeSkinKeys() {
+   window.removeEventListener("mousedown", skinMouseDown);
+   window.removeEventListener("mouseup", skinMouseUp);
+   window.removeEventListener("mousemove", skinMouseMove);
+}
+
+function skinMouseDown(event) {
+   for(const draggableObject of loader.draggableObjects){
+      draggableObject.onMouseDown(event);
+   }
+}
+function skinMouseUp(event) {
+   for(const draggableObject of loader.draggableObjects){
+      draggableObject.onMouseUp(event);
+   }
+}
+function skinMouseMove(event) {
+   for(const draggableObject of loader.draggableObjects){
+      draggableObject.onMouseMove(event);
+   }
+}
+
 function start() {
    render.renderStart(loader);
-}
-function commandScreen() {
-   window.removeEventListener("keydown", keydownStart);
-   uiState = GAME_OFF;
-   addGameKeys();
-   render.renderCommand(loader);
 }
 function update() {
    //update the player position
@@ -438,6 +509,8 @@ function utilityKeys(event) {
             return;
          }
          loader.findFile("./assets/levels/", levelName, ".json").then((result) => {
+           currentLevel = levelName;
+           console.log("saving current level",loader.levelName);
             if (firebase.isUserSignedIn()) {
                console.log("saving current level");
                firebase.saveCurrentLevel(loader.levelName, loader.player.exportCurrentState());
@@ -448,6 +521,7 @@ function utilityKeys(event) {
             } else {
                currentModalWindow = new ModalWindow("Error - Level not found", "The level \"" + levelName + "\" doesn't exist", true, true);
                goToModalState();
+               
             }
          });
       }
@@ -503,7 +577,6 @@ function utilityKeys(event) {
          if (result != null) {
             let text = "You are on the heighest statistics page\n";
             text += "here you can see the highest score game ever made\n\n"
-
             text += "Current score              : " + result.score + "\n";
             text += "Total damage taken         : " + result.totalDamageTaken + "\n";
             text += "Total damage dealt         : " + result.totalDamageDealt + "\n";
@@ -548,11 +621,13 @@ function keydownModal(event) {
 
 function startGame() {
    debug && console.log("start game");
+   
    uiState = GAME_OFF;
-   loader.startScreenButton.forEach(button => {
+   loader.startMenuButtons.forEach(button => {
       button.executed_function = undefined;
    });
    window.removeEventListener("keydown", keydownStart);
+   removeSkinKeys();
    if (firebase.isUserSignedIn()) {
       firebase.getCurrentLevel().then((levelData) => {
          if (levelData != null) {
@@ -564,6 +639,7 @@ function startGame() {
       loadLevel(currentLevel, false);
    }
    addGameKeys();
+
 }
 
 function loadLevel(levelpath) {
@@ -582,13 +658,13 @@ function loadLevel(levelpath) {
 }
 
 function loadStartMenu() {
-   loader.loadStartMenu(START_MENU_FILE_NAME, false).then((result) => {
+   loader.loadStartMenu(START_MENU_FILE_NAME).then((result) => {
       if (!result) {
          console.error(loader.errors);
       } else {
          //set the button action
          loader.setbuttonAction(0, startGame);
-         loader.setbuttonAction(1, commandScreen);
+         loader.setbuttonAction(1, goToSkinPage);
          window.addEventListener("keydown", keydownStart)
          uiState = START;
          debug && console.log("start menu loaded");

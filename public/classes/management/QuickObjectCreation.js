@@ -8,6 +8,7 @@ import Heart from "../collectible/Heart.js";
 import ActivationPlatform from "../platform/ActivationPlatform.js";
 import MovablePlatform from "../platform/MovablePlatform.js";
 import Spike from "../entity/Spike.js";
+import LoaderManager from "./LoaderManager.js";
 
 
 class QuickObjectCreation{
@@ -113,25 +114,35 @@ class QuickObjectCreation{
         this.#type = type;
     }
 
-    init(){
-        //change the background color of the page to white
-        document.body.style.backgroundColor = "white";
-        //change the cursor to crosshair on the canvas
-        this.canvas.style.cursor = "crosshair";
+    createDOMElement(){
+
+    }
+
+    createObjects(){
+        LoaderManager.loadFromJson("assets/json/DefaultObject.json").then((data) => {
+            let json = JSON.parse(data);
+
+            console.log(json);
+        });
+        
+
+
+
+    
         //create object for the preview
         this.#platform = new Platform(0,0,96,16,"assets/sprites/DecorSheet.png",0,0,96,16);
         this.#activationPlatform = new ActivationPlatform(0,0,96,16,"assets/sprites/DecorSheet.png",96,0,96,16,10,10,200);
         this.#movablePlatform = new MovablePlatform([
-            {
-                "x": 300,
-                "y": 500
-            },
-            {
-                "x": 600,
-                "y": 200
-            }
+             {
+                 "x": 300,
+                 "y": 500
+             },
+             {
+                 "x": 600,
+                 "y": 200
+             }
         ],96,48,"assets/sprites/DecorSheet.png",0,48,96,48,2);
-
+ 
         this.#patrolman = new Patrolman(0,0,32,32,"assets/sprites/Patrolman.png",0,0,32,32);
         this.#collisionBlock = new CollisionBlock(0,0,100,100,0);
         this.#passageWay = new PassageWay(0,0,100,100,"");
@@ -139,7 +150,18 @@ class QuickObjectCreation{
         this.#coin = new Coin(0,0,16,16,"assets/sprites/Collectible.png",0,0);
         this.#heart = new Heart(0,0,16,16,"assets/sprites/Collectible.png",0,0);
         this.#spike = new Spike(0,0,32,32,"assets/sprites/spike.png",1,1,0,false,0,0);
+    }
 
+    init(){
+        //change display of the body to block
+        let body = document.querySelector('body');
+        body.style.display = "block";
+        //change the background color of the page to white
+        document.body.style.backgroundColor = "white";
+        //change the cursor to crosshair on the canvas
+        this.canvas.style.cursor = "crosshair";
+       
+        this.createObjects();
         //add a title to the quick object creation
         const title = document.createElement('h2');
         title.style.fontFamily = "Montserrat,sans-serif,arial";
@@ -233,6 +255,9 @@ class QuickObjectCreation{
      * remove the quick object creation to not interfere with the game
      */
     remove(){
+        //change display of the body to flex
+        let body = document.querySelector('body');
+        body.style.display = "flex";
         //change the background color of the page to black 242424
         document.body.style.backgroundColor = "#242424";
         //change the cursor to default on the canvas

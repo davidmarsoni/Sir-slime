@@ -11,7 +11,12 @@
     },
     {
       "Background": {
-        "path": "assets/images/white.png"
+        "path": "assets/images/level3.png"
+      }
+    },
+    {
+      "Song": {
+        "path": "assets/songs/castlecastle.mp3"
       }
     }
   ],
@@ -49,7 +54,7 @@
     {
       "Bat": {
         "x": 163,
-        "y": 308,
+        "y": 307,
         "height": 32,
         "width": 32,
         "origin_x": 64,
@@ -235,7 +240,7 @@
     {
       "Patrolman": {
         "x": 876,
-        "y": 224,
+        "y": 225,
         "origin_x": 876,
         "origin_y": 224,
         "height": 32,
@@ -267,6 +272,46 @@
         "texturepath": "assets/sprites/Patrolman.png",
         "sound": "assets/sounds/ennemy/patrolman/hit.wav"
       }
+    },
+    {
+      "Bat": {
+        "x": 1439,
+        "y": 112,
+        "height": 32,
+        "width": 32,
+        "origin_x": 64,
+        "origin_y": 450,
+        "speed": 2,
+        "damage": 1,
+        "triggerZoneWidth": 96,
+        "triggerZoneHeight": 96,
+        "triggerZoneX": 1300,
+        "triggerZoneY": 200,
+        "triggerZoneFollow": false,
+        "triggeredMode": true,
+        "texturepath": "assets/sprites/Bats.png",
+        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+      }
+    },
+    {
+      "Bat": {
+        "x": 197,
+        "y": 112,
+        "height": 32,
+        "width": 32,
+        "origin_x": 64,
+        "origin_y": 450,
+        "speed": 2,
+        "damage": 1,
+        "triggerZoneWidth": 100,
+        "triggerZoneHeight": 50,
+        "triggerZoneX": 330,
+        "triggerZoneY": 175,
+        "triggerZoneFollow": false,
+        "triggeredMode": false,
+        "texturepath": "assets/sprites/Bats.png",
+        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+      }
     }
   ],
   "objects": [
@@ -283,7 +328,7 @@
       "CollisionBlock": {
         "x": 1253,
         "y": 620,
-        "width": 200,
+        "width": 143,
         "height": 100,
         "collisionSide": 0
       }
@@ -363,7 +408,7 @@
         "triggerZoneY": 30,
         "activationTimer": 500,
         "texturepath": "assets/sprites/DecorSheet.png",
-        "speed": 1
+        "speed": 1.5
       }
     },
     {
@@ -413,7 +458,7 @@
             "y": 430
           }
         ],
-        "speed": 1
+        "speed": 1.5
       }
     },
     {
@@ -622,7 +667,7 @@
     },
     {
       "Coin": {
-        "x": 1337,
+        "x": 1340,
         "y": 241,
         "width": 16,
         "height": 16,
@@ -710,17 +755,6 @@
       }
     },
     {
-      "PassageWay": {
-        "x": 0,
-        "y": 80,
-        "width": 50,
-        "height": 145,
-        "passageWayTo": "level4",
-        "title": "Boss level",
-        "content": "Save the princess adventurer !"
-      }
-    },
-    {
       "MovablePlatform": {
         "width": 96,
         "height": 16,
@@ -748,7 +782,7 @@
     {
       "Spike": {
         "x": 1140,
-        "y": 224,
+        "y": 225,
         "width": 32,
         "height": 32,
         "texturepath": "assets/sprites/spike.png",
@@ -776,7 +810,7 @@
     {
       "Spike": {
         "x": 620,
-        "y": 224,
+        "y": 225,
         "width": 32,
         "height": 32,
         "texturepath": "assets/sprites/spike.png",
@@ -818,6 +852,48 @@
         "value": 50,
         "texturepath": "assets/sprites/Collectible.png",
         "soundPath": "assets/sounds/collectible/coin.wav"
+      }
+    },
+    {
+      "Door": {
+        "x": 50,
+        "y": 129,
+        "width": 64,
+        "height": 96,
+        "texturepath": "assets/images/white.png",
+        "spriteSheetOffsetX": 0,
+        "spriteSheetOffsetY": 0,
+        "spriteSheetWidth": 100,
+        "spriteSheetHeight": 100,
+        "trrigerZoneX": 1330,
+        "trrigerZoneY": 110,
+        "trrigerZoneWidth": 32,
+        "trrigerZoneHeight": 32,
+        "trigerZoneImagePath": "assets/images/white.png",
+        "timeToOpen": 10
+      }
+    },
+    {
+      "PassageWay": {
+        "x": 50,
+        "y": 129,
+        "width": 50,
+        "height": 96,
+        "passageWayTo": "level4",
+        "title": "Boss level",
+        "content": "Save the princess adventurer ! \n Tips: To kill the boss you have to hit hit is hands !"
+      }
+    },
+    {
+      "Heart": {
+        "x": 173,
+        "y": 199,
+        "width": 16,
+        "height": 16,
+        "heal": 2,
+        "heart_gain":0,
+        "texturepath": "assets/sprites/Collectible.png",
+        "soundPath": "assets/sounds/collectible/heart_gain.wav"
       }
     }
   ]
