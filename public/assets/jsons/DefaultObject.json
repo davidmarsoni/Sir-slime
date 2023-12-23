@@ -121,7 +121,7 @@
                 "height": 16,
                 "texturepath": "assets/sprites/Collectible.png",
                 "value": 0,
-                "soundPath" : "assets/sounds/collectible/coin.wav"
+                "soundPath" : "assets/sounds/collectible/coin.mp3"
             }
         },
         {

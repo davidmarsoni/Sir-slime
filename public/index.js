@@ -21,8 +21,8 @@ let uiState = START;
 // The game state
 let currentLevel = DEFAULT_LEVEL;
 let currentModalWindow = new ModalWindow("", "");
-let developerMode = true;
-let debug = true;
+let developerMode = false;
+let debug = false;
 let onlyPlayerKeys = false;
 // The player
 let player;
@@ -88,7 +88,7 @@ function updatePageSkin() {
             draggableObject.x = draggableObject.originX;
             draggableObject.y = draggableObject.originY;
 
-            console.log(draggableObject.texturepath);
+            debug && console.log(draggableObject.texturepath);
             loader.currentSkinPreview.texturepath = draggableObject.texturepath;
             loader.currentSkinPreview.textureLoaded = false;
             loader.currentSkinPreview.loadTexture();
@@ -99,7 +99,7 @@ function updatePageSkin() {
             if(firebase.isUserSignedIn()){
                firebase.updatePlayerSkinPath(loader.currentSkinPath);
             }
-            console.log(loader.currentSkinPath);
+            debug && console.log(loader.currentSkinPath);
          }else if(collide){
             draggableObject.colorStroke = DraggableObject.STROKE_GREEN;
          }else{
@@ -119,8 +119,6 @@ function goToSkinPage() {
          let skinParts = skinpath.split("-");
          loader.currentSkinPreview.texturepath = skinParts[0]+"-"+skinParts[1]+"-preview-"+skinParts[2];
          loader.currentSkinPreview.loadTexture();
-      }else{
-         this.currentSkinPath = loader.draggableObjects[0].texturepath;
       }
    });
    addSkinKeys();
@@ -144,7 +142,7 @@ function goToStartState() {
 function goToModalState() {
    uiState = MODAL;
    resetKeys();
-   console.log("go to modal state");
+   debug && console.log("go to modal state");
    removeGameKeys();
    window.addEventListener("keydown", keydownModal);
 }
@@ -396,7 +394,6 @@ function keydown(event) {
          text += "M               : mute music\n";
          text += "N               : mute sound\n";
          text += "O               : print the level in png\n";
-         text += "S / T           : S for statistics and T heighest statisitcs sver (work only if connected)\n";
          text += "Shift+D         : Developer mode\n";
          text += "Shift+P         : only player keys (wasd)\n";
          if (developerMode === true) {
@@ -404,6 +401,11 @@ function keydown(event) {
             text += "A               : ask for level name\n";
             text += "F               : force load level\n";
             text += "Q               : quick object creation\n";
+         }
+         if(firebase.isUserSignedIn()){
+            text += "S / T           : S for statistics and T heighest statisitcs ever\n";
+            text += "U               : user data\n";
+            text += "L               : leaderboard\n";
          }
       } else {
          text += "You are in only player keys mode. This mode is use to play the game with only the player keys (wasd).\n";
@@ -592,6 +594,72 @@ function utilityKeys(event) {
       });
 
    }
+   // key c (credits)
+   if(event.keyCode === 67){
+      let text = "You are on the credits page\n";
+      text += "here you can see the credits of the game\n\n"
+      text += "Game developped by : \n";
+      text += "    - Binjos Adnan \n";
+      text += "    - Fernández Rodríguez Zanya\n"
+      text += "    - Marsoni David\n"
+      text += "    - Pitteloud Mathias\n"
+      text += "Special thanks to :\n"
+      text += "    - https://shark-game.gloor.dev/, Webtastic Fluffy Bird, The Tremedous Journey, Tetris and Stack for let\n" 
+      text += "our to your their avatars.\n";
+      text += "    - Araújo Jonathan for the idea for using skin of all the projects of the year\n";
+
+      currentModalWindow = new ModalWindow("Credits", text);
+      goToModalState();
+
+   }
+
+   // key u userdata
+   if(event.keyCode === 85){
+      if(firebase.isUserSignedIn()){
+         firebase.getUserInfo().then((result) => {
+            if(result != null){
+               let text = "You are on the user data page\n";
+               text += "here you can see your user data\n\n"
+               
+               // show all the data of result
+               for(const key in result){
+                  //test if there is a other object or a value
+                  if(typeof result[key] === "object"){
+                     text += key + " : \n";
+                     for(const subkey in result[key]){
+                        text += "    " + subkey + " : " + result[key][subkey] + "\n";
+                     }
+                  }else{
+                     text += key + " : " + result[key] + "\n";
+                  }
+               }
+               
+               goToModalState();
+               currentModalWindow = new ModalWindow("User Data", text);
+            }
+         });
+      }
+   }
+
+   //l (leaderboard)
+   if(event.keyCode === 76){
+      firebase.getLeaderboard().then(([data,usernames]) => {
+         console.log(data,usernames);
+         if(data != null && usernames != null){
+            let text = "You are on the leaderboard page\n";
+            text += "here you can see all the best score made by the players\n\n"
+           
+            for(let i = 0; i < data.length; i++){
+         text += "Rank " + (i+1).toString().padEnd(3) + " : " + usernames[i].padEnd(30) + " with " + data[i].score + "\n";
+            }
+            
+            goToModalState();
+            currentModalWindow = new ModalWindow("Leaderboard", text);
+         }
+      });
+   }
+
+   
    // key n (mute sound)
    if (event.keyCode === 78) {
       loader.playSound = !loader.playSound;
@@ -642,6 +710,15 @@ function startGame() {
 
 }
 
+function skinPage(){
+   if(uiState === SKINS){
+      uiState = START;
+      removeSkinKeys();
+   }else{
+      goToSkinPage();
+   }
+}
+
 function loadLevel(levelpath) {
    uiState = GAME_OFF;
    loader.loadGame(levelpath, false).then((result) => {
@@ -664,7 +741,7 @@ function loadStartMenu() {
       } else {
          //set the button action
          loader.setbuttonAction(0, startGame);
-         loader.setbuttonAction(1, goToSkinPage);
+         loader.setbuttonAction(1, skinPage);
          window.addEventListener("keydown", keydownStart)
          uiState = START;
          debug && console.log("start menu loaded");

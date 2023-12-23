@@ -68,7 +68,7 @@ class Button extends GameObjectLogic {
         this.debug && console.log("clicked");
         setTimeout(() => {
           this.#clicked = false;
-        }, 1000);
+        }, 200);
       }
     }
   }

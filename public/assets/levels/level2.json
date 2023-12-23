@@ -309,7 +309,7 @@
         "value": 10,
         "spriteSheetOffsetX": 1,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -321,7 +321,7 @@
         "value": 10,
         "spriteSheetOffsetX": 1,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -333,7 +333,7 @@
         "value": 10,
         "spriteSheetOffsetX": 1,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -345,7 +345,7 @@
         "value": 10,
         "spriteSheetOffsetX": 1,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -357,7 +357,7 @@
         "value": 100,
         "spriteSheetOffsetX": 1,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -369,7 +369,7 @@
         "value": 10,
         "spriteSheetOffsetX": 1,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -381,7 +381,7 @@
         "value": 10,
         "spriteSheetOffsetX": 1,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -393,7 +393,7 @@
         "value": 10,
         "spriteSheetOffsetX": 1,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {

@@ -1,8 +1,8 @@
 import Platform from "../platform/Platform.js";
 import CollisionBlock from "../CollisionBlock.js";
-import Patrolman from "../entity/ennemy/Patrolman.js";
+import Patrolman from "../entity/enemy/Patrolman.js";
 import PassageWay from "../PassageWay.js";
-import Bat from "../entity/ennemy/Bat.js";
+import Bat from "../entity/enemy/Bat.js";
 import Coin from "../collectible/Coin.js";
 import Heart from "../collectible/Heart.js";
 import ActivationPlatform from "../platform/ActivationPlatform.js";
@@ -435,7 +435,7 @@ class QuickObjectCreation{
                         "height": 16,
                         "value": parseInt(value3) == 0 ? 10 :parseInt(value3),
                         "texturepath": "assets/sprites/Collectible.png",
-                        "soundPath":"assets/sounds/collectible/coin.wav"
+                        "soundPath":"assets/sounds/collectible/coin.mp3"
                     }
                 };
                 break;
@@ -449,7 +449,7 @@ class QuickObjectCreation{
                         "height": 16,
                         "value": parseInt(value3) == 0 ? 1 :parseInt(value3),
                         "texturepath": "assets/sprites/Collectible.png",
-                        "soundPath":"assets/sounds/collectible/heart_gain.wav"
+                        "soundPath":"assets/sounds/collectible/heart_gain.mp3"
                     }
                 };
                 break;

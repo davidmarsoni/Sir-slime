@@ -3,7 +3,9 @@
         {
             "mainBackground": {
                 "path": "assets/images/mainBackground.png"
-            },
+            }
+        },
+        {
             "skinBackground": {
                 "path": "assets/images/SkinBackground.png"
             }
@@ -29,148 +31,212 @@
         {
             "DraggableZone": {
                 "x": 750,
-                "y": 255,
+                "y": 295,
                 "width": 200,
-                "height": 400,
+                "height": 370,
                 "message": "Your skin"
             }
         },
         {
+            "Row1":null
+        },
+        {
             "DraggableObject": {
                 "x": 100,
-                "y": 255,
+                "y": 155,
                 "width": 100,
                 "height": 100,
                 "originX": 100,
-                "originY": 255,
+                "originY": 155,
                 "texturepath": "assets/sprites/skins/player-skin-preview-blue.png"
             }
         },
         {
             "DraggableObject": {
-                "x": 100,
-                "y": 405,
-                "width": 100,
-                "height": 100,
-                "originX": 100,
-                "originY": 405,
-                "texturepath": "assets/sprites/skins/player-skin-preview-red.png"
-            }
-        },
-        {
-            "DraggableObject": {
-                "x": 100,
-                "y": 555,
-                "width": 100,
-                "height": 100,
-                "originX": 100,
-                "originY": 555,
-                "texturepath": "assets/sprites/skins/player-skin-preview-green.png"
-            }
-        },
-        {
-            "DraggableObject": {
                 "x": 250,
-                "y": 255,
+                "y": 155,
                 "width": 100,
                 "height": 100,
                 "originX": 250,
-                "originY": 255,
-                "texturepath": "assets/sprites/skins/player-skin-preview-yellow.png"
-            }
-        },
-        {
-            "DraggableObject": {
-                "x": 250,
-                "y": 405,
-                "width": 100,
-                "height": 100,
-                "originX": 250,
-                "originY": 405,
-                "texturepath": "assets/sprites/skins/player-skin-preview-black.png"
-            }
-        },
-        {
-            "DraggableObject": {
-                "x": 250,
-                "y": 555,
-                "width": 100,
-                "height": 100,
-                "originX": 250,
-                "originY": 555,
-                "texturepath": "assets/sprites/skins/player-skin-preview-violet.png"
-            }
-        },
-        {
-            "DraggableObject": {
-                "x": 400,
-                "y": 255,
-                "width": 100,
-                "height": 100,
-                "originX": 400,
-                "originY": 255,
+                "originY": 155,
                 "texturepath": "assets/sprites/skins/player-skin-preview-hat.png"
             }
         },
         {
             "DraggableObject": {
                 "x": 400,
-                "y": 405,
+                "y": 155,
                 "width": 100,
                 "height": 100,
                 "originX": 400,
-                "originY": 405,
-                "texturepath": "assets/sprites/skins/player-skin-preview-transparent.png"
-            }
-        },
-        {
-            "DraggableObject": {
-                "x": 400,
-                "y": 555,
-                "width": 100,
-                "height": 100,
-                "originX": 400,
-                "originY": 555,
-                "texturepath": "assets/sprites/skins/player-skin-preview-violet.png"
+                "originY": 155,
+                "texturepath": "assets/sprites/skins/player-skin-preview-birb.png"
             }
         },
         {
             "DraggableObject": {
                 "x": 550,
-                "y": 255,
+                "y": 155,
                 "width": 100,
                 "height": 100,
                 "originX": 550,
-                "originY": 255,
+                "originY": 155,
+                "texturepath": "assets/sprites/skins/player-skin-preview-guseppe.png"
+            }
+        },
+        {
+            "Row2":null
+        },
+        {
+            "DraggableObject": {
+                "x": 100,
+                "y": 285,
+                "width": 100,
+                "height": 100,
+                "originX": 100,
+                "originY": 285,
+                "texturepath": "assets/sprites/skins/player-skin-preview-green.png"
+            }
+        },
+        {
+            "DraggableObject": {
+                "x": 250,
+                "y": 285,
+                "width": 100,
+                "height": 100,
+                "originX": 250,
+                "originY": 285,
+                "texturepath": "assets/sprites/skins/player-skin-preview-yellow.png"
+            }
+        },
+        {
+            "DraggableObject": {
+                "x": 400,
+                "y": 285,
+                "width": 100,
+                "height": 100,
+                "originX": 400,
+                "originY": 285,
+                "texturepath": "assets/sprites/skins/player-skin-preview-shark.png"
+            }
+        },
+        {
+            "DraggableObject": {
+                "x": 550,
+                "y": 285,
+                "width": 100,
+                "height": 100,
+                "originX": 550,
+                "originY": 285,
+                "texturepath": "assets/sprites/skins/player-skin-preview-tetris.png"
+            }
+        },
+        {
+            "Row3":null
+        },
+        {
+            "DraggableObject": {
+                "x": 100,
+                "y": 425,
+                "width": 100,
+                "height": 100,
+                "originX": 100,
+                "originY": 425,
+                "texturepath": "assets/sprites/skins/player-skin-preview-red.png"
+            }
+        },
+        {
+            "DraggableObject": {
+                "x": 250,
+                "y": 425,
+                "width": 100,
+                "height": 100,
+                "originX": 250,
+                "originY": 425,
+                "texturepath": "assets/sprites/skins/player-skin-preview-violet.png"
+            }
+        },
+        {
+            "DraggableObject": {
+                "x": 400,
+                "y": 425,
+                "width": 100,
+                "height": 100,
+                "originX": 400,
+                "originY": 425,
                 "texturepath": "assets/sprites/skins/player-skin-preview-yellow.png"
             }
         },
         {
             "DraggableObject": {
                 "x": 550,
-                "y": 405,
+                "y": 425,
                 "width": 100,
                 "height": 100,
                 "originX": 550,
-                "originY": 405,
-                "texturepath": "assets/sprites/skins/player-skin-preview-black.png"
-            }
-        },
-        {
-            "DraggableObject": {
-                "x": 550,
-                "y": 555,
-                "width": 100,
-                "height": 100,
-                "originX": 550,
-                "originY": 555,
-                "texturepath": "assets/sprites/skins/player-skin-preview-violet.png"
+                "originY": 425,
+                "texturepath": "assets/sprites/skins/player-skin-preview-yellow.png"
             }
         },
         {
             "GameObject": {
                 "x": 800,
-                "y": 70,
+                "y": 155,
+                "width": 100,
+                "height": 100
+            }
+        },
+        {
+            "Row4":null
+        },
+        {
+            "DraggableObject": {
+                "x": 100,
+                "y": 565,
+                "width": 100,
+                "height": 100,
+                "originX": 100,
+                "originY": 565,
+                "texturepath": "assets/sprites/skins/player-skin-preview-black.png"
+            }
+        },
+        {
+            "DraggableObject": {
+                "x": 250,
+                "y": 565,
+                "width": 100,
+                "height": 100,
+                "originX": 250,
+                "originY": 565,
+                "texturepath": "assets/sprites/skins/player-skin-preview-transparent.png"
+            }
+        },
+        {
+            "DraggableObject": {
+                "x": 400,
+                "y": 565,
+                "width": 100,
+                "height": 100,
+                "originX": 400,
+                "originY": 565,
+                "texturepath": "assets/sprites/skins/player-skin-preview-yellow.png"
+            }
+        },
+        {
+            "DraggableObject": {
+                "x": 550,
+                "y": 565,
+                "width": 100,
+                "height": 100,
+                "originX": 550,
+                "originY": 565,
+                "texturepath": "assets/sprites/skins/player-skin-preview-yellow.png"
+            }
+        },
+        {
+            "GameObject": {
+                "x": 800,
+                "y": 155,
                 "width": 100,
                 "height": 100
             }

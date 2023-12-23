@@ -65,8 +65,8 @@
         "spriteSheetOffsetY": 48,
         "spriteSheetWidth": 96,
         "spriteSheetHeight": 48,
-        "triggerZoneX": 10,
-        "triggerZoneY": 10,
+        "triggerZoneX": 100,
+        "triggerZoneY": 0,
         "activationTimer": 100,
         "texturepath": "assets/sprites/DecorSheet.png"
       }

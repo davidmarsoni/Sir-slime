@@ -291,6 +291,7 @@ class Hand extends Entity {
                   if (this.#boss.health <= 0) {
                      this.#boss.isAlive = false;
                      player.addEnemykilled();
+                     player.addLevelCompleted();
                      player.score += 10000;
                   }
                } else {

@@ -11,15 +11,15 @@
                 "y_v": 0,
                 "origin_x": 64,
                 "origin_y": 450,
-                "maxLives": 40,
+                "maxLives": 3,
                 "maxPossibleLives": 99,
-                "maxHealth": 20,
+                "maxHealth": 6,
                 "maxPossibleHealth": 16,
                 "damage": 1,
                 "speed": 5,
                 "cooldownTime": 250,
-                "walkSoundPath": "assets/sounds/player/walk.wav",
-                "deadSoundPath": "assets/sounds/player/dead.wav"
+                "walkSoundPath": "assets/sounds/player/walk.mp3",
+                "deadSoundPath": "assets/sounds/player/dead.mp3"
             }
         },
         {

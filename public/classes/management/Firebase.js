@@ -172,12 +172,23 @@ class Firebase {
         return false;
     }
 
-    getUserInfo() {
+    getCurrentUserName() {
         if (!this.isUserSignedIn()) {
             return null;
         }
         return this.auth.currentUser.displayName;
     }
+
+    async getUserInfo() {
+        if (!this.isUserSignedIn()) {
+            return null;
+        }
+        //get the user document and return it
+        let userData = await this.getDataFromNodeByUid("users");
+        
+        return userData;
+    }
+
 
     async getDocFromDatabase(node) {
         if (!this.isUserSignedIn()) {
@@ -230,7 +241,7 @@ class Firebase {
         }
     }
 
-    async getNodeFromDatabase(node, orderBy = null, limit = null) {
+    async getNodeFromDatabase(node, orderBy = null,orderByASC = true, limit = null) {
         if (!this.isUserSignedIn()) {
             return null;
         }
@@ -238,8 +249,9 @@ class Firebase {
         let nodeCollectionRef = firestore.collection(this.db, node);
 
         if (orderBy) {
-            nodeCollectionRef = firestore.query(nodeCollectionRef, firestore.orderBy(orderBy));
+            nodeCollectionRef = firestore.query(nodeCollectionRef, firestore.orderBy(orderBy, orderByASC ? "asc" : "desc"));
         }
+
         if (limit) {
             nodeCollectionRef = firestore.query(nodeCollectionRef, firestore.limit(limit));
         }
@@ -253,12 +265,15 @@ class Firebase {
         return data;
     }
 
-    async getDataFromNodeByUid(node) {
+    async getDataFromNodeByUid(node,uid = null) {
         if (!this.isUserSignedIn()) {
             return null;
         }
         const nodeCollection = firestore.collection(this.db, node);
-        const query = firestore.query(nodeCollection, firestore.where("uid", "==", this.auth.currentUser.uid));
+        if(uid == null){
+            uid = this.auth.currentUser.uid;
+        }
+        const query = firestore.query(nodeCollection, firestore.where("uid", "==", uid));
         const querySnapshot = await firestore.getDocs(query);
     
         if (querySnapshot.empty) {
@@ -375,6 +390,19 @@ class Firebase {
     
     async getHighestStats() {
         return await this.getDataFromNodeByUid("highestStats");
+    }
+
+    async getLeaderboard() {
+        //get all the highest stats of all the users and sort them by score
+        let data = await this.getNodeFromDatabase("highestStats", "score", false,18);
+        let usernames = [];
+        //get the usernames of the data by a request to the users node
+        for (let i = 0; i < data.length; i++) {
+            let userData = await this.getDataFromNodeByUid("users",data[i].uid);
+            usernames.push(userData.pseudo);
+        }
+        console.log(data,usernames);
+        return [data,usernames];
     }
 }
 

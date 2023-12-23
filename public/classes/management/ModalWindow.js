@@ -56,7 +56,7 @@ class ModalWindow{
     }
 
     drawBackground() {
-        this.#ctx.fillStyle = "rgba(0,0,0,0.8)";
+        this.#ctx.fillStyle = "rgba(0,0,0,0.65)";
         this.#ctx.fillRect(0,0,this.#ctx.canvas.width,this.#ctx.canvas.height);
     }
 

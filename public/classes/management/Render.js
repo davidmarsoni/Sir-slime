@@ -107,7 +107,7 @@ class Render {
          width += this.#drawText("Debug mode", 20, height);
          width += 10;
       }
-
+     
       if (this.developerMode) {
          width += this.#drawText("Developer mode", 20 + width, height);
          width += 10;
@@ -141,25 +141,27 @@ class Render {
       let x = this.ctx.canvas.width;
       let y = this.ctx.canvas.height - 20;
       height = 34;
-      this.#drawConnexionButton(loader,x, y);
+      this.#drawConnexionButton(loader,x, y, true);
 
      
    }
-   #drawConnexionButton(loader,x,y){
+   #drawConnexionButton(loader,x,y,onlyUser = false){
       let height = 34;
-      let pseudo = firebase.isUserSignedIn() ? firebase.getUserInfo() : "Guest";
+      let pseudo = firebase.isUserSignedIn() ? firebase.getCurrentUserName() : "Guest";
       let width = this.#drawText(pseudo, x, y, true);
       x -= width + 10;
 
-      let buttonText = firebase.isUserSignedIn() ? "Disconnect" : "Connect";
-      width = this.#drawText(buttonText, x, y, true, firebase.isUserSignedIn() ? "#7B0000" : "#00621B");
+      if(!onlyUser){
+         let buttonText = firebase.isUserSignedIn() ? "Disconnect" : "Connect";
+         width = this.#drawText(buttonText, x, y, true, firebase.isUserSignedIn() ? "#7B0000" : "#00621B");
 
-      loader.connectButton.x = x - width - 10;
-      loader.connectButton.y = y - 24;
-      loader.connectButton.width = width;
-      loader.connectButton.height = height;
-      loader.connectButton.debug = this.debug;
-      loader.connectButton.render(this.ctx);
+         loader.connectButton.x = x - width - 10;
+         loader.connectButton.y = y - 24;
+         loader.connectButton.width = width;
+         loader.connectButton.height = height;
+         loader.connectButton.debug = this.debug;
+         loader.connectButton.render(this.ctx);
+      }
    }
 
    #drawHealth(health, maxHealth, x, y) {
@@ -189,15 +191,17 @@ class Render {
    }
 
    #drawText(text, x, y, removeWidth = false, backgroundcolor = "black", textColor = "white") {
-      this.ctx.fillStyle = backgroundcolor;
+      this.ctx.textAlign = "left";
       this.ctx.font = "20px Consolas";
-      let width = Math.round(this.ctx.measureText(text).width) + 20;
-      let height = Math.round(this.ctx.measureText("M").width) + 24;
+      this.ctx.fillStyle = backgroundcolor;
+      const metrics = this.ctx.measureText(text);
+      const textWidth = metrics.actualBoundingBoxRight + metrics.actualBoundingBoxLeft;
+      let width = Math.round(textWidth) + 20;
+      let height = 35;
       removeWidth && (x -= width);
-      this.ctx.fillRect(x - 10, y - 24, width, height);
+      this.ctx.fillRect(x -10, y - 24, width, height);
       this.ctx.fillStyle = textColor;
-      this.ctx.fillText(text, x, y);
-
+      this.ctx.fillText(text, x , y);
       return width;
    }
 
@@ -217,16 +221,25 @@ class Render {
    }
 
    renderSkinPage(loader) {
-      
       if (loader.skinBackground != null) {
          this.ctx.drawImage(loader.skinBackground, 0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
       }
 
-      //draw a title
+      //draw connexion button
+      this.#drawConnexionButton(loader,this.canvas.width, 34);
+
+      //Title of the page
       this.ctx.fillStyle = "rgba(255,255,255,1)";
       this.ctx.textAlign = "left";
       this.ctx.font = "bold 40px Consolas";
-      this.ctx.fillText("Choose your skin", 100, 130);
+      this.ctx.fillText("Choose your skin", 100, 80);
+     
+      //subtitle of the page
+      this.ctx.fillStyle = "rgba(255,255,255,1)";
+      this.ctx.textAlign = "left";
+      this.ctx.font = "bold 20px Consolas";
+      this.ctx.fillText("to choose a skin, use drag and drop", 100, 120);
+
      
       loader.currentSkinPreview.debug = this.debug;
       loader.currentSkinPreview.render(this.ctx);

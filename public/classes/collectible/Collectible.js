@@ -1,4 +1,5 @@
 import Object from "../Object.js";
+
 class Collectable extends Object {
     #animStep = 0;
     #animTimer = 0;

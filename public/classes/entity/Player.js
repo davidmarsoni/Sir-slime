@@ -445,8 +445,8 @@ class Player extends Entity {
             this.timer++;
             if (this.timer === 4) {
                this.timer = 0;
-               this.playSound && this.#walkSound != null ? this.walkSound.play() : null;
             }
+            this.playSound && this.#walkSound != null && this.walkSound.play();
          }
          animationOffset = this.timer * 32;
       } else {
@@ -522,23 +522,6 @@ class Player extends Entity {
       }
    }
 
-   distanceToTheLeft(object) {
-      //absolute value of the distance between the player and the object
-      return Math.abs(this.maxX - object.minX);
-   }
-
-   distanceToTheRight(object) {
-      //absolute value of the distance between the player and the object
-      return Math.abs(this.minX - object.maxX);
-   }
-
-   distanceToTheTop(object) {
-      return Math.abs(this.maxY - object.minY);
-   }
-
-   distanceToTheBottom(object) {
-      return Math.abs(this.minY - object.maxY);
-   }
 
    /**
     * Checks if the player is within a specified perimeter of an object.
@@ -550,50 +533,12 @@ class Player extends Entity {
    InAPerimeter(object, width = 0, height = 0) {
       //console.log(this.distanceToTheLeft(object),this.distanceToTheRight(object),this.distanceToTheTop(object),this.distanceToTheBottom(object));
       //console.log(width,height);
+      let minX = object.minX - width;
+      let minY = object.minY - height;
+      let maxX = object.maxX + width;
+      let maxY = object.maxY + height;
 
-      //if the object is too small to have a perimeter
-      if (object.height + height <= 0) {
-         return false;
-      }
-      if (object.width + width <= 0) {
-         return false;
-      }
-
-
-
-      /**
-        *  █▯█
-        *  █▯█
-        *  █▯█
-        */
-
-      if (height != 0 && width != 0) {
-
-         if (this.distanceToTheLeft(object) <= width && this.distanceToTheTop(object) <= height) {
-            return true;
-         }
-         if (this.distanceToTheLeft(object) <= width && this.distanceToTheBottom(object) <= height) {
-            return true;
-         }
-         if (this.distanceToTheRight(object) <= width && this.distanceToTheTop(object) <= height) {
-            return true;
-         }
-         if (this.distanceToTheRight(object) <= width && this.distanceToTheBottom(object) <= height) {
-            return true;
-         }
-      }
-
-      /**
-       *  ▯█▯
-       *  ▯█▯
-       *  ▯█▯
-       */
-
-      if (this.maxX >= object.minX && this.minX <= object.maxX && this.maxY >= object.minY - height && this.minY <= object.maxY + height) {
-         return true;
-      }
-
-      return false;
+      return this.maxX >= minX && this.minX <= maxX && this.maxY >= minY && this.minY <= maxY;
    }
 
 

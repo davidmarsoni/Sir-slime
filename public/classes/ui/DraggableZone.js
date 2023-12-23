@@ -27,7 +27,6 @@ class DraggableZone extends GameObject {
         ctx.fillStyle = 'white';
         ctx.font = '20px Consolas';
         ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
         ctx.fillText(this.#message, this.x + this.width / 2, this.y + this.height / 2);
     }
 }

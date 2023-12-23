@@ -4,9 +4,9 @@ import Platform from "../platform/Platform.js";
 import ActivationPlatform from "../platform/ActivationPlatform.js";
 import MovablePlatform from "../platform/MovablePlatform.js";
 import CollisionBlock from "../CollisionBlock.js";
-import Patrolman from "../entity/ennemy/Patrolman.js";
+import Patrolman from "../entity/enemy/Patrolman.js";
 import PassageWay from "../PassageWay.js";
-import Bat from "../entity/ennemy/Bat.js";
+import Bat from "../entity/enemy/Bat.js";
 import Coin from "../collectible/Coin.js";
 import Heart from "../collectible/Heart.js";
 import Spike from "../entity/Spike.js";
@@ -20,38 +20,36 @@ import Hand from "../entity/boss/Hand.js";
 import DraggableObject from "../ui/DraggableObject.js";
 import DraggableZone from "../ui/DraggableZone.js";
 import GameObject from "../GameObject.js";
-/**
- * This class is used to load a level from a json file
- * It contains all the data of the loaded level and the player
- */
+import EnemyFactory from "./EnemyFactory.js";
+import ObjectFactory from "./ObjectFactory.js";
 class Loader {
-   //debug variable
-   debug = false;
-
+   //#region variables
    //utilitary variables
+   #debug = false;
    #playSound = true;
    #playMusic = false;
    #errors = [];
 
-   //for the game
+   //variables for the a level
+   #backgroundImage = null;
+   #connectButton;
    #levelName;
    #levelDisplayName;
    #levelAuthor;
    #song;
    #player = null;
    #patrolmen = [];
+   #bats = [];
+   #boss = null;
+   #spikes = [];
    #platforms = [];
    #collisionBlocks = [];
    #passageWays = [];
    #collectibles = [];
-   #backgroundImage = null;
-   #bats = [];
-   #spikes = [];
    #doors = [];
-   #connectButton;
-   #boss;
 
 
+   //variables for the start menu
    #mainBackground;
    #skinBackground;
 
@@ -60,23 +58,23 @@ class Loader {
    #draggableZones = [];
    #currentSkinPreview = null;
    #currentSkinPath = null;
+   //#endregion
 
-   //handler
-   handlers = {
-      handleClick: (intIndex, event) => {
-         this.startScreenButtons[intIndex].handleClickEvent(event);
+   //#region getters and setters
+   get debug() { return this.#debug; }
+   set debug(value) { this.#debug = value; }
+
+   get playMusic() { return this.#playMusic; }
+   set playMusic(value) {
+      this.#playMusic = value;
+      if (this.#playMusic) {
+         this.#song.play();
+      } else {
+         this.#song.pause();
       }
-   };
-
-   get debug() { return this.debug; }
-   set debug(value) { this.debug = value; }
-   /**
-    * This function is used to get the errors list of the last loading
-    */
-   get errors() { return this.#errors; }
+   }
 
    get playSound() { return this.#playSound; }
-
    set playSound(value) {
       this.#playSound = value;
 
@@ -92,60 +90,174 @@ class Loader {
       }
    }
 
-   get playMusic() { return this.#playMusic; }
+   get errors() { return this.#errors; }
 
-   set playMusic(value) {
-      this.#playMusic = value;
-      if (this.#playMusic) {
-         this.#song.play();
-      } else {
-         this.#song.pause();
-      }
-   }
-
+   get backgroundImage() { return this.#backgroundImage; }
+   get connectButton() { return this.#connectButton; }
    get levelName() { return this.#levelName; }
-   set levelName(value) { this.#levelName = value; }
    get levelDisplayName() { return this.#levelDisplayName; }
    get levelAuthor() { return this.#levelAuthor; }
-
+   get song() { return this.#song; }
    get player() { return this.#player; }
    get patrolmen() { return this.#patrolmen; }
+   get bats() { return this.#bats; }
+   get boss() { return this.#boss; }
+   get spikes() { return this.#spikes; }
    get platforms() { return this.#platforms; }
    get collisionBlocks() { return this.#collisionBlocks; }
    get passageWays() { return this.#passageWays; }
-   get bats() { return this.#bats; }
    get collectibles() { return this.#collectibles; }
-   get spikes() { return this.#spikes; }
-   get connectButton() { return this.#connectButton; }
-   get boss() { return this.#boss; }
    get doors() { return this.#doors; }
-   get song() { return this.#song; }
-   get backgroundImage() { return this.#backgroundImage; }
+
+   get mainBackground() { return this.#mainBackground; }
+   get skinBackground() { return this.#skinBackground; }
+   get startMenuButtons() { return this.#startMenuButtons; }
    get draggableObjects() { return this.#draggableObjects; }
    get draggableZones() { return this.#draggableZones; }
    get currentSkinPreview() { return this.#currentSkinPreview; }
+   set currentSkinPreview(value) { this.#currentSkinPreview = value; }
    get currentSkinPath() { return this.#currentSkinPath; }
    set currentSkinPath(value) { this.#currentSkinPath = value; }
+   //#endregion
 
-   //startMenu getters and setter
-
-   get mainBackground() {
-      return this.#mainBackground;
+   //#region load functions
+   /**
+   * This function is used to load game at a specific level
+   * @param {*} levelname name of the level to load
+   * @param {*} debug if true the function will print debug information otherwise it will not
+   * @returns true if the level was loaded correctly false otherwise
+   */
+   loadGame(levelname, debug = false) {
+      this.debug = debug;
+      this.clean();
+      return new Promise((resolve) => {
+         this.loadLevel(levelname, resolve);
+      });
    }
 
-   get skinBackground() {
-      return this.#skinBackground;
+   /**
+    * This function is used to load the level passed in parameter
+    * @param {*} levelname name of the level to load
+    * @param {*} resolve function to call when the level is loaded
+    */
+   loadLevel(levelname, resolve) {
+      this.findFile(LEVEL_FOLDER, levelname, FILE_EXTENSION).then((result) => {
+         if (!result) {
+            this.#errors.push(`The level ${levelname}${FILE_EXTENSION} could not be found in the folder ${LEVEL_FOLDER} or the folder does not exist`);
+            resolve(false);
+            return;
+         }
+         this.debug && console.log(`The level ${levelname} was found`);
+         //load the level
+         this.loadLevelFromJSON(levelname, resolve);
+      });
    }
 
-   get startMenuButtons() {
-      return this.#startMenuButtons;
+   loadLevelFromJSON(levelname, resolve) {
+      loaderManager.loadLevelFromJSON(`${LEVEL_FOLDER}${levelname}${FILE_EXTENSION}`, this.debug).then(([Information, player_info_level, objects, ennemies]) => {
+         this.setInformation(Information);
+         this.setObjects(objects);
+         this.setEnnemies(ennemies);
+         this.finalizeLoading(player_info_level, resolve);
+      });
+   }
+   /**
+    * This function is used to finalize the loading of the level
+    * @param {*} player_info_level information about the player get from the level json
+    * @param {*} resolve  function to call when the level is loaded
+    */
+   finalizeLoading(player_info_level, resolve) {
+      const finalize = () => {
+         this.updatePlayer(player_info_level);
+         this.debug && console.log("player is charged");
+         this.errors.size != 0 && this.debug && console.log(this.errors);
+         resolve(true);
+      };
+
+      this.debug && console.log("Start loading player");
+      if (this.player == null || this.player == undefined) {
+         this.loadPlayerFromJSON(finalize);
+      } else {
+         this.debug && console.log("player is not empty");
+         finalize();
+      }
    }
 
-   set startMenuButtons(value) {
-      this.#startMenuButtons = value;
+   /**
+    * This function is used to load the player from the json file if the player is not already loaded
+    * @param {*} finalize function to call when the player is loaded
+    */
+   loadPlayerFromJSON(finalize) {
+      this.debug && console.log("player is empty");
+      loaderManager.loadPlayerFromJSON("assets/jsons/player.json", this.debug).then((player_info_from_json) => {
+         //set the player
+         this.setPlayer(player_info_from_json);
+         //test if the player is connected if yes load the player state from firebase
+         this.updatePlayerStateFromFirebase(finalize);
+      });
    }
 
+   /**
+    * This function is used to load the player state from firebase and update the player
+    * @param {*} finalize function to call when the player state is loaded
+    */
+   updatePlayerStateFromFirebase(finalize) {
+      firebase.getCurrentPlayerState().then((player_info) => {
+         if (player_info != null) {
+            this.debug && console.log(player_info.currentPlayerState);
+            this.debug && console.log("player state is charged from firebase");
+            this.#player.updateCurrentState(player_info.currentPlayerState);
+         } else {
+            this.debug && console.log("no player state not exist in firebase");
+         }
+         finalize();
+      });
+   }
 
+   /**
+    * This function is used to load the start menu
+    * @param {*} fileName name of the start menu file to load
+    * @returns true if the start menu was loaded correctly false otherwise
+    */
+   loadStartMenu(fileName) {
+      this.clean();
+      this.loadConnectButton();
+      return new Promise((resolve) => {
+         this.checkStartMenuFile(fileName, resolve);
+      });
+   }
+
+   /**
+    * This function is used to check if the start menu file exist
+    * @param {*} fileName name of the start menu file to load
+    * @param {*} resolve function to call when the start menu is loaded
+    */
+   checkStartMenuFile(fileName, resolve) {
+      this.findFile(START_MENU_FOLDER, fileName, FILE_EXTENSION).then((result) => {
+         if (result) {
+            this.loadStartMenuFromJSON(fileName, resolve);
+         } else {
+            this.#errors.push(`The Start Screen ${fileName}${StartMenuExtension} could not be found in the folder ${StartMenuFolder} or the folder does not exist`);
+            resolve(false);
+         }
+      });
+   }
+
+   /**
+    * This function is used to load the start menu from the json file
+    * @param {*} fileName name of the start menu file to load
+    * @param {*} resolve function to call when the start menu is loaded
+    */
+   loadStartMenuFromJSON(fileName, resolve) {
+      loaderManager.loadStartMenuFromJSON(`${START_MENU_FOLDER}${fileName}${FILE_EXTENSION}`, this.debug).then(([information, objects]) => {
+         this.setStartBackground(information);
+         this.setStartMenuObjects(objects);
+         if (this.errors.size != 0 && this.debug) {
+            console.log(this.errors);
+         }
+         resolve(true);
+      });
+   }
 
    loadConnectButton() {
       this.#connectButton = new Button(0, 0, 0, 0, "");
@@ -170,534 +282,9 @@ class Loader {
       this.#connectButton.debug = this.debug;
    }
 
-
    /**
-    * This function is used to load a level from a json file
-    * @param {*} levelname name of the level to load
-    * @param {*} debug if true the function will print debug information otherwise it will not
-    * @returns true if the level was loaded correctly false otherwise
-    */
-   loadGame(levelname, debug = false) {
-      this.debug = debug;
-      this.clean();
-      //promise principle
-      return new Promise((resolve) => {
-         //On cherche le fichier du niveau si il existe
-         this.findFile(LEVEL_FOLDER, levelname, FILE_EXTENSION).then((result) => {
-            //si le fichier n'existe pas on renvoie false
-            if (!result) {
-               this.#errors.push(`The level ${levelname}${FILE_EXTENSION} could not be found in the folder ${LEVEL_FOLDER} or the folder does not exist`);
-               resolve(false);
-            }
-
-            this.debug && console.log(`The level ${levelname} was found`);
-
-            //on charge le niveau
-            loaderManager.loadLevelFromJSON(`${LEVEL_FOLDER}${levelname}${FILE_EXTENSION}`, this.debug).then(([Information, player_info_level, objects, ennemies]) => {
-               //on set les informations du niveau
-               this.setInformation(Information);
-               this.setObjects(objects);
-               this.setEnnemies(ennemies);
-
-
-               //declare the function that will be called at the end of the loading
-               const finalizeLoading = () => {
-
-                  this.updatePlayer(player_info_level);
-                  this.debug && console.log("player is charged");
-                  this.errors.size != 0 && this.debug && console.log(this.errors);
-                  resolve(true);
-               };
-
-               //on charge le joueur si il n'est pas chargé
-               this.debug && console.log("Start loading player");
-               if (this.player == null || this.player == undefined) {
-                  this.debug && console.log("player is empty");
-                  loaderManager.loadPlayerFromJSON("assets/jsons/player.json", this.debug).then((player_info_from_json) => {
-                     this.setPlayer(player_info_from_json);
-                     firebase.getCurrentPlayerState().then((player_info) => {
-                        if (player_info != null) {
-                           this.debug && console.log(player_info.currentPlayerState);
-                           this.debug && console.log(player_info_from_json);
-                           this.debug && console.log("player state is charged from firebase");
-                           this.#player.updateCurrentState(player_info.currentPlayerState);
-
-                        } else {
-                           this.debug && console.log("no player state not exist in firebase");
-                        }
-                        finalizeLoading();
-                     });
-
-                  });
-
-               } else {
-                  this.debug && console.log("player is not empty");
-                  finalizeLoading();
-               }
-            });
-
-         });
-      });
-   }
-
-   loadStartMenu(fileName) {
-      this.clean();
-      this.loadConnectButton();
-      return new Promise((resolve) => {
-         //set some constants for the function
-
-         //check if the level exists
-         this.findFile(START_MENU_FOLDER, fileName, FILE_EXTENSION).then((result) => {
-            if (result) {
-               loaderManager.loadStartMenuFromJSON(`${START_MENU_FOLDER}${fileName}${FILE_EXTENSION}`, this.debug).then(([information, objects]) => {
-
-                  this.setStartMenuInformation(information);
-                  this.setStartMenuObjects(objects);
-                  if (this.errors.size != 0 && this.debug) {
-                     console.log(this.errors);
-                  }
-                  resolve(true);
-               });
-            } else {
-               this.#errors.push(`The Start Screen ${fileName}${StartMenuExtension} could not be found in the folder ${StartMenuFolder} or the folder does not exist`);
-               resolve(false);
-            }
-         });
-      });
-   }
-
-   /**
-    * This function is used to update the player beetwen two level
-    * @param {*} player_info a list of information about the player
-    */
-   updatePlayer(player_info) {
-      let playerObject = player_info[0][Player.name];
-      this.#player.update(playerObject.x, playerObject.y, playerObject.origin_x, playerObject.origin_y);
-      if(firebase.isUserSignedIn()){
-         firebase.getPlayerSkinPath().then((skinpath) => {
-            console.log(skinpath);
-            if(skinpath != null || skinpath != undefined){
-               this.#player.texturepath = skinpath;
-               this.#player.loadTexture();
-            }else{
-               this.#player.texturepath = this.#currentSkinPath;
-               this.#player.loadTexture();
-               
-            }
-         });
-       
-      }else{
-         this.#player.texturepath = this.#currentSkinPath;
-         this.#player.loadTexture();
-      }
-   }
-
-   /**
-    * This function is used to set the information of the level for exemple the name of the level
-    * @param {*} Information a list of information about the level
-    */
-   setInformation(Information) {
-      try {
-         const { DisplayName } = Information[0];
-         this.#levelDisplayName = DisplayName;
-      } catch (e) {
-         this.#errors.push(`The import of the level display name failed | ${e.message}`);
-      }
-
-      try {
-         const { Name } = Information[1];
-         this.#levelName = Name;
-      } catch (e) {
-         this.#errors.push(`The import of the level name failed | ${e.message}`);
-      }
-
-      try {
-         const { Author } = Information[2];
-         this.#levelAuthor = Author;
-      } catch (e) {
-         this.#errors.push(`The import of the author failed | ${e.message}`);
-      }
-
-      try {
-         const { path } = Information[3]["Background"];
-         this.loadBackground(path);
-      } catch (e) {
-         this.#errors.push(`The import of the background failed | ${e.message}`);
-      }
-
-      try {
-         const { path } = Information[4]["Song"];
-         this.#song = new Audio(path);
-         this.#song.loop = true;
-         this.#song.volume = 0.5;
-         if (this.playMusic) {
-            this.#song.play();
-         }
-      } catch (e) {
-         this.#errors.push(`The import of the song failed | ${e.message}`);
-      }
-   }
-
-
-   /**
-    * This function is used to set the player a the start of the game
-    * @param {*} player_info a list of information about the player
-    */
-   setPlayer(player_info) {
-      let playerObject = player_info[0][Player.name];
-      let playertmp;
-      try {
-         playertmp = new Player(
-            playerObject.x,
-            playerObject.y,
-            playerObject.width,
-            playerObject.height,
-            playerObject.texturepath,
-            playerObject.origin_x,
-            playerObject.origin_y,
-            playerObject.maxLives,
-            playerObject.maxPossibleLives,
-            playerObject.maxHealth,
-            playerObject.maxPossibleHealth,
-            playerObject.speed,
-            playerObject.damage,
-            playerObject.cooldownTime,
-            playerObject.walkSoundPath,
-            playerObject.deadSoundPath,
-         );
-         playertmp.loadTexture();
-         let fireballObject = player_info[1][Fireballs.name];
-         playertmp.defaultFireball = fireballObject;
-         this.#player = playertmp;
-      } catch (e) {
-         this.errors.push("The import of the player failed | " + e.message);
-         console.log(e);
-      }
-
-      if (this.debug) {
-         console.log("dump of the player");
-         console.log("player : " + this.player);
-      }
-
-   }
-   /**
-    * This function is used to set the objects in the level
-    * @param {*} objectsArray a list of objects in the level
-    */
-   setObjects(objectsArray) {
-      //create the temporary objects
-      let platformObject = [];
-      let collisionBlockObject = [];
-      let passageWaysObject = [];
-      let collectibleObject = [];
-      let spikeObject = [];
-
-      try {
-         for (let i = 0; i < objectsArray.length; i++) {
-            const element = objectsArray[i];
-            const elementType = Object.keys(element)[0];
-            const elementData = element[elementType];
-            switch (elementType) {
-               case Platform.name:
-                  const platform = Object.assign(new Platform(), elementData);
-                  platform.loadTexture();
-                  platformObject.push(platform);
-                  break;
-
-               case ActivationPlatform.name:
-                  const activationPlatform = Object.assign(new ActivationPlatform(), elementData);
-                  activationPlatform.loadTexture();
-                  platformObject.push(activationPlatform);
-                  break;
-
-               case MovablePlatform.name:
-                  const movablePlatform = new MovablePlatform(
-                     elementData.path,
-                     elementData.width,
-                     elementData.height,
-                     elementData.texturepath,
-                     elementData.spriteSheetOffsetX,
-                     elementData.spriteSheetOffsetY,
-                     elementData.spriteSheetWidth,
-                     elementData.spriteSheetHeight,
-                     elementData.speed,
-                  );
-                  platformObject.push(movablePlatform);
-                  movablePlatform.loadTexture();
-                  break;
-
-               case CollisionBlock.name:
-                  const collisionBlock = Object.assign(new CollisionBlock(), elementData);
-                  collisionBlockObject.push(collisionBlock);
-                  break;
-
-               case PassageWay.name:
-                  const passageWay = Object.assign(new PassageWay(), elementData);
-                  passageWaysObject.push(passageWay);
-                  break;
-
-               case Coin.name:
-                  const coin = Object.assign(new Coin(), elementData);
-                  coin.loadTexture();
-                  collectibleObject.push(coin);
-                  break;
-               case Heart.name:
-                  const heart = Object.assign(new Heart(), elementData);
-                  heart.loadTexture();
-                  collectibleObject.push(heart);
-                  break;
-               case Spike.name:
-                  const spike = Object.assign(new Spike(), elementData);
-                  spike.loadTexture();
-                  spikeObject.push(spike);
-                  break;
-               case Door.name:
-                  // use the constructor of the door instead of the object assign because the door has important logic in the constructor
-                  const door = new Door(
-                     elementData.x,
-                     elementData.y,
-                     elementData.width,
-                     elementData.height,
-                     elementData.texturepath,
-                     elementData.spriteSheetOffsetX,
-                     elementData.spriteSheetOffsetY,
-                     elementData.spriteSheetWidth,
-                     elementData.spriteSheetHeight,
-                     elementData.trrigerZoneX,
-                     elementData.trrigerZoneY,
-                     elementData.trrigerZoneWidth,
-                     elementData.trrigerZoneHeight,
-                     elementData.trigerZoneImagePath,
-                     elementData.timeToOpen,
-                     elementData.passageWayTo,
-                     elementData.title,
-                     elementData.content
-                  );
-
-                  door.loadTexture();
-                  this.#doors.push(door);
-                  break;
-               default:
-                  this.#errors.push(`Unknown object type: ${elementType}`);
-                  break;
-            }
-         }
-      } catch (e) {
-         this.#errors.push("The import of the objects failed | " + e.message);
-
-         console.log(e);
-      } finally {
-         // Set the object arrays to the class properties
-         this.#platforms = platformObject;
-         this.#collisionBlocks = collisionBlockObject;
-         this.#passageWays = passageWaysObject;
-         this.#collectibles = collectibleObject;
-         this.#spikes = spikeObject;
-      }
-
-      //check if there is at least one platform and one collision block in the level
-      if (this.platforms.length == 0) {
-         this.#errors.push("There is no platform in this level");
-      }
-      if (this.collisionBlocks.length == 0) {
-         this.#errors.push("There is no collision block in this level");
-      }
-      if (this.debug) {
-         console.log("dump of the objects in the level");
-         console.log("platforms : " + this.platforms);
-         console.log("collisionBlocks : " + this.collisionBlocks);
-         console.log("passageWays : " + this.passageWays);
-         console.log("collectibles : " + this.collectibles);
-         console.log("spikes : " + this.spikes);
-         console.log("doors : " + this.doors);
-      }
-   }
-   /**
-    * This function is used to set the ennemies in the level
-    * @param {*} ennemiesArray a list of ennemies in the level
-    */
-   setEnnemies(ennemiesArray) {
-      // create the temporary object
-      let patrolmanObject = [];
-      let batObject = [];
-      try {
-         for (let i = 0; i < ennemiesArray.length; i++) {
-            const element = ennemiesArray[i];
-            const elementType = Object.keys(element)[0];
-            const elementData = element[elementType];
-
-            switch (elementType) {
-               case Patrolman.name:
-                  const patrolman = Object.assign(new Patrolman(), elementData);
-                  patrolman.loadTexture();
-                  patrolmanObject.push(patrolman);
-                  break;
-               case Bat.name:
-                  const bat = new Bat(
-                     elementData.x,
-                     elementData.y,
-                     elementData.width,
-                     elementData.height,
-                     elementData.texturepath,
-                     elementData.origin_x,
-                     elementData.origin_y,
-                     elementData.speed,
-                     elementData.damage,
-                     elementData.triggerZoneWidth,
-                     elementData.triggerZoneHeight,
-                     elementData.triggerZoneX,
-                     elementData.triggerZoneY,
-                     elementData.triggeredMode,
-                     elementData.triggerZoneFollow,
-                  );
-
-                  bat.loadTexture();
-
-                  batObject.push(bat);
-
-                  break;
-
-               case Boss.name:
-                  this.#boss = new Boss(
-                     elementData.x,
-                     elementData.y,
-                     elementData.width,
-                     elementData.height,
-                     elementData.texturepath,
-                     elementData.bossbarpath,
-                     elementData.origin_x,
-                     elementData.origin_y,
-                     elementData.path,
-                     elementData.damage,
-                     elementData.health,
-                     elementData.handTrampleDamage,
-                  )
-                  this.#boss.loadTexture();
-                  this.#boss.loadTextureBossBar();
-                  break;
-
-               case Hand.name:
-                  let h = new Hand(
-                     elementData.x,
-                     elementData.y,
-                     elementData.width,
-                     elementData.height,
-                     elementData.texturepath,
-                     elementData.origin_x,
-                     elementData.origin_y,
-                     elementData.speed,
-                     elementData.damage,
-                     elementData.right,
-                     elementData.levelBottom
-                  )
-                  h.loadTexture();
-                  if (elementData.right === true) {
-                     this.#boss.handRight = h;
-                  } else {
-                     this.#boss.handLeft = h;
-                  }
-                  break;
-
-               default:
-                  this.#errors.push(`Unknown enemy type: ${elementType}`);
-                  break;
-            }
-         }
-      } catch (e) {
-         this.#errors.push(`The import of the enemies failed | ${e.message}`);
-         console.error(e);
-      } finally {
-         // Set the enemy arrays to the class properties
-         this.#patrolmen = patrolmanObject;
-         this.#bats = batObject;
-      }
-      //set the global variable
-      this.#patrolmen = patrolmanObject;
-      this.#bats = batObject;
-
-      if (this.debug) {
-         console.log("dump of the ennemies in the level");
-         console.log("patrolmen : " + this.patrolmen.length);
-         console.log("bats : " + this.bats.length);
-         console.log("boss : " + this.boss);
-      }
-   }
-
-   setStartMenuInformation(information) {
-
-      //console.log(information);
-      try {
-
-
-         this.debug && console.log(information[0].mainBackground.path);
-         this.debug && console.log(information[0].skinBackground.path);
-
-         this.loadStartScreenBackground(information[0].mainBackground.path);
-         this.loadCommandBackground(information[0].skinBackground.path);
-
-      } catch (e) {
-         this.#errors.push("The import of the background failed | " + e.message);
-      }
-
-
-   }
-
-   setStartMenuObjects(objectsArray) {
-
-      this.debug && console.log(objectsArray);
-
-      let buttonObjects = [];
-      let draggableObjects = [];
-      let draggableZones = [];
-      let currentSkinPreview = null;
-      try {
-         for (let i = 0; i < objectsArray.length; i++) {
-            const element = objectsArray[i];
-            const elementType = Object.keys(element)[0];
-            const elementData = element[elementType];
-
-            switch (elementType) {
-               case Button.name:
-                  const button = Object.assign(new Button(), elementData);
-                  buttonObjects.push(button);
-                  break;
-               case DraggableObject.name:
-                  const draggableObject = Object.assign(new DraggableObject(), elementData);
-                  draggableObject.loadTexture();
-                  draggableObjects.push(draggableObject);
-                  break;
-               case DraggableZone.name:
-                  const draggableZone = Object.assign(new DraggableZone(), elementData);
-                  draggableZones.push(draggableZone);
-                  break;
-
-               case GameObject.name:
-                  const gameObject = Object.assign(new GameObject(), elementData);
-                  currentSkinPreview = gameObject;
-               default:
-                  this.#errors.push(`Unknown startScreen type: ${elementType}`);
-                  break;
-            }
-         }
-      } catch (e) {
-         this.#errors.push(`The import of the startScreen failed | ${e.message}`);
-         console.error(e);
-      } finally {
-         // set the startScreen object 
-         this.#startMenuButtons = buttonObjects;
-         this.#draggableObjects = draggableObjects;
-         this.#draggableZones = draggableZones;
-         this.#currentSkinPreview = currentSkinPreview;
-
-         currentSkinPreview.texturepath = this.#draggableObjects[0].texturepath;
-         currentSkinPreview.loadTexture();
-         
-        
-      }
-   }
-   /**
-    * This function is used to load the background image only one time when the level is loaded
-    */
+   * This function is used to load the background image only one time when the level is loaded
+   */
    loadImage(path) {
       let image = new Image();
       if (path != null) {
@@ -740,14 +327,336 @@ class Loader {
          this.#errors.push(`The import of the command screen image failed | ${e.message}`);
       }
    }
+   //#endregion
+
+   //#region update functions
+   /**
+    * This function is used to update the player beetwen two level
+    * @param {*} player_info a list of information about the player
+    */
+   updatePlayer(player_info) {
+      let playerObject = player_info[0][Player.name];
+      this.#player.update(playerObject.x, playerObject.y, playerObject.origin_x, playerObject.origin_y);
+      if (firebase.isUserSignedIn()) {
+         firebase.getPlayerSkinPath().then((skinpath) => {
+            console.log(skinpath);
+            if (skinpath != null || skinpath != undefined) {
+               this.#player.texturepath = skinpath;
+               this.#player.loadTexture();
+            } else {
+               this.#player.texturepath = this.#currentSkinPath;
+               this.#player.loadTexture();
+
+            }
+         });
+
+      } else {
+         this.#player.texturepath = this.#currentSkinPath;
+         this.#player.loadTexture();
+      }
+   }
+
+   //#endregion
+
+   //#region set functions
+   /**
+   * This function is used to set the information of the level for exemple the name of the level
+   * @param {*} Information a list of information about the level
+   */
+   setInformation(Information) {
+      function TestImport(argument, errorMessage) {
+         try {
+            argument();
+         } catch (e) {
+            this.#errors.push(`${errorMessage} | ${e.message}`);
+         }
+      }
+
+      TestImport(() => this.#levelDisplayName = Information[0].DisplayName, 'The import of the level display name failed');
+      TestImport(() => this.#levelName = Information[1].Name, 'The import of the level name failed');
+      TestImport(() => this.#levelAuthor = Information[2].Author, 'The import of the author failed');
+      TestImport(() => this.loadBackground(Information[3]["Background"].path), 'The import of the background failed');
+      TestImport(() => {
+         const { path } = Information[4]["Song"];
+         this.#song = new Audio(path);
+         this.#song.loop = true;
+         this.#song.volume = 1;
+         if (this.playMusic) {
+            this.#song.play();
+         }
+      }, 'The import of the song failed');
+   }
 
    /**
-    * This function is used to find a file in a folder
-    * @param {*} folder folder where the file is located exemple : "levels/"
-    * @param {*} name name of the file exemple : "level1"
-    * @param {*} extension extension of the file exemple : ".json"
-    * @returns true if the file is found false otherwise
+    * This function is used to set the player a the start of the game
+    * @param {*} player_info a list of information about the player
     */
+   setPlayer(player_info) {
+      let playerObject = player_info[0][Player.name];
+      let playertmp;
+      try {
+         playertmp = new Player(
+            playerObject.x,
+            playerObject.y,
+            playerObject.width,
+            playerObject.height,
+            playerObject.texturepath,
+            playerObject.origin_x,
+            playerObject.origin_y,
+            playerObject.maxLives,
+            playerObject.maxPossibleLives,
+            playerObject.maxHealth,
+            playerObject.maxPossibleHealth,
+            playerObject.speed,
+            playerObject.damage,
+            playerObject.cooldownTime,
+            playerObject.walkSoundPath,
+            playerObject.deadSoundPath,
+         );
+         if (this.#currentSkinPath == null) {
+            this.#currentSkinPath = playerObject.texturepath;
+         }
+         let fireballObject = player_info[1][Fireballs.name];
+         playertmp.defaultFireball = fireballObject;
+         this.#player = playertmp;
+      } catch (e) {
+         this.errors.push("The import of the player failed | " + e.message);
+         console.log(e);
+      }
+
+      if (this.debug) {
+         console.log("dump of the player");
+         console.log("player : " + this.player);
+      }
+
+   }
+   /**
+    * This function is used to set the objects in the level
+    * @param {*} objectsArray a list of objects in the level
+    */
+   setObjects(objectsArray) {
+      const factory = new ObjectFactory();
+
+      let platformObject = [];
+      let collisionBlockObject = [];
+      let passageWayObject = [];
+      let collectibleObject = [];
+      let spikeObject = [];
+      let doorObject = [];
+
+      try {
+         for (let i = 0; i < objectsArray.length; i++) {
+            const element = objectsArray[i];
+            const elementType = Object.keys(element)[0];
+            const elementData = element[elementType];
+
+            const object = factory.createObject(elementType, elementData);
+
+            switch (elementType) {
+               case Platform.name:
+                  platformObject.push(object);
+                  break;
+               case ActivationPlatform.name:
+                  platformObject.push(object);
+                  break;
+               case MovablePlatform.name:
+                  platformObject.push(object);
+                  break;
+               case CollisionBlock.name:
+                  collisionBlockObject.push(object);
+                  break;
+               case PassageWay.name:
+                  passageWayObject.push(object);
+                  break;
+               case Coin.name:
+                  collectibleObject.push(object);
+                  break;
+               case Heart.name:
+                  collectibleObject.push(object);
+                  break;
+               case Spike.name:
+                  spikeObject.push(object);
+                  break;
+               case Door.name:
+                  doorObject.push(object);
+                  break;
+               default:
+                  throw new Error(`Unknown enemy type: ${elementType}`);
+            }
+         }
+      } catch (e) {
+         this.#errors.push(`The import of the enemies failed | ${e.message}`);
+         console.error(e);
+      } finally {
+         this.#platforms = platformObject;
+         this.#collisionBlocks = collisionBlockObject;
+         this.#passageWays = passageWayObject;
+         this.#collectibles = collectibleObject;
+         this.#spikes = spikeObject;
+         this.#doors = doorObject;
+      }
+
+      // Check if there is at least one collision block in the level (otherwise the player will fall forever)
+      if (this.collisionBlocks.length == 0) {
+         this.#errors.push("There is no collision block in this level");
+      }
+
+      if (this.debug) {
+         console.log("dump of the objects in the level");
+         console.log("platforms : " + this.platforms);
+         console.log("collisionBlocks : " + this.collisionBlocks);
+         console.log("passageWays : " + this.passageWays);
+         console.log("collectibles : " + this.collectibles);
+         console.log("spikes : " + this.spikes);
+         console.log("doors : " + this.doors);
+      }
+   }
+   /**
+    * This function is used to set the ennemies in the level
+    * @param {*} ennemiesArray a list of ennemies in the level
+    */
+   setEnnemies(ennemiesArray) {
+      const factory = new EnemyFactory();
+
+      let patrolmanObject = [];
+      let batObject = [];
+      let bossObject = null;
+      let handObject = [];
+
+      try {
+         for (let i = 0; i < ennemiesArray.length; i++) {
+            const element = ennemiesArray[i];
+            const elementType = Object.keys(element)[0];
+            const elementData = element[elementType];
+
+            const enemy = factory.createEnemy(elementType, elementData);
+
+            switch (elementType) {
+               case Patrolman.name:
+                  patrolmanObject.push(enemy);
+                  break;
+               case Bat.name:
+                  batObject.push(enemy);
+                  break;
+               case Boss.name:
+                  bossObject = enemy;
+                  break;
+               case Hand.name:
+                  handObject.push(enemy);
+                  if (elementData.right === true) {
+                     bossObject.handRight = enemy;
+                  } else {
+                     bossObject.handLeft = enemy;
+                  }
+                  break;
+               default:
+                  throw new Error(`Unknown enemy type: ${elementType}`);
+            }
+         }
+      } catch (e) {
+         this.#errors.push(`The import of the enemies failed | ${e.message}`);
+         console.error(e);
+      } finally {
+         this.#patrolmen = patrolmanObject;
+         this.#bats = batObject;
+         this.#boss = bossObject;
+      }
+
+      if (this.debug) {
+         console.log("dump of the ennemies in the level");
+         console.log("patrolmen : " + this.patrolmen);
+         console.log("bats : " + this.bats);
+         console.log("boss : " + this.boss);
+      }
+   }
+
+   /**
+    * 
+    * @param {*} backgroundArray list of i
+    */
+   setStartBackground(backgroundArray) {
+
+      //console.log(information);
+      try {
+
+         this.debug && console.log(backgroundArray[0].mainBackground.path);
+         this.debug && console.log(backgroundArray[1].skinBackground.path);
+
+         this.loadStartScreenBackground(backgroundArray[0].mainBackground.path);
+         this.loadCommandBackground(backgroundArray[1].skinBackground.path);
+
+      } catch (e) {
+         this.#errors.push("The import of the background failed | " + e.message);
+      }
+
+
+   }
+
+   setStartMenuObjects(objectsArray) {
+      this.debug && console.log(objectsArray);
+
+      let buttonObjects = [];
+      let draggableObjects = [];
+      let draggableZones = [];
+      let currentSkinPreview = null;
+      try {
+         for (let i = 0; i < objectsArray.length; i++) {
+            const element = objectsArray[i];
+            const elementType = Object.keys(element)[0];
+            const elementData = element[elementType];
+
+            switch (elementType) {
+               case Button.name:
+                  const button = Object.assign(new Button(), elementData);
+                  buttonObjects.push(button);
+                  break;
+               case DraggableObject.name:
+                  const draggableObject = Object.assign(new DraggableObject(), elementData);
+                  draggableObject.loadTexture();
+                  draggableObjects.push(draggableObject);
+                  break;
+               case DraggableZone.name:
+                  const draggableZone = Object.assign(new DraggableZone(), elementData);
+                  draggableZones.push(draggableZone);
+                  break;
+               case GameObject.name:
+                  const gameObject = Object.assign(new GameObject(), elementData);
+                  currentSkinPreview = gameObject;
+               default:
+                  this.#errors.push(`Unknown startScreen type: ${elementType}`);
+                  break;
+            }
+         }
+      } catch (e) {
+         this.#errors.push(`The import of the startScreen failed | ${e.message}`);
+         console.error(e);
+      } finally {
+         // set the startScreen object 
+         this.#startMenuButtons = buttonObjects;
+         this.#draggableObjects = draggableObjects;
+         this.#draggableZones = draggableZones;
+         this.#currentSkinPreview = currentSkinPreview;
+
+         currentSkinPreview.texturepath = this.#draggableObjects[0].texturepath;
+         currentSkinPreview.loadTexture();
+
+
+      }
+   }
+
+   setbuttonAction(intIndex, executed_function) {
+      this.#startMenuButtons[intIndex].executed_function = executed_function;
+   }
+   //#endregion
+
+   //#region utilitary functions
+   /**
+   * This function is used to find a file in a folder
+   * @param {*} folder folder where the file is located exemple : "levels/"
+   * @param {*} name name of the file exemple : "level1"
+   * @param {*} extension extension of the file exemple : ".json"
+   * @returns true if the file is found false otherwise
+   */
    findFile(folder, name, extension) {
       return new Promise((resolve, reject) => {
          const xhr = new XMLHttpRequest();
@@ -769,9 +678,6 @@ class Loader {
       });
    }
 
-   /**
-    * This function is used to get the number of ennemies in the level
-    */
    get numberOfEnnemies() {
       let numberOfEnnemies = 0;
       this.#patrolmen.forEach(patrolman => {
@@ -788,13 +694,9 @@ class Loader {
       return numberOfEnnemies;
    }
 
-   setbuttonAction(intIndex, executed_function) {
-      this.#startMenuButtons[intIndex].executed_function = executed_function;
-   }
-
    /**
-    * This function is used to reset the loader completely
-    */
+ * This function is used to reset the loader completely
+ */
    reset() {
       this.clean();
       this.#player = null;
@@ -820,12 +722,11 @@ class Loader {
       this.#backgroundImage = null;
       this.#playSound = null;
       this.#levelDisplayName = null;
-      // include other properties you want to clean
 
-      // Pause and reset the song if it exists
       if (this.#song != null) {
          this.#song.pause();
       }
+      
       this.#song = null;
    }
 
@@ -846,6 +747,8 @@ class Loader {
          });
       }
    }
+
+   //#endregion
 }
 
 export default Loader;

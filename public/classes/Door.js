@@ -8,6 +8,8 @@ class Door extends Object{
     #timeToOpen = 0;
     #timerToOpen = 0;
     #doorIsOpen = false;
+    #DoorPhase = 0; // 0 = closed, 1 = opening, 2 = open
+    #LeverPhase = 0; // 0 = closed, 1 = opening 1, 2 = opening 2, 3 = open
 
     constructor(x, y, width, height,texturepath,spriteSheetOffsetX,spriteSheetOffsetY,spriteSheetWidth,spriteSheetHeight, trrigerZoneX, trrigerZoneY, trrigerZoneWidth, trrigerZoneHeight,trigerZoneImagePath,timeToOpen) {
         super(x, y, width, height,texturepath,spriteSheetOffsetX,spriteSheetOffsetY,spriteSheetWidth,spriteSheetHeight);
@@ -38,8 +40,17 @@ class Door extends Object{
             //if the door is not already open
            
             this.#timerToOpen--;
+            this.#DoorPhase = 1;
+            if(this.#timerToOpen / this.#timeToOpen > 0.75){
+                this.#LeverPhase = 1;
+            }else if(this.#timerToOpen / this.#timeToOpen > 0.25){
+                this.#LeverPhase = 2;
+            }
+            
             if(this.#timerToOpen === 0){
                 this.#doorIsOpen = true;
+                this.#DoorPhase = 2;
+                this.#LeverPhase = 3;
             }
         }
 
@@ -78,7 +89,7 @@ class Door extends Object{
             ctx.drawImage(
                 this.texture,
                 this.spriteSheetOffsetX,
-                this.spriteSheetOffsetY,
+                this.spriteSheetOffsetY+this.#DoorPhase * this.spriteSheetHeight,
                 this.spriteSheetWidth,
                 this.spriteSheetHeight,
                 this.x,
@@ -92,7 +103,7 @@ class Door extends Object{
             ctx.drawImage(
                 this.#trigrerZoneImage,
                 0,
-                0,
+                this.#LeverPhase * this.#triggerZone.width,
                 this.#triggerZone.width,
                 this.#triggerZone.height,
                 this.#triggerZone.x,

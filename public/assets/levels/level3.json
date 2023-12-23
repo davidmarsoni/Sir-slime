@@ -469,7 +469,7 @@
         "height": 16,
         "value": 300,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -480,7 +480,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -491,7 +491,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -502,7 +502,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -513,7 +513,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -524,7 +524,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -535,7 +535,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -546,7 +546,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -557,7 +557,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -640,7 +640,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -651,7 +651,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -662,7 +662,7 @@
         "height": 16,
         "value": 10,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -673,7 +673,7 @@
         "height": 16,
         "value": 50,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -829,7 +829,7 @@
         "height": 16,
         "value": 50,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -840,7 +840,7 @@
         "height": 16,
         "value": 50,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -851,7 +851,7 @@
         "height": 16,
         "value": 50,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/coin.wav"
+        "soundPath": "assets/sounds/collectible/coin.mp3"
       }
     },
     {
@@ -860,25 +860,25 @@
         "y": 129,
         "width": 64,
         "height": 96,
-        "texturepath": "assets/images/white.png",
+        "texturepath": "assets/sprites/Door.png",
         "spriteSheetOffsetX": 0,
         "spriteSheetOffsetY": 0,
-        "spriteSheetWidth": 100,
-        "spriteSheetHeight": 100,
+        "spriteSheetWidth": 64,
+        "spriteSheetHeight": 96,
         "trrigerZoneX": 1330,
         "trrigerZoneY": 110,
         "trrigerZoneWidth": 32,
         "trrigerZoneHeight": 32,
-        "trigerZoneImagePath": "assets/images/white.png",
-        "timeToOpen": 10
+        "trigerZoneImagePath": "assets/sprites/Lever.png",
+        "timeToOpen": 50
       }
     },
     {
       "PassageWay": {
-        "x": 50,
-        "y": 129,
-        "width": 50,
-        "height": 96,
+        "x": 51,
+        "y": 130,
+        "width": 62,
+        "height": 94,
         "passageWayTo": "level4",
         "title": "Boss level",
         "content": "Save the princess adventurer ! \n Tips: To kill the boss you have to hit hit is hands !"
@@ -893,7 +893,7 @@
         "heal": 2,
         "heart_gain":0,
         "texturepath": "assets/sprites/Collectible.png",
-        "soundPath": "assets/sounds/collectible/heart_gain.wav"
+        "soundPath": "assets/sounds/collectible/heart_gain.mp3"
       }
     }
   ]
