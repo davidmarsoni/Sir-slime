@@ -36,7 +36,21 @@ class Firebase {
             const authResult = await auth.signInWithPopup(this.auth, googleAuthProvider);
             const user = authResult.user;
             this.debug && console.log(user);
-            await this.updateOrCreateUserDocument(user);
+            //check if the user already exists in the database
+            let data = await this.getDataFromNodeByUid("users");
+            if (!data) {
+                //if not create a new document in the users node
+                await this.updateOrCreateDocument("users", {
+                    pseudo: user.displayName,
+                    lastConnection: firestore.serverTimestamp(),
+                },undefined, true);
+            }else{
+                data.lastConnection = firestore.serverTimestamp();
+                data.pseudo = user.displayName;
+                await this.updateOrCreateDocument("users", data,undefined, false);
+            }
+            
+
             return true;
         } catch (error) {
             console.error(error);
@@ -52,30 +66,6 @@ class Firebase {
         });
     }
 
-    async updateOrCreateUserDocument(user) {
-        const userDocument = await this.getDocFromDatabase("users");
-        const usersCollection = firestore.collection(this.db, "users");
-
-        if (userDocument) {
-            this.debug && console.log("Document with the same UID already exists, updating...");
-            await this.updateUserDocument(userDocument);
-        } else {
-            this.debug && console.log("Document does not exist, creating...");
-            await this.createDocument(usersCollection, {
-                time: firestore.serverTimestamp(),
-                uid: this.auth.currentUser.uid,
-                pseudo: user.displayName,
-            });
-        }
-    }
-
-    async updateUserDocument(docToUpdate) {
-        await firestore.updateDoc(docToUpdate.ref, {
-            time: firestore.serverTimestamp(),
-            uid: this.auth.currentUser.uid,
-            pseudo: this.auth.currentUser.displayName,
-        });
-    }
 
     async saveCurrentLevel(levelName, currentPlayerState) {
         if (!this.isUserSignedIn()) {
@@ -84,7 +74,16 @@ class Firebase {
         }
         this.debug && console.log("saving level",levelName,currentPlayerState);
         await this.updateOrCreateDocument("currentLevel", "name", levelName);
+
+        //get old current level stats and archive them into the allTimeStats node
+        let oldCurrentPlayerState = await this.getCurrentPlayerState();
+        if (oldCurrentPlayerState) {
+            await this.updateAllTimeStats(oldCurrentPlayerState);
+        }
+        
         await this.updateOrCreateDocument("currentPlayerState", "currentPlayerState", currentPlayerState);
+     
+
         this.debug && console.log("level saved") ;
     }
 
@@ -96,6 +95,7 @@ class Firebase {
         //get previous stats and add the new ones
 
         const doc = await this.getDocFromDatabase("allTimeStats");
+        
         let data = {};
         if (doc) {
             data = doc.data();
@@ -128,11 +128,10 @@ class Firebase {
                 data = currentPlayerStats;
                 updateTime = true;
             }
-        }
-        else {
+        } else {
             data = currentPlayerStats;
+            updateTime = true;
         }
-
         await this.updateOrCreateDocument("highestStats", data,undefined, updateTime);
     }
 
@@ -147,17 +146,17 @@ class Firebase {
         }
     
         if (updateTime){
-            console.log("update time");
+            this.debug && console.log("update time");
             data["time"] = firestore.serverTimestamp();
         }
         
         data["uid"] = this.auth.currentUser.uid;
     
         if (doc) {
-            console.log(`Document with the same UID already exists, updating...`);
+            this.debug && console.log(`Document with the same UID already exists, updating...`);
             await firestore.updateDoc(doc.ref, data);
         } else {
-            console.log(`Document does not exist, creating...`);
+            this.debug && console.log(`Document does not exist, creating...`);
             const collectionRef = firestore.collection(this.db, collection);
             await this.createDocument(collectionRef, data);
         }
@@ -282,7 +281,6 @@ class Firebase {
         } else {
             let data = querySnapshot.docs[0].data();
             delete data.time;
-            delete data.uid;
             return data;
         }
     }
@@ -300,7 +298,6 @@ class Firebase {
         querySnapshot.forEach((doc) => {
             let docData = doc.data();
             delete docData.time;
-            delete docData.uid;
             data.push(docData);
         });
         return data;
@@ -310,7 +307,6 @@ class Firebase {
         if (!this.isUserSignedIn()) {
             return null;
         }
-
         const doc = await this.getDocFromDatabase("currentPlayerState");
         if (doc) {
          
@@ -322,7 +318,28 @@ class Firebase {
             await firestore.deleteDoc(doc2.ref);
             this.debug && console.log("Document of the currentLevel node "+doc2.ref+" deleted");
         }
+    }
 
+    async resetAllTimeStats() {
+        if (!this.isUserSignedIn()) {
+            return null;
+        }
+        const doc = await this.getDocFromDatabase("allTimeStats");
+        if (doc) {
+            await firestore.deleteDoc(doc.ref);
+            this.debug && console.log("Document of the allTimeStats node "+doc.ref+" deleted");
+        }
+    }
+
+    async resetHighestStats() {
+        if (!this.isUserSignedIn()) {
+            return null;
+        }
+        const doc = await this.getDocFromDatabase("highestStats");
+        if (doc) {
+            await firestore.deleteDoc(doc.ref);
+            this.debug && console.log("Document of the highestStats node "+doc.ref+" deleted");
+        }
     }
 
     async getCurrentPlayerState() {
@@ -348,7 +365,7 @@ class Firebase {
         let userData = await this.getDocFromDatabase("users");
         let userDoc = userData.data();
         userDoc.localisation = localisation;
-        await this.updateOrCreateDocument("users", userDoc,undefined, true);
+        await this.updateOrCreateDocument("users", userDoc,undefined, false);
     }
 
     async updatePlayerSkinPath(skinPath) {
@@ -393,15 +410,16 @@ class Firebase {
     }
 
     async getLeaderboard() {
-        //get all the highest stats of all the users and sort them by score
         let data = await this.getNodeFromDatabase("highestStats", "score", false,18);
         let usernames = [];
-        //get the usernames of the data by a request to the users node
+        data = data.filter((player) => {
+            return player.score > 0;
+        });
+
         for (let i = 0; i < data.length; i++) {
             let userData = await this.getDataFromNodeByUid("users",data[i].uid);
             usernames.push(userData.pseudo);
         }
-        console.log(data,usernames);
         return [data,usernames];
     }
 }

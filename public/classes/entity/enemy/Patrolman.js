@@ -15,8 +15,8 @@ class Patrolman extends Enemy{
     #defaultVelocity = [2, -2]
     #chosenSide = 0;
 
-    constructor(x, y, width, height, texturepath, origin_x, origin_y, path,speed,damage) {
-        super(x, y, width, height, texturepath,speed,damage);
+    constructor(x, y, width, height, texturepath,speed,damage,hitSound,deathSound,origin_x, origin_y, path) {
+        super(x, y, width, height, texturepath,speed,damage,hitSound,deathSound);
         this.#origin_x = origin_x;
         this.#origin_y = origin_y;
         this.#path = path;
@@ -84,14 +84,6 @@ class Patrolman extends Enemy{
 
     set origin_x(value) {
         this.#origin_x = value;
-    }
-
-    get isAlive() {
-        return this.#isAlive;
-    }
-
-    set isAlive(value) {
-        this.#isAlive = value;
     }
 
     get x_v() {
@@ -212,6 +204,7 @@ class Patrolman extends Enemy{
                 player.score += 500;
                 player.addEnemykilled();
                 player.addDamageDealt(1);
+                this.playSound && this.deathSound != null && this.deathSound.play();
                 this.isAlive = false;
             }
             // Push the player left
@@ -221,7 +214,7 @@ class Patrolman extends Enemy{
                 player.y_v = -3;
                 player.predictedX = this.x - this.width + player.x_v;
                 player.jump = true;
-                player.hit(this.damage);
+                player.hit(this.damage,true,this.hitSound);
             }
             // Push the player right
             else if(player.x >= this.x && this.isAlive === true){
@@ -230,7 +223,9 @@ class Patrolman extends Enemy{
                 player.y_v = -3;
                 player.predictedX = this.x + player.width + player.x_v;
                 player.jump = true;
-                player.hit(this.damage);
+                player.hit(this.damage,true,this.hitSound);
+                
+                
             } else {
                 this.debug && console.log("an error in collision was made, oops !!") ;
             }

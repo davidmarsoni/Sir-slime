@@ -138,6 +138,7 @@ class Fireball extends Entity {
             bat.isAlive = false;
             this.#effective = false;
             this.debug && console.log("collision avec bat");
+            bat.playSound && bat.deathSound != null && bat.deathSound.play();
             collide = true;
          }
       }

@@ -79,7 +79,9 @@
         ],
         "speed": 1,
         "damage": 2,
-        "texturepath": "assets/sprites/Patrolman.png"
+        "texturepath": "assets/sprites/Patrolman.png",
+        "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+        "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
       }
     },
     {
@@ -99,7 +101,8 @@
         "triggeredMode": true,
         "triggerZoneFollow": false,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -119,7 +122,8 @@
         "triggeredMode": true,
         "triggerZoneFollow": false,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -137,7 +141,8 @@
         "triggerZoneFollow": true,
         "triggeredMode": false,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -157,7 +162,8 @@
         "triggeredMode": true,
         "triggerZoneFollow": false,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -177,7 +183,7 @@
         "triggerZoneFollow": false,
         "triggeredMode": false,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "soundPath": "assets/sounds/enemy/bat/hit.mp3"
       }
     }
   ],
@@ -188,6 +194,7 @@
         "y": 94,
         "width": 2,
         "height": 104,
+        "isNewLevel": false,
         "passageWayTo": "level2"
       }
     },

@@ -7,7 +7,7 @@ class Entity extends GameObject {
     #spriteSheetHeight = 32;
     #speed = 0;
     #damage = 0;
-    #IsAlive = true;
+    #isAlive = true;
 
     constructor(x, y, width, height, texturepath, speed, damage) {
         super(x, y, width, height, texturepath);
@@ -63,12 +63,16 @@ class Entity extends GameObject {
         this.#damage = value;
     }
 
-    get IsAlive() {
-        return this.#IsAlive;
+    get isAlive() {
+        return this.#isAlive;
     }
 
-    set IsAlive(value) {
-        this.#IsAlive = value;
+    set isAlive(value) {
+        this.#isAlive = value;
+    }
+
+    setAlive(value) {
+        this.isAlive = value;
     }
 
     get center() {

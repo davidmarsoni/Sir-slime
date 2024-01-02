@@ -36,6 +36,11 @@ class Render {
       //test the type of the backgroundImage
       if (backgroundImage != null) {
          this.ctx.drawImage(backgroundImage, 0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
+         
+         if (backgroundImage.complete === false) {
+            this.ctx.fillStyle = "rgba(240,240,240,1)";
+            this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+         }
       } else {
          this.ctx.fillStyle = "rgba(240,240,240,1)";
          this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);

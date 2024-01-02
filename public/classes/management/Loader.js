@@ -12,7 +12,7 @@ import Heart from "../collectible/Heart.js";
 import Spike from "../entity/Spike.js";
 import Button from "../ui/Button.js";
 import Fireballs from "../entity/Utility/Fireball.js";
-import { LEVEL_FOLDER, FILE_EXTENSION, START_MENU_FOLDER, DEFAULT_LEVEL } from "./Default.js";
+import { LEVEL_FOLDER, FILE_EXTENSION, START_MENU_FOLDER, DEFAULT_LEVEL, WIN_SOUND_PATH, GAME_OVER_SOUND_PATH } from "./Default.js";
 import firebase from "./Firebase.js";
 import Door from "../Door.js";
 import Boss from "../entity/boss/Boss.js";
@@ -22,42 +22,47 @@ import DraggableZone from "../ui/DraggableZone.js";
 import GameObject from "../GameObject.js";
 import EnemyFactory from "./EnemyFactory.js";
 import ObjectFactory from "./ObjectFactory.js";
+
 class Loader {
    //#region variables
    //utilitary variables
-   #debug = false;
-   #playSound = true;
-   #playMusic = false;
-   #errors = [];
+   #debug;
+   #playSound;
+   #playMusic;
+   #errors;
+
+   //variables for the game
+   #winSound;
+   #gameOverSound;
 
    //variables for the a level
-   #backgroundImage = null;
+   #backgroundImage;
    #connectButton;
    #levelName;
    #levelDisplayName;
    #levelAuthor;
    #song;
-   #player = null;
-   #patrolmen = [];
-   #bats = [];
-   #boss = null;
-   #spikes = [];
-   #platforms = [];
-   #collisionBlocks = [];
-   #passageWays = [];
-   #collectibles = [];
-   #doors = [];
+   #player;
+   #patrolmen;
+   #bats;
+   #boss;
+   #spikes;
+   #platforms;
+   #collisionBlocks;
+   #passageWays;
+   #collectibles;
+   #doors;
 
 
    //variables for the start menu
    #mainBackground;
    #skinBackground;
 
-   #startMenuButtons = [];
-   #draggableObjects = [];
-   #draggableZones = [];
-   #currentSkinPreview = null;
-   #currentSkinPath = null;
+   #startMenuButtons;
+   #draggableObjects;
+   #draggableZones;
+   #currentSkinPreview;
+   #currentSkinPath;
    //#endregion
 
    //#region getters and setters
@@ -88,7 +93,14 @@ class Loader {
       for (const collectible of this.collectibles) {
          collectible.playSound = this.#playSound;
       }
+      for (const spike of this.spikes) {
+         spike.playSound = this.#playSound;
+      }
+      //TODO : add the other objects that can play sound spike, boss, lever door etc..
    }
+
+   get winSound() { return this.#winSound; }
+   set winSound(value) { this.#winSound = value; }
 
    get errors() { return this.#errors; }
 
@@ -120,6 +132,78 @@ class Loader {
    set currentSkinPath(value) { this.#currentSkinPath = value; }
    //#endregion
 
+   //#region constructor
+   constructor() {
+      this.#debug = false;
+      this.#playSound = true;
+      this.#playMusic = false;
+      this.#errors = [];
+
+      //variables for the game
+      this.#winSound = null;
+      this.#gameOverSound = null;
+
+      //variables for the a level
+      this.#backgroundImage = null;
+
+      this.#player = null;
+      this.#patrolmen = [];
+      this.#bats = [];
+      this.#boss = null;
+      this.#spikes = [];
+      this.#platforms = [];
+      this.#collisionBlocks = [];
+      this.#passageWays = [];
+      this.#collectibles = [];
+      this.#doors = [];
+
+      this.#startMenuButtons = [];
+      this.#draggableObjects = [];
+      this.#draggableZones = [];
+      this.#currentSkinPreview = null;
+      this.#currentSkinPath = null;
+   }
+
+   //#region play functions
+
+   playWinSound() {
+      let flag = false;
+      if (this.#winSound != null && this.#playSound === true) {
+         if(this.#song != null && this.#song.paused === false){
+            this.#song.pause();
+            flag = true;
+         }
+         this.#winSound.play();
+         this.#winSound.onended = () => {
+            if(flag){
+               setTimeout(() => {
+                  this.#song.play();
+               }, 1000);
+            }
+         }
+         
+      }
+   }
+
+   playGameOverSound() {
+      let flag = false;
+      if (this.#gameOverSound != null && this.playSound === true) {
+         //if the music is playing we pause it
+         if (this.#song != null && this.#song.paused === false) {
+            this.#song.pause();
+            flag = true;
+         }
+         this.#gameOverSound.play();
+         this.#gameOverSound.onended = () => {
+            if (flag) {
+               setTimeout(() => {
+                  this.#song.play();
+               }, 1000);
+            }
+         }
+      }
+   }
+
    //#region load functions
    /**
    * This function is used to load game at a specific level
@@ -136,7 +220,8 @@ class Loader {
    }
 
    /**
-    * This function is used to load the level passed in parameter
+    * This function is used to load the level passed in parameter 
+    * This function is used to check if the level exist before loading it
     * @param {*} levelname name of the level to load
     * @param {*} resolve function to call when the level is loaded
     */
@@ -153,6 +238,12 @@ class Loader {
       });
    }
 
+   /**
+    * This function is used to load the level from the json file
+    * and then call the function to break down the json file information ito the different object
+    * @param {*} levelname  name of the level to load
+    * @param {*} resolve function to call when the level is loaded
+    */
    loadLevelFromJSON(levelname, resolve) {
       loaderManager.loadLevelFromJSON(`${LEVEL_FOLDER}${levelname}${FILE_EXTENSION}`, this.debug).then(([Information, player_info_level, objects, ennemies]) => {
          this.setInformation(Information);
@@ -163,6 +254,7 @@ class Loader {
    }
    /**
     * This function is used to finalize the loading of the level
+    * This function will load or update the player depending on the situation
     * @param {*} player_info_level information about the player get from the level json
     * @param {*} resolve  function to call when the level is loaded
     */
@@ -229,6 +321,8 @@ class Loader {
 
    /**
     * This function is used to check if the start menu file exist
+    * We do a function here because we need to wait for the promise to be resolved before continuing
+    * this function allow us to have better readability of the code
     * @param {*} fileName name of the start menu file to load
     * @param {*} resolve function to call when the start menu is loaded
     */
@@ -259,11 +353,17 @@ class Loader {
       });
    }
 
+   /**
+    * This function is used to load the connect button for the google authentification use on the start menu
+    */
    loadConnectButton() {
+      if (this.#connectButton != null) {
+         this.#connectButton.removeEventListener();
+         this.#connectButton = null;
+      }
+
       this.#connectButton = new Button(0, 0, 0, 0, "");
       this.#connectButton.executed_function = () => {
-
-
          if (firebase.isUserSignedIn()) {
             this.#connectButton.isAlive = false;
             console.log("disconnecting");
@@ -274,13 +374,13 @@ class Loader {
             firebase.signIn().then(() => {
                this.askForGeolocalisation();
             });
-            //TODO : reset the current progression and charge the current player state
-            //OR : add a modal to ask the user if he wants to reset his progression
          }
-
       }
       this.#connectButton.debug = this.debug;
    }
+
+
+
 
    /**
    * This function is used to load the background image only one time when the level is loaded
@@ -339,7 +439,7 @@ class Loader {
       this.#player.update(playerObject.x, playerObject.y, playerObject.origin_x, playerObject.origin_y);
       if (firebase.isUserSignedIn()) {
          firebase.getPlayerSkinPath().then((skinpath) => {
-            console.log(skinpath);
+            this.debug && console.log(skinpath);
             if (skinpath != null || skinpath != undefined) {
                this.#player.texturepath = skinpath;
                this.#player.loadTexture();
@@ -364,27 +464,34 @@ class Loader {
    * @param {*} Information a list of information about the level
    */
    setInformation(Information) {
-      function TestImport(argument, errorMessage) {
+      self = this;
+      function Test(argument, errorMessage) {
          try {
             argument();
          } catch (e) {
-            this.#errors.push(`${errorMessage} | ${e.message}`);
+            self.errors.push(`${errorMessage} | ${e.message}`);
          }
       }
 
-      TestImport(() => this.#levelDisplayName = Information[0].DisplayName, 'The import of the level display name failed');
-      TestImport(() => this.#levelName = Information[1].Name, 'The import of the level name failed');
-      TestImport(() => this.#levelAuthor = Information[2].Author, 'The import of the author failed');
-      TestImport(() => this.loadBackground(Information[3]["Background"].path), 'The import of the background failed');
-      TestImport(() => {
+      Test(() => this.#levelDisplayName = Information[0].DisplayName, 'The import of the level display name failed');
+      Test(() => this.#levelName = Information[1].Name, 'The import of the level name failed');
+      Test(() => this.#levelAuthor = Information[2].Author, 'The import of the author failed');
+      Test(() => this.loadBackground(Information[3]["Background"].path), 'The import of the background failed');
+      Test(() => {
          const { path } = Information[4]["Song"];
          this.#song = new Audio(path);
          this.#song.loop = true;
-         this.#song.volume = 1;
+         this.#song.volume = 0.7;
          if (this.playMusic) {
             this.#song.play();
          }
       }, 'The import of the song failed');
+
+      this.#winSound = new Audio(WIN_SOUND_PATH);
+      this.#winSound.volume = 0.7;
+      this.#gameOverSound = new Audio(GAME_OVER_SOUND_PATH);
+      this.#gameOverSound.volume = 0.7;
+
    }
 
    /**
@@ -411,7 +518,8 @@ class Loader {
             playerObject.damage,
             playerObject.cooldownTime,
             playerObject.walkSoundPath,
-            playerObject.deadSoundPath,
+            playerObject.respawnSoundPath,
+            playerObject.throwSoundPath,
          );
          if (this.#currentSkinPath == null) {
             this.#currentSkinPath = playerObject.texturepath;
@@ -720,13 +828,12 @@ class Loader {
       this.#levelName = null;
       this.#levelAuthor = null;
       this.#backgroundImage = null;
-      this.#playSound = null;
       this.#levelDisplayName = null;
 
       if (this.#song != null) {
          this.#song.pause();
       }
-      
+
       this.#song = null;
    }
 

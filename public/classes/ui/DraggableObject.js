@@ -33,8 +33,9 @@ class DraggableObject extends GameObject {
     set colorStroke(value) { this.#colorStroke = value; }
 
     onMouseDown(event) {
-        let x = event.clientX - this.#canvas.offsetLeft;
-        let y = event.clientY - this.#canvas.offsetTop;
+        const rect = this.#canvas.getBoundingClientRect();
+        let x = event.clientX - rect.left;
+        let y = event.clientY - rect.top;
 
         if (this.isWithin(x, y)) {
             this.#isDragging = true;
@@ -50,8 +51,9 @@ class DraggableObject extends GameObject {
 
     onMouseMove(event) {
         if (this.#isDragging) {
-            this.x = event.clientX - this.#canvas.offsetLeft - this.#dragOffset.x;
-            this.y = event.clientY - this.#canvas.offsetTop - this.#dragOffset.y;
+            const rect = this.#canvas.getBoundingClientRect();
+            this.x = event.clientX - rect.left - this.#dragOffset.x;
+            this.y = event.clientY - rect.top - this.#dragOffset.y;
         }
     }
 

@@ -51,7 +51,8 @@ class Player extends Entity {
 
    //sound
    #walkSound = null;
-   #deadSound = null;
+   #respawnSound = null;
+   #throwSound = null;
 
    //Fireball
    #cooldown = false;
@@ -60,7 +61,7 @@ class Player extends Entity {
    #defaultFireball;
 
 
-   constructor(x, y, width, height, texturepath, origin_x, origin_y, maxLives, maxPossibleLives, maxHealth, maxPossibleHealth, speed, damage, cooldownTime, walkSoundPath, deadSounPath) {
+   constructor(x, y, width, height, texturepath, origin_x, origin_y, maxLives, maxPossibleLives, maxHealth, maxPossibleHealth, speed, damage, cooldownTime, walkSoundPath, respawnSoundPath,throwSoundPath) {
       super(x, y, width, height, texturepath, speed, damage);
       this.#origin_x = origin_x;
       this.#origin_y = origin_y;
@@ -72,9 +73,8 @@ class Player extends Entity {
       this.#currenthealth = this.maxHealth;
       this.#cooldownTime = cooldownTime;
       this.walkSound = walkSoundPath;
-      this.deadSound = deadSounPath;
-
-
+      this.respawnSound = respawnSoundPath;
+      this.throwSound =  throwSoundPath;
    }
    /**
     * Update the player position beetwen 2 level
@@ -99,10 +99,13 @@ class Player extends Entity {
 
    throwFireball() {
       //clone default fireball and throw it
-      let fireball = new Fireball(this.#defaultFireball.x, this.#defaultFireball.y, this.#defaultFireball.width, this.#defaultFireball.height, this.#defaultFireball.texturepath, this.#defaultFireball.speed, this.#defaultFireball.damage)
-      fireball.loadTexture();
-      fireball.throw(this);
-      this.fireballs.push(fireball);
+      if (!this.cooldown) {
+         let fireball = new Fireball(this.#defaultFireball.x, this.#defaultFireball.y, this.#defaultFireball.width, this.#defaultFireball.height, this.#defaultFireball.texturepath, this.#defaultFireball.speed, this.#defaultFireball.damage)
+         fireball.loadTexture();
+         this.playSound && this.#throwSound != null && this.#throwSound.play();
+         fireball.throw(this);
+         this.fireballs.push(fireball);
+      }
    }
 
    updateFireball(collisionBlocks, bats, patrolmen) {
@@ -189,7 +192,7 @@ class Player extends Entity {
    get totalDamageDealt() { return this.#totalDamageDealt; }
    get totalheal() { return this.#totalheal; }
    get walkSound() { return this.#walkSound; }
-   get deadSound() { return this.#deadSound; }
+   get respawnSound() { return this.#respawnSound; }
    get cooldown() { return this.#cooldown; }
    get cooldownTime() { return this.#cooldownTime; }
    get fireballs() { return this.#fireballs; }
@@ -203,16 +206,25 @@ class Player extends Entity {
       this.#walkSound = new Audio(value);
       this.#walkSound.volume = 0.5;
       this.#walkSound.onerror = () => {
-         console.log("Error loading walk sound");
+         console.log("Error loading walk sound for player");
          this.#walkSound = null;
       };
    }
-   set deadSound(value) {
-      this.#deadSound = new Audio(value);
-      this.#deadSound.volume = 1;
-      this.#deadSound.onerror = () => {
-         console.log("Error loading dead sound");
-         this.#deadSound = null;
+   set respawnSound(value) {
+      this.#respawnSound = new Audio(value);
+      this.#respawnSound.volume = 1;
+      this.#respawnSound.onerror = () => {
+         console.log("Error loading respawn sound for player");
+         this.#respawnSound = null;
+      };
+   }
+
+   set throwSound(value) {
+      this.#throwSound = new Audio(value);
+      this.#throwSound.volume = 0.05 ;
+      this.#throwSound.onerror = () => {
+         console.log("Error loading throw sound for player");
+         this.#throwSound = null;
       };
    }
 
@@ -332,7 +344,6 @@ class Player extends Entity {
    dead() {
       this.addDeath();
       this.#currentlives--;
-      this.playSound && this.deadSound != null && this.deadSound.play();
       if (this.lifeRemains) {
          this.debug && console.log("player is dead, number of life left : " + this.lives);
          this.#currenthealth = this.#maxHealth;
@@ -361,6 +372,7 @@ class Player extends Entity {
       this.y_v = 0;
       this.x_v = 0;
 
+      this.playSound && this.respawnSound != null && this.respawnSound.play();
       this.debug && console.log("respawn number of life left : " + this.lives);
    }
 
@@ -486,15 +498,17 @@ class Player extends Entity {
       }
 
       this.#fireballs.forEach(fireball => {
+         fireball.debug = this.debug;
          fireball.render(ctx);
       });
 
    }
 
-   hit(damage = 1, isPreventMovement = true) {
+   hit(damage = 1, isPreventMovement = true,sound = null) {
       this.debug && console.log("current helth of the player: " + this.#currenthealth);
 
       if (!this.isHit) {
+         this.playSound && sound != null && sound.play();
          this.#invicivibilityTimer = 0;
          this.isHit = true;
          this.debug && console.log("player hit");

@@ -83,7 +83,7 @@ class ObjectFactory {
             data.value,
             data.soundPath
         );
-
+        coin.loadTexture();
         //constructor(x, y, width, height, texturepath,spriteSheetOffsetX,value,soundPath) {
         return coin;
     }

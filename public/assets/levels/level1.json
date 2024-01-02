@@ -45,7 +45,9 @@
                 ],
                 "speed": 1,
                 "damage": 2,
-                "texturepath": "assets/sprites/Patrolman.png"
+                "texturepath": "assets/sprites/Patrolman.png",
+                "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+                "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
             }
         },
         {
@@ -60,16 +62,17 @@
                 "damage": 1,
                 "triggerZoneWidth": 0,
                 "triggerZoneHeight": 0,
-                "triggerZoneX": 0,  
+                "triggerZoneX": 0,
                 "triggerZoneY": 0,
-                "triggerZoneFollow" : false,
-                "triggeredMode" : false, 
+                "triggerZoneFollow": false,
+                "triggeredMode": false,
                 "texturepath": "assets/sprites/Bats.png",
-                "soundPath" : "assets/sounds/enemy/bat/hit.wav"
+                "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+                "deathSound": "assets/sounds/enemy/bat/death.mp3"
             }
         }
     ],
-    "objects":[
+    "objects": [
         {
             "PassageWay": {
                 "x": 1450,
@@ -171,7 +174,7 @@
                 "height": 16,
                 "value": 10,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -182,7 +185,7 @@
                 "height": 16,
                 "value": 10,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -193,7 +196,7 @@
                 "height": 16,
                 "value": 10,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -204,7 +207,7 @@
                 "height": 16,
                 "value": 10,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -215,7 +218,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -226,7 +229,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -269,7 +272,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -280,7 +283,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -291,7 +294,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -302,7 +305,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -313,7 +316,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -324,7 +327,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -335,7 +338,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -346,7 +349,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -357,7 +360,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -368,7 +371,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -379,7 +382,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -390,7 +393,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -401,7 +404,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -412,7 +415,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -423,7 +426,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -434,7 +437,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -445,7 +448,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -456,7 +459,7 @@
                 "height": 16,
                 "value": 100,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         },
         {
@@ -514,9 +517,9 @@
                 "width": 16,
                 "height": 16,
                 "heal": 0,
-                "heart_gain" :1,
+                "heart_gain": 1,
                 "texturepath": "assets/sprites/none.png",
-                "soundPath" : "assets/sounds/collectible/heart_gain.mp3"
+                "soundPath": "assets/sounds/collectible/heart_gain.mp3"
             }
         },
         {
@@ -527,7 +530,7 @@
                 "height": 16,
                 "value": 50,
                 "texturepath": "assets/sprites/Collectible.png",
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
+                "soundPath": "assets/sounds/collectible/coin.mp3"
             }
         }
     ]

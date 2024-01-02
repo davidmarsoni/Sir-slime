@@ -10,8 +10,9 @@ class ModalWindow{
     #renderOneTime;
     #wasRendered = false;
     #callback = undefined;
+    #conditionalExit = false;
 
-    constructor(title,content,renderOneTime = true,textCentered = false,callback = null){
+    constructor(title,content,renderOneTime = true,textCentered = false,callback = null,conditionalExit = false){
         this.title = title;
         if(content != null && content.length > 1000 || content != undefined){
             this.content = content;
@@ -21,7 +22,7 @@ class ModalWindow{
         this.renderOneTime = renderOneTime;
         this.textCentered = textCentered;
         this.callback = callback;
-        
+        this.conditionalExit = conditionalExit;
     }
 
     get title() { return this.#title; }
@@ -41,6 +42,9 @@ class ModalWindow{
 
     get callback() { return this.#callback; }
     set callback(value) { this.#callback = value; }
+
+    get conditionalExit() { return this.#conditionalExit; }
+    set conditionalExit(value) { this.#conditionalExit = value; }
 
     render(ctx){
         if(this.renderOneTime && this.wasRendered){
@@ -81,7 +85,12 @@ class ModalWindow{
         this.drawTitle(this.#ctx.canvas.width/2, 50);
         let lines = this.content.split("\n");
         this.drawContent(lines, 50, 90);
-        this.drawhelp();
+        if(!this.conditionalExit){
+            this.drawhelp();
+        }else{
+            this.drawhelpConditional();
+        }  
+       
     }
 
     openCenterText(){
@@ -94,15 +103,26 @@ class ModalWindow{
         this.drawBackground();
         this.drawTitle(x, y);
         this.drawContent(lines, x, y + 50, "center");
-        this.drawhelp();
+        if(!this.conditionalExit){
+            this.drawhelp();
+        }else{
+            this.drawhelpConditional();
+        }
     }
 
+    
     drawhelp(){
-        //write a text to the top right corner
         this.#ctx.fillStyle = "rgba(255,255,255,1)";
         this.#ctx.textAlign = "left";
         this.#ctx.font = "bold 20px Consolas";
         this.#ctx.fillText("press ESC or ENTER to close",this.#ctx.canvas.width-320,30);
     }    
+
+    drawhelpConditional(){
+        this.#ctx.fillStyle = "rgba(255,255,255,1)";
+        this.#ctx.textAlign = "left";
+        this.#ctx.font = "bold 20px Consolas";
+        this.#ctx.fillText("press ENTER to continue and ESC to exit",this.#ctx.canvas.width-450,30);
+    }
 }
 export default ModalWindow;

@@ -45,7 +45,9 @@
         ],
         "speed": 1.25,
         "damage": 2,
-        "texturepath": "assets/sprites/Patrolman.png"
+        "texturepath": "assets/sprites/Patrolman.png",
+        "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+        "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
       }
     },
     {
@@ -65,7 +67,8 @@
         "triggeredMode": true,
         "triggerZoneFollow": false,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -85,7 +88,8 @@
         "triggeredMode": true,
         "triggerZoneFollow": false,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -105,7 +109,8 @@
         "triggeredMode": true,
         "triggerZoneFollow": false,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     }
   ],
@@ -403,6 +408,7 @@
         "width": 170,
         "height": 50,
         "passageWayTo": "level2bis",
+        "isNewLevel": false,
         "title": "Secret Level",
         "content": "You found a secret level ! (this level is harder than the normal level 2) \n If you want to go back to the normal level 2, walk back a the start of the level"
       }

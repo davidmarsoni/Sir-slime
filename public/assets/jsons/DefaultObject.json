@@ -1,174 +1,156 @@
 {
-    "objects":[
-     
-        {
-            "Platform": {
-                "x": 0,
-                "y": 0,
-                "width": 96,
-                "height": 16,
-                "texturepath": "assets/sprites/DecorSheet.png",
-                "spriteSheetOffsetX": 0,
-                "spriteSheetOffsetY": 0,
-                "spriteSheetWidth": 96,
-                "spriteSheetHeight": 16
-            }
+    "objects": {
+        "Platform": {
+            "x": 0,
+            "y": 0,
+            "width": 96,
+            "height": 16,
+            "texturepath": "assets/sprites/DecorSheet.png",
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 0,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 16
         },
-        {
-            "ActivationPlatform": {
-                "x": 0,
-                "y": 0,
-                "width": 96,
-                "height": 16,
-                "texturepath": "assets/sprites/DecorSheet.png",
-                "spriteSheetOffsetX": 96,
-                "spriteSheetOffsetY": 0,
-                "spriteSheetWidth": 96,
-                "spriteSheetHeight": 16,
-                "activationX": 10,
-                "activationY": 10,
-                "activationWidth": 200,
-                "activationHeight": 200
-            }
+        "ActivationPlatform": {
+            "x": 0,
+            "y": 0,
+            "width": 96,
+            "height": 16,
+            "texturepath": "assets/sprites/DecorSheet.png",
+            "spriteSheetOffsetX": 96,
+            "spriteSheetOffsetY": 0,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 16,
+            "activationX": 10,
+            "activationY": 10,
+            "activationWidth": 200,
+            "activationHeight": 200
         },
-        {
-            "MovablePlatform":{
-                "x": 0,
-                "y": 0,
-                "width": 96,
-                "height": 16,
-                "texturepath": "assets/sprites/DecorSheet.png",
-                "spriteSheetOffsetX": 0,
-                "spriteSheetOffsetY": 0,
-                "spriteSheetWidth": 96,
-                "spriteSheetHeight": 16,
-                "speed": 2,
-                "path": [
-                    {
-                        "x": 300,
-                        "y": 500
-                    },
-                    {
-                        "x": 600,
-                        "y": 200
-                    }
-                ]
-            }
+        "MovablePlatform": {
+            "x": 0,
+            "y": 0,
+            "width": 96,
+            "height": 16,
+            "texturepath": "assets/sprites/DecorSheet.png",
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 0,
+            "spriteSheetWidth": 96,
+            "spriteSheetHeight": 16,
+            "speed": 2,
+            "path": [
+                {
+                    "x": 300,
+                    "y": 500
+                },
+                {
+                    "x": 600,
+                    "y": 200
+                }
+            ]
         },
-        {
-            "Patrolman":{
-                "x": 0,
-                "y": 0,
-                "width": 32,
-                "height": 32,
-                "origin_x": 0,
-                "origin_y": 0,
-                "path": [
-                    0,
-                    0
-                ],
-                "damage": 1,
-                "speed": 1,
-                "texturepath": "assets/sprites/Patrolman.png",
-                "sound" : "assets/sounds/ennemy/patrolman/hit.wav"
-            }
+        "CollisionBlock": {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 100,
+            "collisionSide": 0
         },
-        {
-            "CollisionBlock":{
-                "x": 0,
-                "y": 0,
-                "width": 100,
-                "height": 100,
-                "collisionSide": 0
-            }
+        "PassageWay": {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 100,
+            "passageWayTo": "",
+            "title": "",
+            "content": ""
         },
-        {
-            "PassageWay":{
-                "x": 0,
-                "y": 0,
-                "width": 100,
-                "height": 100,
-                "passageWayTo": "",
-                "title": "",
-                "content": ""
-            }
+        "Coin": {
+            "x": 0,
+            "y": 0,
+            "width": 16,
+            "height": 16,
+            "texturepath": "assets/sprites/Collectible.png",
+            "value": 0,
+            "soundPath": "assets/sounds/collectible/coin.mp3"
         },
-     {
-            "Bat":{
-                "x": 0,
-                "y": 0,
-                "width": 32,
-                "height": 32,
-                "origin_x": 0,
-                "origin_y": 0,
-                "speed": 2,
-                "damage": 1,
-                "triggerZoneWidth": 200,
-                "triggerZoneHeight": 200,
-                "triggerZoneX": 0,
-                "triggerZoneY": 0,
-                "triggeredMode": false,
-                "triggerZoneFollow": false,
-                "texturepath": "assets/sprites/Bats.png",
-                "sound" : "assets/sounds/ennemy/bat/hit.wav"
-            }
+        "Heart": {
+            "x": 0,
+            "y": 0,
+            "width": 16,
+            "height": 16,
+            "heal": 0,
+            "heart_gain": 1,
+            "texturepath": "assets/sprites/Collectible.png",
+            "soundPath": "assets/sounds/collectible/heart_gain.mp3"
         },
-        {
-            "Coin":{
-                "x": 0,
-                "y": 0,
-                "width": 16,
-                "height": 16,
-                "texturepath": "assets/sprites/Collectible.png",
-                "value": 0,
-                "soundPath" : "assets/sounds/collectible/coin.mp3"
-            }
+        "Spike": {
+            "x": 0,
+            "y": 0,
+            "width": 32,
+            "height": 32,
+            "texturepath": "assets/sprites/spike.png",
+            "damage": 1,
+            "facing": 1,
+            "isStatic": true,
+            "upTime": 0,
+            "downTime": 0,
+            "hitSound": "assets/sounds/spike/hit.mp3"
         },
-        {
-            "Heart":{
-                "x": 0,
-                "y": 0,
-                "width": 16,
-                "height": 16,
-                "texturepath": "assets/sprites/Collectible.png",
-                "spriteSheetOffsetX": 16,
-                "heal": 0,
-                "heart_gain": 0,
-                "soundPath" : "assets/sounds/collectible/heart.wav"
-            }
-        },
-        {
-            "Spike":{
-                "x": 0,
-                "y": 0,
-                "width": 32,
-                "height": 32,
-                "texturepath": "assets/sprites/spike.png",
-                "damage": 1,
-                "facing": 1,
-                "isStatic": true,
-                "upTime": 0,
-                "downTime": 0
-            }
-        },
-        {
-            "Door": {
-              "x": 0,
-              "y": 0,
-              "width": 100,
-              "height": 100,
-              "texturepath": "assets/images/white.png",
-              "spriteSheetOffsetX": 0,
-              "spriteSheetOffsetY": 0,
-              "spriteSheetWidth": 100,
-              "spriteSheetHeight": 100,
-              "trrigerZoneX": 50,
-              "trrigerZoneY": 50,
-              "trrigerZoneWidth": 50,
-              "trrigerZoneHeight": 50,
-              "trigerZoneImagePath": "assets/images/white.png",
-              "timeToOpen": 501
-            }
+        "Door": {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 100,
+            "texturepath": "assets/images/white.png",
+            "spriteSheetOffsetX": 0,
+            "spriteSheetOffsetY": 0,
+            "spriteSheetWidth": 100,
+            "spriteSheetHeight": 100,
+            "trrigerZoneX": 50,
+            "trrigerZoneY": 50,
+            "trrigerZoneWidth": 50,
+            "trrigerZoneHeight": 50,
+            "trigerZoneImagePath": "assets/images/white.png",
+            "timeToOpen": 501
         }
-    ]
+    },
+    "enemies": {
+        "Bat": {
+            "x": 0,
+            "y": 0,
+            "width": 32,
+            "height": 32,
+            "origin_x": 0,
+            "origin_y": 0,
+            "speed": 2,
+            "damage": 1,
+            "triggerZoneWidth": 200,
+            "triggerZoneHeight": 200,
+            "triggerZoneX": 0,
+            "triggerZoneY": 0,
+            "triggeredMode": false,
+            "triggerZoneFollow": false,
+            "texturepath": "assets/sprites/Bats.png",
+            "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+            "deathSound": "assets/sounds/enemy/bat/death.mp3"
+        },
+        "Patrolman": {
+            "x": 0,
+            "y": 0,
+            "width": 32,
+            "height": 32,
+            "origin_x": 0,
+            "origin_y": 0,
+            "path": [
+                0,
+                0
+            ],
+            "damage": 1,
+            "speed": 1,
+            "texturepath": "assets/sprites/Patrolman.png",
+            "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+            "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
+        }
+    }
+  
 }

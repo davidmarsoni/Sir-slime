@@ -5,14 +5,15 @@ class PassageWay extends GameObjectLogic{
     #passageWayTo = "";
     #title = "";
     #content = "";
+    #isNewLevel = true;
 
-    constructor(x, y, width, height, passageWayTo, title, content) {
+    constructor(x, y, width, height, passageWayTo, title, content, isNewLevel = true) {
         super(x, y, width, height);
         this.#passageWayTo = passageWayTo;
         this.isAnimate = false;
         this.#title = title;
         this.#content = content;
-
+        this.#isNewLevel = isNewLevel;
     }
 
     get passageWayTo() { return this.#passageWayTo; }
@@ -24,6 +25,8 @@ class PassageWay extends GameObjectLogic{
     get content() { return this.#content; }
     set content(value) { this.#content = value; }
     
+    get isNewLevel() { return this.#isNewLevel; }
+    set isNewLevel(value) { this.#isNewLevel = value; }
 
     collide(player) {
         if(player.x >= this.x

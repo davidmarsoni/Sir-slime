@@ -7,13 +7,18 @@
       "Name": "levelt"
     },
     {
-      "Author": "David"
+      "Author": "Made To test the game"
     },
     {
       "Background": {
         "path": "assets/images/white.png"
       }
-    }
+    },
+    {
+      "Song": {
+          "path": "assets/songs/world.mp3"
+      }
+  }
   ],
   "player_info": [
     {
@@ -28,7 +33,7 @@
   "enemies": [
     {
       "Bat": {
-        "x": 900,
+        "x": 400,
         "y": 332,
         "height": 32,
         "width": 32,
@@ -41,7 +46,8 @@
         "triggeredMode": false,
         "triggerZoneFollow": true,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     }
   ],

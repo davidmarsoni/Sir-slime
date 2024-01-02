@@ -48,7 +48,8 @@
         "triggerZoneFollow": false,
         "triggeredMode": true,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -66,7 +67,8 @@
         "triggerZoneFollow": false,
         "triggeredMode": false,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -86,7 +88,8 @@
         "triggerZoneFollow": false,
         "triggeredMode": true,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -106,7 +109,8 @@
         "triggerZoneFollow": false,
         "triggeredMode": true,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -126,7 +130,8 @@
         "triggerZoneFollow": false,
         "triggeredMode": true,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -144,7 +149,8 @@
         "speed": 1,
         "damage": 1,
         "texturepath": "assets/sprites/Patrolman.png",
-        "sound": "assets/sounds/ennemy/patrolman/hit.wav"
+        "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+        "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
       }
     },
     {
@@ -162,7 +168,8 @@
         "speed": 1,
         "damage": 1,
         "texturepath": "assets/sprites/Patrolman.png",
-        "sound": "assets/sounds/ennemy/patrolman/hit.wav"
+        "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+        "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
       }
     },
     {
@@ -180,7 +187,8 @@
         "speed": 1,
         "damage": 1,
         "texturepath": "assets/sprites/Patrolman.png",
-        "sound": "assets/sounds/ennemy/patrolman/hit.wav"
+        "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+        "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
       }
     },
     {
@@ -198,7 +206,8 @@
         "speed": 1,
         "damage": 1,
         "texturepath": "assets/sprites/Patrolman.png",
-        "sound": "assets/sounds/ennemy/patrolman/hit.wav"
+        "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+        "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
       }
     },
     {
@@ -216,7 +225,8 @@
         "speed": 1,
         "damage": 1,
         "texturepath": "assets/sprites/Patrolman.png",
-        "sound": "assets/sounds/ennemy/patrolman/hit.wav"
+        "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+        "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
       }
     },
     {
@@ -234,7 +244,8 @@
         "speed": 1,
         "damage": 1,
         "texturepath": "assets/sprites/Patrolman.png",
-        "sound": "assets/sounds/ennemy/patrolman/hit.wav"
+        "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+        "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
       }
     },
     {
@@ -252,7 +263,8 @@
         "speed": 1,
         "damage": 1,
         "texturepath": "assets/sprites/Patrolman.png",
-        "sound": "assets/sounds/ennemy/patrolman/hit.wav"
+        "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+        "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
       }
     },
     {
@@ -270,7 +282,8 @@
         "speed": 1,
         "damage": 1,
         "texturepath": "assets/sprites/Patrolman.png",
-        "sound": "assets/sounds/ennemy/patrolman/hit.wav"
+        "hitSound": "assets/sounds/enemy/patrolman/hit.mp3",
+        "deathSound": "assets/sounds/enemy/patrolman/death.mp3"
       }
     },
     {
@@ -290,7 +303,8 @@
         "triggerZoneFollow": false,
         "triggeredMode": true,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     },
     {
@@ -310,7 +324,8 @@
         "triggerZoneFollow": false,
         "triggeredMode": false,
         "texturepath": "assets/sprites/Bats.png",
-        "soundPath": "assets/sounds/enemy/bat/hit.wav"
+        "hitSound": "assets/sounds/enemy/bat/hit.mp3",
+        "deathSound": "assets/sounds/enemy/bat/death.mp3"
       }
     }
   ],
@@ -368,9 +383,9 @@
         "height": 16,
         "spriteSheetOffsetX": 0,
         "spriteSheetOffsetY": 0,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 16,
-        "texturepath": "assets/sprites/DecorSheet.png"
+        "spriteSheetWidth": 0,
+        "spriteSheetHeight": 0,
+        "texturepath": "assets/sprites/none.png"
       }
     },
     {
@@ -381,9 +396,9 @@
         "height": 16,
         "spriteSheetOffsetX": 0,
         "spriteSheetOffsetY": 0,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 16,
-        "texturepath": "assets/sprites/DecorSheet.png"
+        "spriteSheetWidth": 0,
+        "spriteSheetHeight": 0,
+        "texturepath": "assets/sprites/none.png"
       }
     },
     {
@@ -684,9 +699,9 @@
         "height": 16,
         "spriteSheetOffsetX": 0,
         "spriteSheetOffsetY": 0,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 16,
-        "texturepath": "assets/sprites/DecorSheet.png"
+        "spriteSheetWidth": 0,
+        "spriteSheetHeight": 0,
+        "texturepath": "assets/sprites/none.png"
       }
     },
     {
@@ -697,9 +712,9 @@
         "height": 16,
         "spriteSheetOffsetX": 0,
         "spriteSheetOffsetY": 0,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 16,
-        "texturepath": "assets/sprites/DecorSheet.png"
+        "spriteSheetWidth": 0,
+        "spriteSheetHeight": 0,
+        "texturepath": "assets/sprites/none.png"
       }
     },
     {
@@ -710,9 +725,9 @@
         "height": 16,
         "spriteSheetOffsetX": 0,
         "spriteSheetOffsetY": 0,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 16,
-        "texturepath": "assets/sprites/DecorSheet.png"
+        "spriteSheetWidth": 0,
+        "spriteSheetHeight": 0,
+        "texturepath": "assets/sprites/none.png"
       }
     },
     {
@@ -723,9 +738,9 @@
         "height": 16,
         "spriteSheetOffsetX": 0,
         "spriteSheetOffsetY": 0,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 16,
-        "texturepath": "assets/sprites/DecorSheet.png"
+        "spriteSheetWidth": 0,
+        "spriteSheetHeight": 0,
+        "texturepath": "assets/sprites/none.png"
       }
     },
     {
@@ -736,9 +751,9 @@
         "height": 16,
         "spriteSheetOffsetX": 0,
         "spriteSheetOffsetY": 0,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 16,
-        "texturepath": "assets/sprites/DecorSheet.png"
+        "spriteSheetWidth": 0,
+        "spriteSheetHeight": 0,
+        "texturepath": "assets/sprites/none.png"
       }
     },
     {
@@ -749,9 +764,9 @@
         "height": 16,
         "spriteSheetOffsetX": 0,
         "spriteSheetOffsetY": 0,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 16,
-        "texturepath": "assets/sprites/DecorSheet.png"
+        "spriteSheetWidth": 0,
+        "spriteSheetHeight": 0,
+        "texturepath": "assets/sprites/none.png"
       }
     },
     {
@@ -786,6 +801,7 @@
         "width": 32,
         "height": 32,
         "texturepath": "assets/sprites/spike.png",
+        "hitSound": "assets/sounds/spike/hit.mp3",
         "damage": 1,
         "facing": 0,
         "fixed": false,
@@ -800,6 +816,7 @@
         "width": 32,
         "height": 32,
         "texturepath": "assets/sprites/spike.png",
+        "hitSound": "assets/sounds/spike/hit.mp3",
         "damage": 1,
         "facing": 0,
         "fixed": false,
@@ -814,6 +831,7 @@
         "width": 32,
         "height": 32,
         "texturepath": "assets/sprites/spike.png",
+        "hitSound": "assets/sounds/spike/hit.mp3",
         "damage": 1,
         "facing": 0,
         "fixed": false,
@@ -891,7 +909,7 @@
         "width": 16,
         "height": 16,
         "heal": 2,
-        "heart_gain":0,
+        "heart_gain": 0,
         "texturepath": "assets/sprites/Collectible.png",
         "soundPath": "assets/sounds/collectible/heart_gain.mp3"
       }

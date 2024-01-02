@@ -311,11 +311,11 @@ class Hand extends Entity {
                fireballs[i].y - fireballs[i].height < this.HitboxBottom
             ) {
                if (this.#state === Hand.ON_GROUND) {
-                  console.log(i);
+                  this.debug && console.log(i);
                   Fireball.removeFireball(fireballs, i);
-                  this.#boss.health -= 1;
-                  player.score += 10;
-                  player.addDamageDealt(1);
+                  this.#boss.health -= 4;
+                  player.score += 50;
+                  player.addDamageDealt(4);
                   if (this.#boss.health <= 0) {
                      this.#boss.isAlive = false;
                      player.addEnemykilled();

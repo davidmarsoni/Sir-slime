@@ -34,10 +34,13 @@ class Spike extends Entity {
 
     // hitbox position
     #hitBox = [];
-
-    constructor(x, y, width, height, texturepath, damage,facing,isStatic = true,upTime = 0,downTime = 0) {
+    
+    //sound
+    #hitSound = null;
+    constructor(x, y, width, height, texturepath, damage,facing,hitSoundPath,isStatic = true,upTime = 0,downTime = 0) {
         super(x, y, width, height, texturepath, damage);
         this.#facing = facing;
+        this.hitSound = hitSoundPath;
         this.#isStatic = isStatic;
         this.#upTime = upTime;
         this.#downTime = downTime;
@@ -60,6 +63,15 @@ class Spike extends Entity {
     get hitBox() { return this.#hitBox; }
     set hitBox(value) { this.#hitBox = value; }
 
+    get hitSound() { return this.#hitSound; }
+    set hitSound(value) { 
+        this.#hitSound = new Audio(value);
+        this.#hitSound.volume = 0.2;
+        this.#hitSound.onerror = () => {
+           console.log("Error loading hit sound for spike");
+           this.#hitSound = null;
+        };
+    }
 
     animate() {
         switch (this.#state) {
@@ -162,7 +174,7 @@ class Spike extends Entity {
             this.debug && console.log("collide") ;
             
             player.jump = true;
-            player.hit(this.damage,false);
+            player.hit(this.damage,false,this.#hitSound);
         }
     }
 
