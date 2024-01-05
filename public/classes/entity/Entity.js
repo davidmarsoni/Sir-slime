@@ -15,61 +15,20 @@ class Entity extends GameObject {
         this.#damage = damage;
     }
 
-    get spriteDirectionOffset() {
-        return this.#spriteDirectionOffset;
-    }
-
-    set spriteDirectionOffset(value) {
-        this.#spriteDirectionOffset = value;
-    }
-
-    get animationOffset() {
-        return this.#animationOffset;
-    }
-
-    set animationOffset(value) {
-        this.#animationOffset = value;
-    }
-
-    get spriteSheetWidth() {
-        return this.#spriteSheetWidth;
-    }
-
-    set spriteSheetWidth(value) {
-        this.#spriteSheetWidth = value;
-    }
-
-    get spriteSheetHeight() {
-        return this.#spriteSheetHeight;
-    }
-
-    set spriteSheetHeight(value) {
-        this.#spriteSheetHeight = value;
-    }
-
-    get speed() {
-        return this.#speed;
-    }
-
-    set speed(value) {
-        this.#speed = value;
-    }
-
-    get damage() {
-        return this.#damage;
-    }
-
-    set damage(value) {
-        this.#damage = value;
-    }
-
-    get isAlive() {
-        return this.#isAlive;
-    }
-
-    set isAlive(value) {
-        this.#isAlive = value;
-    }
+    get spriteDirectionOffset() { return this.#spriteDirectionOffset; }
+    set spriteDirectionOffset(value) { this.#spriteDirectionOffset = value; }
+    get animationOffset() { return this.#animationOffset; }
+    set animationOffset(value) { this.#animationOffset = value; }
+    get spriteSheetWidth() { return this.#spriteSheetWidth; }
+    set spriteSheetWidth(value) { this.#spriteSheetWidth = value; }
+    get spriteSheetHeight() { return this.#spriteSheetHeight; }
+    set spriteSheetHeight(value) { this.#spriteSheetHeight = value; }
+    get speed() { return this.#speed; }
+    set speed(value) { this.#speed = value;}
+    get damage() {return this.#damage; }
+    set damage(value) {this.#damage = value;}
+    get isAlive() {return this.#isAlive;}
+    set isAlive(value) { this.#isAlive = value; }
 
     setAlive(value) {
         this.isAlive = value;
@@ -81,25 +40,12 @@ class Entity extends GameObject {
             y: this.y - this.height / 2
         }
     }
-    get maxX() {
-        return this.x;
-    }
+    get maxX() { return this.x;}
+    get maxY() { return this.y;}
+    get minX() { return this.x - this.width;}
+    get minY() {return this.y - this.height;}
 
-    get maxY() {
-        return this.y;
-    }
-
-    get minX() {
-        return this.x-this.width;
-    }
-
-    get minY() {
-        return this.y-this.height;
-    }
-
-    render(){
-    }
-  
+    render() {}
 }
 
 export default Entity;

@@ -25,14 +25,11 @@ class Door extends Object{
         this.#timerToOpen = timeToOpen;
     }
 
-    
-
     get timeToOpen() {return this.#timeToOpen;}
     set timeToOpen(value) {this.#timeToOpen = value;}
 
     get timerToOpen() {return this.#timerToOpen;}
     set timerToOpen(value) {this.#timerToOpen = value;}
-
 
     collide(player) {
         //if the player is in the trigger zone
@@ -137,8 +134,6 @@ class Door extends Object{
             }
            
             ctx.fillText(text, this.x + this.width/2, this.y - 5);
-
-
         }
     }
 }

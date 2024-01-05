@@ -281,6 +281,7 @@ function update() {
     // Death by falling
     if (player.predictedY > 1200) {
         player.takeDamage(2);
+        player.respawn();
         debug && console.log("death by falling");
     }
 

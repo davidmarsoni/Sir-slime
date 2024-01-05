@@ -13,7 +13,6 @@ import ObjectFactory from "./ObjectFactory.js";
 import Door from "../Door.js";
 import EnemyFactory from "./EnemyFactory.js";
 
-
 class QuickObjectCreation {
     #objects_list;
     #textForTheObject;
@@ -42,9 +41,7 @@ class QuickObjectCreation {
     #door;
 
     #textExplain;
-
     #objectsData =[];
-
 
     mouseDownHandler = (e) => {
         this.getMousePosition(e);
@@ -300,7 +297,6 @@ class QuickObjectCreation {
 
         //get the value of the input if there is one and find the right type of data
         const input1 = document.getElementById("input1");
-
         if (input1.value !== "") {
             value1 = input1.value;
         }
@@ -452,7 +448,7 @@ class QuickObjectCreation {
      */
     render(ctx) {
         if (this.status) {
-            ctx.fillStyle = "rgba(255,255,255,0.1)";
+            ctx.fillStyle = "rgba(255,255,255,0.3)";
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         }
         //render the object
@@ -476,6 +472,8 @@ class QuickObjectCreation {
                 this.#activationPlatform.render(ctx);
                 break;
             case MovablePlatform.name:
+                this.#movablePlatform.x = parseInt(this.#value1) == 0 ? this.#x : parseInt(this.#value1);
+                this.#movablePlatform.y =parseInt(this.#value2) == 0 ? this.#y : parseInt(this.#value2);
                 this.#movablePlatform.path = [
                     {
                         "x": parseInt(this.#value1) == 0 ? this.#x : parseInt(this.#value1),

@@ -61,7 +61,7 @@ class Player extends Entity {
    #defaultFireball;
 
 
-   constructor(x, y, width, height, texturepath, origin_x, origin_y, maxLives, maxPossibleLives, maxHealth, maxPossibleHealth, speed, damage, cooldownTime, walkSoundPath, respawnSoundPath,throwSoundPath) {
+   constructor(x, y, width, height, texturepath, origin_x, origin_y, maxLives, maxPossibleLives, maxHealth, maxPossibleHealth, speed, damage, cooldownTime, walkSoundPath, respawnSoundPath, throwSoundPath) {
       super(x, y, width, height, texturepath, speed, damage);
       this.#origin_x = origin_x;
       this.#origin_y = origin_y;
@@ -74,7 +74,7 @@ class Player extends Entity {
       this.#cooldownTime = cooldownTime;
       this.walkSound = walkSoundPath;
       this.respawnSound = respawnSoundPath;
-      this.throwSound =  throwSoundPath;
+      this.throwSound = throwSoundPath;
    }
    /**
     * Update the player position beetwen 2 level
@@ -111,7 +111,7 @@ class Player extends Entity {
    updateFireball(collisionBlocks, bats, patrolmen) {
       for (let i = 0; i < this.#fireballs.length; i++) {
          this.#fireballs[i].move();
-         let collide = this.#fireballs[i].collide(this,collisionBlocks, bats, patrolmen);
+         let collide = this.#fireballs[i].collide(this, collisionBlocks, bats, patrolmen);
          if (collide === true) {
             Fireball.removeFireball(this.#fireballs, i)
             return;
@@ -198,10 +198,6 @@ class Player extends Entity {
    get fireballs() { return this.#fireballs; }
    get defaultFireball() { return this.#defaultFireball; }
 
-
-
-
-
    set walkSound(value) {
       this.#walkSound = new Audio(value);
       this.#walkSound.volume = 0.5;
@@ -221,7 +217,7 @@ class Player extends Entity {
 
    set throwSound(value) {
       this.#throwSound = new Audio(value);
-      this.#throwSound.volume = 0.05 ;
+      this.#throwSound.volume = 0.05;
       this.#throwSound.onerror = () => {
          console.log("Error loading throw sound for player");
          this.#throwSound = null;
@@ -243,6 +239,7 @@ class Player extends Entity {
    addCoinCollected() { this.#numberOfCoinsCollected++; }
    addDeath() { this.#numberOfDeaths++; }
    addLevelCompleted() { this.#numberOfLevelCompleted++; }
+
    addDamageTaken(value) {
       if (value > 0) {
          this.#totalDamageTaken += value;
@@ -268,7 +265,6 @@ class Player extends Entity {
    }
 
    // #endregion
-
    // #region life methods
    /**
     * Heals the player by a specified value. If no value is provided, heals to max health.
@@ -351,7 +347,6 @@ class Player extends Entity {
       }
    }
 
-
    /**
     * Checks if the player is dead, i.e., if the current health is less than 1.
     * @returns {boolean} - True if the player is dead, false otherwise.
@@ -359,7 +354,6 @@ class Player extends Entity {
    isDead() {
       return this.#currenthealth < 1;
    }
-
 
    /**
     * Respawns the player at the original coordinates and resets velocity.
@@ -381,7 +375,6 @@ class Player extends Entity {
    }
 
    // #endregion
-
    // #region collision methods
    getTrampleBoxLeft(predicted = false) {
       if (predicted) {
@@ -401,9 +394,6 @@ class Player extends Entity {
    // #endregion
 
    render(ctx, keys) {
-
-
-
       if (this.isRendered === false) {
          return;
       }
@@ -504,7 +494,7 @@ class Player extends Entity {
 
    }
 
-   hit(damage = 1, isPreventMovement = true,sound = null) {
+   hit(damage = 1, isPreventMovement = true, sound = null) {
       this.debug && console.log("current helth of the player: " + this.#currenthealth);
 
       if (!this.isHit) {
@@ -536,7 +526,6 @@ class Player extends Entity {
       }
    }
 
-
    /**
     * Checks if the player is within a specified perimeter of an object.
     * @param {Object} object - The object to check the player's proximity to.
@@ -554,9 +543,7 @@ class Player extends Entity {
 
       return this.maxX >= minX && this.minX <= maxX && this.maxY >= minY && this.minY <= maxY;
    }
-
-
-
+   
    updatePosition(keys) {
       if (this.jump === false || this.isTransported === true) {
          this.x_v *= FRICTION;

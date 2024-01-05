@@ -89,7 +89,6 @@ class EnemyFactory {
         hand.loadTexture();
         return hand;
     }
-    // Implement the createBat, createBoss, and createHand methods similarly
 }
 
 export default EnemyFactory;

@@ -11,7 +11,7 @@
     },
     {
       "Background": {
-        "path": "assets/images/level4.gif"
+        "path": "assets/images/level4.png"
       }
     },
     {
@@ -126,12 +126,12 @@
         "x": 412,
         "y": 575,
         "width": 96,
-        "height": 48,
+        "height": 16,
         "spriteSheetOffsetX": 0,
-        "spriteSheetOffsetY": 48,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 48,
-        "texturepath": "assets/sprites/DecorSheet.png"
+        "spriteSheetOffsetY": 0,
+        "spriteSheetWidth": 0,
+        "spriteSheetHeight": 0,
+        "texturepath": "assets/sprites/none.png"
       }
     },
     {
@@ -139,12 +139,12 @@
         "x": 1012,
         "y": 575,
         "width": 96,
-        "height": 48,
+        "height": 16,
         "spriteSheetOffsetX": 0,
-        "spriteSheetOffsetY": 48,
-        "spriteSheetWidth": 96,
-        "spriteSheetHeight": 48,
-        "texturepath": "assets/sprites/DecorSheet.png"
+        "spriteSheetOffsetY": 0,
+        "spriteSheetWidth": 0,
+        "spriteSheetHeight": 0,
+        "texturepath": "assets/sprites/none.png"
       }
     }
   ]

@@ -109,7 +109,6 @@ class ModalWindow{
             this.drawhelpConditional();
         }
     }
-
     
     drawhelp(){
         this.#ctx.fillStyle = "rgba(255,255,255,1)";

@@ -6,13 +6,8 @@ class CollisionBlock extends GameObjectLogic{
         this.#collisionSide = collisionSide;
     }
 
-    get collisionSide() {
-        return this.#collisionSide;
-    }
-
-    set collisionSide(value) {
-        this.#collisionSide = value;
-    }
+    get collisionSide() { return this.#collisionSide;}
+    set collisionSide(value) {this.#collisionSide = value; }
 
     render(ctx) {
         if(this.isRendered === false){

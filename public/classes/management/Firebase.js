@@ -82,7 +82,6 @@ class Firebase {
         }
         
         await this.updateOrCreateDocument("currentPlayerState", "currentPlayerState", currentPlayerState);
-     
 
         this.debug && console.log("level saved") ;
     }

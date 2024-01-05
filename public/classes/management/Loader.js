@@ -169,19 +169,19 @@ class Loader {
    playWinSound() {
       let flag = false;
       if (this.#winSound != null && this.#playSound === true) {
-         if(this.#song != null && this.#song.paused === false){
+         if (this.#song != null && this.#song.paused === false) {
             this.#song.pause();
             flag = true;
          }
          this.#winSound.play();
          this.#winSound.onended = () => {
-            if(flag){
+            if (flag) {
                setTimeout(() => {
                   this.#song.play();
                }, 1000);
             }
          }
-         
+
       }
    }
 
@@ -536,7 +536,6 @@ class Loader {
          console.log("dump of the player");
          console.log("player : " + this.player);
       }
-
    }
    /**
     * This function is used to set the objects in the level

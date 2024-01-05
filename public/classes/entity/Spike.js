@@ -13,7 +13,7 @@ class Spike extends Entity {
     static DOWN = 1;
     static LEFT = 2;
     static RIGHT = 3;
-    
+
     #state = 'idleUp'; // state
     #frame = 0; // frame of the animation 
     #delay = 10; // delay between each frame
@@ -34,42 +34,42 @@ class Spike extends Entity {
 
     // hitbox position
     #hitBox = [];
-    
+
     //sound
     #hitSound = null;
-    constructor(x, y, width, height, texturepath, damage,facing,hitSoundPath,isStatic = true,upTime = 0,downTime = 0) {
+    constructor(x, y, width, height, texturepath, damage, facing, hitSoundPath, isStatic = true, upTime = 0, downTime = 0) {
         super(x, y, width, height, texturepath, damage);
         this.#facing = facing;
         this.hitSound = hitSoundPath;
         this.#isStatic = isStatic;
         this.#upTime = upTime;
         this.#downTime = downTime;
-        this.hitBox = new GameObjectLogic(0,0,0,0);
+        this.hitBox = new GameObjectLogic(0, 0, 0, 0);
     }
 
-    get fixed() { return this.#isStatic; } 
+    get fixed() { return this.#isStatic; }
     set fixed(value) { this.#isStatic = value; }
-    get facing() { return this.#facing; } 
+    get facing() { return this.#facing; }
     set facing(value) { this.#facing = value; }
     get upTime() { return this.#upTime; }
     set upTime(value) { this.#upTime = value; }
     get downTime() { return this.#downTime; }
     set downTime(value) { this.#downTime = value; }
-    
-    get hitBoxSizeX() { return this.#hitBoxSizeX; } 
+
+    get hitBoxSizeX() { return this.#hitBoxSizeX; }
     set hitBoxSizeX(value) { this.#hitBoxSizeX = value; }
-    get hitBoxSizeY() { return this.#hitBoxSizeY; } 
+    get hitBoxSizeY() { return this.#hitBoxSizeY; }
     set hitBoxSizeY(value) { this.#hitBoxSizeY = value; }
     get hitBox() { return this.#hitBox; }
     set hitBox(value) { this.#hitBox = value; }
 
     get hitSound() { return this.#hitSound; }
-    set hitSound(value) { 
+    set hitSound(value) {
         this.#hitSound = new Audio(value);
         this.#hitSound.volume = 0.2;
         this.#hitSound.onerror = () => {
-           console.log("Error loading hit sound for spike");
-           this.#hitSound = null;
+            console.log("Error loading hit sound for spike");
+            this.#hitSound = null;
         };
     }
 
@@ -87,7 +87,7 @@ class Spike extends Entity {
         this.updateHitbox();
         this.calculatePredictedHitbox();
     }
-    
+
     animateIdle() {
         this.#waitTimer++;
         if (this.#state === 'idleUp') {
@@ -109,14 +109,14 @@ class Spike extends Entity {
             }
         }
     }
-    
+
     animateTo() {
         this.#waitTimer++;
         if (this.#waitTimer >= this.#delay) {
             this.#waitTimer = 0;
             if (this.#state === 'toUp') {
                 this.#frame--;
-                if(this.#frame === 3){
+                if (this.#frame === 3) {
                     this.#frame = 1;
                 }
                 if (this.#frame === 0) {
@@ -151,8 +151,8 @@ class Spike extends Entity {
     }
 
     calculatePredictedHitbox() {
-        this.hitBox.x = this.x- this.width;
-        this.hitBox.y = this.y- this.height;
+        this.hitBox.x = this.x - this.width;
+        this.hitBox.y = this.y - this.height;
         this.hitBox.width = this.width;
         this.hitBox.height = this.height;
 
@@ -163,32 +163,32 @@ class Spike extends Entity {
             this.hitBox.height = this.hitBoxSizeY;
         } else if (this.facing === Spike.LEFT) {
             this.hitBox.width = this.hitBoxSizeX;
-            
+
         } else if (this.facing === Spike.RIGHT) {
             this.hitBox.x += this.width - this.hitBoxSizeX;
             this.hitBox.width = this.hitBoxSizeX;
         }
     }
-    collide(player){
-        if(player.InAPerimeter(this.#hitBox,0,0)){
-            this.debug && console.log("collide") ;
-            
+    collide(player) {
+        if (player.InAPerimeter(this.#hitBox, 0, 0)) {
+            this.debug && console.log("collide");
+
             player.jump = true;
-            player.hit(this.damage,false,this.#hitSound);
+            player.hit(this.damage, false, this.#hitSound);
         }
     }
 
     render(ctx) {
-        if(this.isRendered === false){
+        if (this.isRendered === false) {
             return;
         }
 
         this.animate();
-        if(this.textureLoaded === true){
+        if (this.textureLoaded === true) {
             ctx.drawImage(
                 this.texture,  // Sprite
-                this.width*this.facing,  // Sprite sheet offset x
-                this.width*this.#frame,  // Sprite sheet offset y
+                this.width * this.facing,  // Sprite sheet offset x
+                this.width * this.#frame,  // Sprite sheet offset y
                 this.width, // Sprite sheet w
                 this.height, // Sprite sheet h
                 this.x - this.width,
@@ -198,27 +198,27 @@ class Spike extends Entity {
             )
         }
 
-        if(this.debug === true){
+        if (this.debug === true) {
             ctx.strokeStyle = "black";
             ctx.strokeRect(this.x - this.width, this.y - this.height, this.width, this.height);
             ctx.fillStyle = "black";
             ctx.fillRect(this.x - 8, this.y - 8, 8, 8);
-        
+
             // Draw the hitbox in green
             ctx.strokeStyle = "green";
             ctx.strokeRect(this.hitBox.x, this.hitBox.y, this.hitBox.width, this.hitBox.height);
             ctx.fillStyle = "rgba(0,255,0,0.25)";
             ctx.fillRect(this.hitBox.x, this.hitBox.y, this.hitBox.width, this.hitBox.height);
-        
+
             // Add the time remaining and the current state
             ctx.fillStyle = "black";
             ctx.font = "10px Arial";
-            ctx.fillText(this.#state, this.x - this.width/2, this.y - this.width - 20);
-        
+            ctx.fillText(this.#state, this.x - this.width / 2, this.y - this.width - 20);
+
             // Display timer information
             const timerText = this.#downTimer ? `${this.#downTimer}/${this.#downTime}` : `${this.#upTimer}/${this.#upTime}`;
             if (this.#downTimer || this.#upTimer) {
-                ctx.fillText(timerText, this.x - this.width/2 , this.y - this.width - 10);
+                ctx.fillText(timerText, this.x - this.width / 2, this.y - this.width - 10);
             }
         }
     }

@@ -58,46 +58,16 @@ class Boss extends Entity {
       this.#bossBarPath = bossbarpath;
    }
 
-   get handLeft() {
-      return this.#handLeft;
-   }
+   get handLeft() { return this.#handLeft; }
 
    set handLeft(value) {
       this.#handLeft = value;
       this.handLeft.boss = this;
    }
 
-   get handRight() {
-      return this.#handRight;
-   }
-
    set handRight(value) {
       this.#handRight = value;
       this.handRight.boss = this;
-   }
-
-   get step() {
-      return this.#step;
-   }
-
-   set step(value) {
-      this.#step = value;
-   }
-
-   get bossBarPath() {
-      return this.#bossBarPath;
-   }
-
-   set bossBarPath(value) {
-      this.#bossBarPath = value;
-   }
-
-   get bossBar() {
-      return this.#bossBar;
-   }
-
-   set bossBar(value) {
-      this.#bossBar = value;
    }
 
    get bossBarLoaded() {
@@ -107,97 +77,36 @@ class Boss extends Entity {
       return this.#bossBarLoaded;
    }
 
-   set bossBarLoaded(value) {
-      this.#bossBarLoaded = value;
-   }
-
-   get path() {
-      return this.#path;
-   }
-
-   set path(value) {
-      this.#path = value;
-   }
-
-   get animTimer() {
-      return this.#animTimer;
-   }
-
-   set animTimer(value) {
-      this.#animTimer = value;
-   }
-
-   get animStep() {
-      return this.#animStep;
-   }
-
-   set animStep(value) {
-      this.#animStep = value;
-   }
-
-   get direction() {
-      return this.#direction;
-   }
-
-   set direction(value) {
-      this.#direction = value;
-   }
-
-   get origin_y() {
-      return this.#origin_y;
-   }
-
-   set origin_y(value) {
-      this.#origin_y = value;
-   }
-
-   get origin_x() {
-      return this.#origin_x;
-   }
-
-   set origin_x(value) {
-      this.#origin_x = value;
-   }
-
-   get damage() {
-      return this.#damage;
-   }
-
-   set damage(value) {
-      this.#damage = value;
-   }
-
-   get isAlive() {
-      return this.#isAlive;
-   }
-
-   set isAlive(value) {
-      this.#isAlive = value;
-   }
-
-   set health(value) {
-      this.#health = value;
-   }
-
-   get health() {
-      return this.#health;
-   }
-
-   set totalHealth(value) {
-      this.#totalHealth = value;
-   }
-
-   get totalHealth() {
-      return this.#totalHealth;
-   }
-
-   set handTrampleDamage(value) {
-      this.#handTrampleDamage = value;
-   }
-
-   get handTrampleDamage() {
-      return this.#handTrampleDamage;
-   }
+   get handRight() { return this.#handRight; }
+   get step() { return this.#step; }
+   set step(value) { this.#step = value; }
+   get bossBarPath() { return this.#bossBarPath; }
+   set bossBarPath(value) { this.#bossBarPath = value; }
+   get bossBar() { return this.#bossBar; }
+   set bossBar(value) { this.#bossBar = value; }
+   set bossBarLoaded(value) { this.#bossBarLoaded = value; }
+   get path() { return this.#path; }
+   set path(value) { this.#path = value; }
+   get animTimer() { return this.#animTimer; }
+   set animTimer(value) { this.#animTimer = value; }
+   get animStep() { return this.#animStep; }
+   set animStep(value) { this.#animStep = value; }
+   get direction() { return this.#direction; }
+   set direction(value) { this.#direction = value; }
+   get origin_y() {return this.#origin_y;}
+   set origin_y(value) { this.#origin_y = value;}
+   get origin_x() { return this.#origin_x;}
+   set origin_x(value) {this.#origin_x = value;}
+   get damage() { return this.#damage;}
+   set damage(value) { this.#damage = value;}
+   get isAlive() { return this.#isAlive;}
+   set isAlive(value) { this.#isAlive = value;}
+   set health(value) { this.#health = value;}
+   get health() {return this.#health;}
+   set totalHealth(value) { this.#totalHealth = value;}
+   get totalHealth() { return this.#totalHealth; }
+   set handTrampleDamage(value) { this.#handTrampleDamage = value;}
+   get handTrampleDamage() { return this.#handTrampleDamage;}
 
    debugCascade(value) {
       this.debug = value;

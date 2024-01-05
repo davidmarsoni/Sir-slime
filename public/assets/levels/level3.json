@@ -874,7 +874,7 @@
     },
     {
       "Door": {
-        "x": 50,
+        "x": 90,
         "y": 129,
         "width": 64,
         "height": 96,
@@ -893,10 +893,10 @@
     },
     {
       "PassageWay": {
-        "x": 51,
-        "y": 130,
-        "width": 62,
-        "height": 94,
+        "x": 91,
+        "y": 135,
+        "width": 60,
+        "height": 90,
         "passageWayTo": "level4",
         "title": "Boss level",
         "content": "Save the princess adventurer ! \n Tips: To kill the boss you have to hit hit is hands !"
@@ -904,7 +904,7 @@
     },
     {
       "Heart": {
-        "x": 173,
+        "x": 213,
         "y": 199,
         "width": 16,
         "height": 16,

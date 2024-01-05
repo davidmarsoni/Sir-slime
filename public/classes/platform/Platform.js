@@ -66,9 +66,7 @@ class Platform extends Object{
         }
     }
 
-    move(){
-
-    }
+    move(){}
 }
 
 export default Platform;

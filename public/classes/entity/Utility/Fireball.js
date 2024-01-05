@@ -12,29 +12,12 @@ class Fireball extends Entity {
       super(x, y, width, height, texturepath, speed, damage);
    }
 
-   get effective() {
-      return this.#effective;
-   }
-
-   set effective(value) {
-      this.#effective = value;
-   }
-
-   get x_v() {
-      return this.#x_v;
-   }
-
-   set x_v(value) {
-      this.#x_v = value;
-   }
-
-   get y_v() {
-      return this.#y_v;
-   }
-
-   set y_v(value) {
-      this.#y_v = value;
-   }
+   get effective() { return this.#effective; }
+   set effective(value) { this.#effective = value; }
+   get x_v() { return this.#x_v; }
+   set x_v(value) { this.#x_v = value; }
+   get y_v() { return this.#y_v; }
+   set y_v(value) { this.#y_v = value; }
 
 
    render(ctx) {
@@ -47,10 +30,7 @@ class Fireball extends Entity {
          this.#animTimer = 0;
       }
 
-
       if (this.#effective) {
-
-
          if (this.textureLoaded === true) {
             ctx.drawImage(
                this.texture,  // Sprite
@@ -63,19 +43,11 @@ class Fireball extends Entity {
                this.width,
                this.height
             )
-
          } else {
             this.debug = true;
          }
-
       }
-
    }
-
-
-
-
-
 
    throw(player) {
       this.debug && console.log(player.cooldown, player.cooldownTime);
@@ -100,7 +72,6 @@ class Fireball extends Entity {
             this.#x_v = this.speed;
          }
 
-
          // Set cooldown
          player.cooldown = true;
          setTimeout(() => {
@@ -110,8 +81,6 @@ class Fireball extends Entity {
          // Action is not allowed because cooldown is active
          this.debug && console.log("Action not allowed, cooldown is active.");
       }
-
-
    }
 
    move() {
@@ -121,7 +90,7 @@ class Fireball extends Entity {
       }
    }
 
-   collide(player,collisionblocks, bats, patrolmen) {
+   collide(player, collisionblocks, bats, patrolmen) {
       let collide = false;
       // Check for collision with each bat
       for (const bat of bats) {

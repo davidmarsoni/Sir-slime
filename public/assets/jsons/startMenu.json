@@ -164,7 +164,7 @@
                 "height": 100,
                 "originX": 400,
                 "originY": 425,
-                "texturepath": "assets/sprites/skins/player-skin-preview-yellow.png"
+                "texturepath": "assets/sprites/skins/player-skin-preview-stack.png"
             }
         },
         {
@@ -175,7 +175,7 @@
                 "height": 100,
                 "originX": 550,
                 "originY": 425,
-                "texturepath": "assets/sprites/skins/player-skin-preview-yellow.png"
+                "texturepath": "assets/sprites/skins/player-skin-preview-minecraft.png"
             }
         },
         {
@@ -219,7 +219,7 @@
                 "height": 100,
                 "originX": 400,
                 "originY": 565,
-                "texturepath": "assets/sprites/skins/player-skin-preview-yellow.png"
+                "texturepath": "assets/sprites/skins/player-skin-preview-maxwell.png"
             }
         },
         {
@@ -230,7 +230,7 @@
                 "height": 100,
                 "originX": 550,
                 "originY": 565,
-                "texturepath": "assets/sprites/skins/player-skin-preview-yellow.png"
+                "texturepath": "assets/sprites/skins/player-skin-preview-dinnerbone.png"
             }
         },
         {

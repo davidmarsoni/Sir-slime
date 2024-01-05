@@ -9,34 +9,18 @@ class GameObject extends GameObjectLogic{
         this.texturepath = texturepath;
     }
 
-    get texture() {
-        return this.#texture;
-    }
-
-    set texture(value) {
-        this.#texture = value;
-    }
-
+    get texture() {  return this.#texture;  }
+    set texture(value) {   this.#texture = value; }
     get textureLoaded() {
         if(this.#textureLoaded === null){
             this.loadTexture();
         }
         return this.#textureLoaded;
     }
+    set textureLoaded(value){   this.#textureLoaded = value; }
+    get texturepath() {   return this.#texturepath; }
 
-    set textureLoaded(value){
-        this.#textureLoaded = value;
-    }
-
-    get texturepath() {
-        return this.#texturepath;
-    }
-
-    set texturepath(value) {
-        this.#texturepath = value;
-    }
-    
-
+    set texturepath(value) {   this.#texturepath = value; }
 
     loadTexture(){
         this.#texture = new Image();

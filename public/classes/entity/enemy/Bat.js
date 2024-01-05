@@ -10,8 +10,8 @@ class Bat extends Enemy {
    #triggerZone;
    #x_v = 0;
    #y_v = -4;
-   #velocityIncrementation = [0.05, -0.05];
-   #defaultVelocity = [2, -2]
+   static VELOCITY_INCREMENTATION = [0.05, -0.05];
+   static DEFAULT_VELOCITY = [2, -2]
    #chosenSide = 0;
    #triggeredMode = false;
    #isTriggered = false;
@@ -19,10 +19,8 @@ class Bat extends Enemy {
    #triggerZoneWidth;
    #triggerZoneHeight;
 
-
-
-   constructor(x, y, width, height, texturepath, speed, damage,hitSound,deathSound, origin_x, origin_y, triggerZoneWidth, triggerZoneHeight, triggerZoneX, triggerZoneY, triggeredMode = false, triggerZoneFollow = false) {
-      super(x, y, width, height, texturepath, speed, damage,hitSound,deathSound);
+   constructor(x, y, width, height, texturepath, speed, damage, hitSound, deathSound, origin_x, origin_y, triggerZoneWidth, triggerZoneHeight, triggerZoneX, triggerZoneY, triggeredMode = false, triggerZoneFollow = false) {
+      super(x, y, width, height, texturepath, speed, damage, hitSound, deathSound);
       this.#origin_x = origin_x;
       this.#origin_y = origin_y;
       this.#triggeredMode = triggeredMode;
@@ -47,86 +45,26 @@ class Bat extends Enemy {
       this.#triggerZone = new GameObjectLogic(tmpTriggerZoneX, tmpTriggerZoneY, tmpTriggerZoneWidth, tmpTriggerZoneHeight);
    }
 
-   get animTimer() {
-      return this.#animTimer;
-   }
-
-   set animTimer(value) {
-      this.#animTimer = value;
-   }
-
-   get animStep() {
-      return this.#animStep;
-   }
-
-   set animStep(value) {
-      this.#animStep = value;
-   }
-
-   get direction() {
-      return this.#direction;
-   }
-
-   set direction(value) {
-      this.#direction = value;
-   }
-
-   get origin_x() {
-      return this.#origin_x;
-   }
-
-   set origin_x(value) {
-      this.#origin_x = value;
-   }
-
-   get origin_y() {
-      return this.#origin_y;
-   }
-
-   set origin_y(value) {
-      this.#origin_y = value;
-   }
-
-   get isIdle() {
-      return this.#isIdle;
-   }
-
-   set isIdle(value) {
-      this.#isIdle = value;
-   }
-
-   get triggeredMode() {
-      return this.#triggeredMode;
-   }
-
-   set triggeredMode(value) {
-      this.#triggeredMode = value;
-   }
-
-   get isTriggered() {
-      return this.#isTriggered;
-   }
-
-   set isTriggered(value) {
-      this.#isTriggered = value;
-   }
-
-   get triggerZone() {
-      return this.#triggerZone;
-   }
-
-   set triggerZone(value) {
-      this.#triggerZone = value;
-   }
-
-   get triggerZoneFollow() {
-      return this.#triggerZoneFollow;
-   }
-
-   set triggerZoneFollow(value) {
-      this.#triggerZoneFollow = value;
-   }
-
+   get animTimer() { return this.#animTimer; }
+   set animTimer(value) { this.#animTimer = value; }
+   get animStep() { return this.#animStep; }
+   set animStep(value) { this.#animStep = value; }
+   get direction() { return this.#direction; }
+   set direction(value) { this.#direction = value; }
+   get origin_x() { return this.#origin_x; }
+   set origin_x(value) { this.#origin_x = value; }
+   get origin_y() { return this.#origin_y; }
+   set origin_y(value) { this.#origin_y = value; }
+   get isIdle() { return this.#isIdle; }
+   set isIdle(value) { this.#isIdle = value; }
+   get triggeredMode() { return this.#triggeredMode; }
+   set triggeredMode(value) { this.#triggeredMode = value; }
+   get isTriggered() { return this.#isTriggered; }
+   set isTriggered(value) { this.#isTriggered = value; }
+   get triggerZone() { return this.#triggerZone; }
+   set triggerZone(value) { this.#triggerZone = value; }
+   get triggerZoneFollow() { return this.#triggerZoneFollow; }
+   set triggerZoneFollow(value) { this.#triggerZoneFollow = value; }
 
    getTrampleBoxLeft() {
       return this.x - this.width + this.width / 4;
@@ -136,15 +74,13 @@ class Bat extends Enemy {
       return this.x - this.width / 4;
    }
 
-
-
    render(ctx) {
       if (this.isRendered === false) {
          return;
       }
-      if(this.isAlive === true){
+      if (this.isAlive === true) {
          //show the trigger zone boder in ligh red but realy thin and transparent
-         if(this.#isTriggered === false){
+         if (this.#isTriggered === false) {
             ctx.fillStyle = "rgba(180,56,45,0.10)"
             ctx.fillRect(this.#triggerZone.x, this.#triggerZone.y, this.#triggerZone.width, this.#triggerZone.height);
             ctx.strokeStyle = "rgba(180,56,45,0.10)";
@@ -160,7 +96,7 @@ class Bat extends Enemy {
          //selon le mode de la chauve-souris, on affiche la zone de trigger ou le trigerArea
          ctx.fillStyle = "rgba(169,208,72,0.25)"
 
-         if(this.isAlive === true){
+         if (this.isAlive === true) {
             ctx.fillStyle = "rgba(255,0,0,0.25)"
             ctx.fillRect(this.#triggerZone.x, this.#triggerZone.y, this.#triggerZone.width, this.#triggerZone.height);
             //add a border in dark red
@@ -221,8 +157,6 @@ class Bat extends Enemy {
       let deltaX;
       let deltaY;
 
-
-
       if (this.#triggeredMode === true) {
          //si dans le périmètre de trigger
          if (player.InAPerimeter(this.#triggerZone)) {
@@ -260,17 +194,13 @@ class Bat extends Enemy {
 
 
       if (this.isAlive === false) {
-         this.#x_v += this.#velocityIncrementation[this.#chosenSide];
+         this.#x_v += Bat.VELOCITY_INCREMENTATION[this.#chosenSide];
          this.#y_v += 0.7;
 
          this.x = this.x + this.#x_v;
          this.y = this.y + this.#y_v;
       }
-
-
-
    }
-
 
    collide(player) {
 
@@ -300,11 +230,11 @@ class Bat extends Enemy {
             this.debug && console.log("trample");
             player.y_v = -7;
             this.#chosenSide = Math.round(Math.random());
-            this.#x_v = this.#defaultVelocity[this.#chosenSide];
+            this.#x_v = Bat.DEFAULT_VELOCITY[this.#chosenSide];
             player.score += 500;
             player.addEnemykilled();
             player.addDamageDealt(1);
-         
+
             this.playSound && this.deathSound != null && this.deathSound.play();
             this.isAlive = false;
          }
@@ -327,23 +257,9 @@ class Bat extends Enemy {
             player.jump = true;
             player.hit(this.damage, true, this.hitSound);
          }
-
       }
    }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
 
 export default Bat;
 

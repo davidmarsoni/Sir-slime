@@ -9,10 +9,7 @@ class Enemy extends Entity {
         this.deathSound = deathSound;
     }
 
-    get hitSound() {
-        return this.#hitSound;
-    }
-
+    get hitSound() { return this.#hitSound;}
     set hitSound(value) {
         this.#hitSound = new Audio(value);
         this.#hitSound.volume = 0.2;
@@ -22,10 +19,7 @@ class Enemy extends Entity {
         };
     }
 
-    get deathSound() {
-        return this.#deathSound;
-    }
-
+    get deathSound() { return this.#deathSound; }
     set deathSound(value) {
         this.#deathSound = new Audio(value);
         this.#deathSound.volume = 0.2;

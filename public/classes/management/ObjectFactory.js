@@ -126,7 +126,6 @@ class ObjectFactory {
         door.loadTexture();
         return door;
     }
-
 }
 
 export default ObjectFactory;

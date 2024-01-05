@@ -58,135 +58,42 @@ class Hand extends Entity {
       this.#levelBottom = levelBottom;
    }
 
-   get step() {
-      return this.#step;
-   }
-
-   set step(value) {
-      this.#step = value;
-   }
-
-   get speed() {
-      return this.#speed;
-   }
-
-   set speed(value) {
-      this.#speed = value;
-   }
-
-   get animTimer() {
-      return this.#animTimer;
-   }
-
-   set animTimer(value) {
-      this.#animTimer = value;
-   }
-
-   get animStep() {
-      return this.#animStep;
-   }
-
-   set animStep(value) {
-      this.#animStep = value;
-   }
-
-   get direction() {
-      return this.#direction;
-   }
-
-   set direction(value) {
-      this.#direction = value;
-   }
-
-   get origin_y() {
-      return this.#origin_y;
-   }
-
-   set origin_y(value) {
-      this.#origin_y = value;
-   }
-
-   get origin_x() {
-      return this.#origin_x;
-   }
-
-   set origin_x(value) {
-      this.#origin_x = value;
-   }
-
-   get damage() {
-      return this.#damage;
-   }
-
-   set damage(value) {
-      this.#damage = value;
-   }
-
-   get isAlive() {
-      return this.#isAlive;
-   }
-
-   set isAlive(value) {
-      $
-      this.#isAlive = value;
-   }
-
-   get offsetXLink() {
-      return this.#offsetXLink;
-   }
-
-   set offsetXLink(value) {
-      this.#offsetXLink = value;
-   }
-
-   get offsetYLink() {
-      return this.#offsetYLink;
-   }
-
-   set offsetYLink(value) {
-      this.#offsetYLink = value;
-   }
-
-   get state() {
-      return this.#state;
-   }
-
-   set state(value) {
-      this.#state = value;
-   }
-
-   get target() {
-      return this.#target;
-   }
+   get step() { return this.#step; }
+   set step(value) { this.#step = value; }
+   get speed() { return this.#speed; }
+   set speed(value) { this.#speed = value; }
+   get animTimer() { return this.#animTimer; }
+   set animTimer(value) { this.#animTimer = value; }
+   get animStep() { return this.#animStep; }
+   set animStep(value) { this.#animStep = value; }
+   get direction() { return this.#direction; }
+   set direction(value) { this.#direction = value; }
+   get origin_y() { return this.#origin_y; }
+   set origin_y(value) { this.#origin_y = value; }
+   get origin_x() { return this.#origin_x; }
+   set origin_x(value) { this.#origin_x = value; }
+   get damage() { return this.#damage; }
+   set damage(value) { this.#damage = value; }
+   get isAlive() { return this.#isAlive; }
+   set isAlive(value) { this.#isAlive = value; }
+   get offsetXLink() { return this.#offsetXLink; }
+   set offsetXLink(value) { this.#offsetXLink = value; }
+   get offsetYLink() { return this.#offsetYLink; }
+   set offsetYLink(value) { this.#offsetYLink = value; }
+   get state() { return this.#state; }
+   set state(value) { this.#state = value; }
+   get target() { return this.#target; }
+   set boss(value) { this.#boss = value; }
+   get isIdle() { return this.#state === Hand.IDLE; }
+   get HitboxLeft() { return this.x - this.#offsetXHitbox; }
+   get HitboxTop() { return this.y - this.height + this.#offsetYHitbox; }
+   get HitboxRight() { return this.HitboxLeft + this.#hitboxWidth; }
+   get HitboxBottom() { return this.y; }
 
    set target(value) {
       if (this.state === Hand.IDLE || this.state === Hand.TRANSLATE_TO_TARGET || this.state === Hand.PREPARE_TO_ATTACK) {
          this.#target = new GameObjectLogic(value.x, value.y + this.distance_FROM_TARGET, 0, 0);
       }
-   }
-
-   set boss(value) {
-      this.#boss = value;
-   }
-
-   get isIdle() {
-      return this.#state === Hand.IDLE;
-   }
-
-   get HitboxLeft() {
-      return this.x - this.#offsetXHitbox;
-   }
-
-   get HitboxTop() {
-      return this.y - this.height + this.#offsetYHitbox;
-   }
-
-   get HitboxRight() {
-      return this.HitboxLeft + this.#hitboxWidth;
-   }
-
-   get HitboxBottom() {
-      return this.y;
    }
 
    render(ctx) {
@@ -401,9 +308,6 @@ class Hand extends Entity {
             break;
       }
    }
-
-
-
 }
 
 export default Hand;

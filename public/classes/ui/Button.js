@@ -14,12 +14,9 @@ class Button extends GameObjectLogic {
         this.#screen = screen;
     }
 
-    get executed_function() {
-        return this.#executed_function;
-    }
-
+    get executed_function() { return this.#executed_function; }
     set executed_function(value) {
-       
+
         // Remove old event listener if it exists
         if (this.#eventListener != null) {
             this.removeEventListener();
@@ -36,15 +33,14 @@ class Button extends GameObjectLogic {
     }
 
     removeEventListener() {
-        if(this.#eventListener != null){
+        if (this.#eventListener != null) {
             window.removeEventListener('click', this.#eventListener);
             this.#eventListener = null;
         }
     }
 
     addEventListener() {
-       
-        if(this.#eventListener != null){
+        if (this.#eventListener != null) {
             window.addEventListener('click', this.#eventListener);
         }
     }
@@ -85,10 +81,5 @@ class Button extends GameObjectLogic {
             }
         }
     }
-
-
-
-
-
 }
 export default Button;
