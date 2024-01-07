@@ -37,6 +37,7 @@ class PassageWay extends GameObjectLogic{
             return true;
         }
     }
+    
     render(ctx) {
         if(this.isRendered === false){
             return;

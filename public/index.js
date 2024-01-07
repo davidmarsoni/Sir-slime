@@ -697,7 +697,6 @@ function utilityKeys(event) {
         });
     }
 
-
     // key n (mute sound)
     if (event.keyCode === 78) {
         loader.playSound = !loader.playSound;
@@ -752,7 +751,6 @@ function startGame() {
         loadLevel(currentLevel, false);
     }
     addGameKeys();
-
 }
 
 function skinPage() {

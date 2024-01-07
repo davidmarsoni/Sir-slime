@@ -12,6 +12,7 @@ class Collectable extends Object {
         this.#isAlive = true;
         this.soundPath = soundPath;
     }
+
     get animStep() { return this.#animStep; }
     set animStep(value) { this.#animStep = value; }
 
@@ -37,7 +38,6 @@ class Collectable extends Object {
     set isAlive(value) { this.#isAlive = value; }
 
     collide(player) {
-
         if (this.isAlive === false) {
             return;
         }
@@ -60,7 +60,6 @@ class Collectable extends Object {
         if (this.isRendered === false) {
             return;
         }
-
         if (this.isAnimated === true) {
             this.animTimer++;
             if (this.animTimer === 8) {

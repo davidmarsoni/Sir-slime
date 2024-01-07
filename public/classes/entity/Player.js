@@ -60,7 +60,6 @@ class Player extends Entity {
    #fireballs = [];
    #defaultFireball;
 
-
    constructor(x, y, width, height, texturepath, origin_x, origin_y, maxLives, maxPossibleLives, maxHealth, maxPossibleHealth, speed, damage, cooldownTime, walkSoundPath, respawnSoundPath, throwSoundPath) {
       super(x, y, width, height, texturepath, speed, damage);
       this.#origin_x = origin_x;
@@ -230,7 +229,6 @@ class Player extends Entity {
    set cooldownTime(value) { this.#cooldownTime = value; }
    set fireballs(value) { this.#fireballs = value; }
    set defaultFireball(value) { this.#defaultFireball = value; }
-
 
    // #endregion
    // #region statistic methods

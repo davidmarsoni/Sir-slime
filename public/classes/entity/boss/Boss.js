@@ -204,8 +204,6 @@ class Boss extends Entity {
       }
    }
 
-
-
    collide(player) {
       // if the boss is attacking smth
       if (this.#state === Boss.ATTACK) {

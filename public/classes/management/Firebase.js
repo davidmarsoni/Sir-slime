@@ -49,7 +49,6 @@ class Firebase {
                 data.pseudo = user.displayName;
                 await this.updateOrCreateDocument("users", data,undefined, false);
             }
-            
 
             return true;
         } catch (error) {

@@ -19,7 +19,6 @@ class Fireball extends Entity {
    get y_v() { return this.#y_v; }
    set y_v(value) { this.#y_v = value; }
 
-
    render(ctx) {
       this.#animTimer++;
       if (this.#animTimer === 6) {

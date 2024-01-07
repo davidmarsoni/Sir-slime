@@ -53,7 +53,6 @@ class Loader {
    #collectibles;
    #doors;
 
-
    //variables for the start menu
    #mainBackground;
    #skinBackground;
@@ -378,9 +377,6 @@ class Loader {
       }
       this.#connectButton.debug = this.debug;
    }
-
-
-
 
    /**
    * This function is used to load the background image only one time when the level is loaded
@@ -835,7 +831,6 @@ class Loader {
 
       this.#song = null;
    }
-
 
    // Geolocation
    askForGeolocalisation() {

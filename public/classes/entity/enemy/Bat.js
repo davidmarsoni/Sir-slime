@@ -1,6 +1,8 @@
 import Enemy from "./Enemy.js";
 import GameObjectLogic from "../../GameObjectLogic.js";
 class Bat extends Enemy {
+   static VELOCITY_INCREMENTATION = [0.05, -0.05];
+   static DEFAULT_VELOCITY = [2, -2]
    #origin_x = 64;
    #origin_y = 64;
    #direction = true;
@@ -10,8 +12,6 @@ class Bat extends Enemy {
    #triggerZone;
    #x_v = 0;
    #y_v = -4;
-   static VELOCITY_INCREMENTATION = [0.05, -0.05];
-   static DEFAULT_VELOCITY = [2, -2]
    #chosenSide = 0;
    #triggeredMode = false;
    #isTriggered = false;
@@ -34,7 +34,6 @@ class Bat extends Enemy {
          this.#triggerZone = new GameObjectLogic(triggerZoneX, triggerZoneY, triggerZoneWidth, triggerZoneHeight);
       }
    }
-
 
    updateTriggerZone() {
       let tmpTriggerZoneX = this.minX - this.#triggerZoneWidth;
@@ -192,7 +191,6 @@ class Bat extends Enemy {
          this.y += directionY * this.speed;
       }
 
-
       if (this.isAlive === false) {
          this.#x_v += Bat.VELOCITY_INCREMENTATION[this.#chosenSide];
          this.#y_v += 0.7;
@@ -238,7 +236,6 @@ class Bat extends Enemy {
             this.playSound && this.deathSound != null && this.deathSound.play();
             this.isAlive = false;
          }
-
 
          else if (player.x <= this.x && !player.isHit && this.isAlive === true) {
             this.debug && console.log("left");
