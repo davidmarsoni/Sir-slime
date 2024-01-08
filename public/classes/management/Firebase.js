@@ -77,7 +77,8 @@ class Firebase {
         //get old current level stats and archive them into the allTimeStats node
         let oldCurrentPlayerState = await this.getCurrentPlayerState();
         if (oldCurrentPlayerState) {
-            await this.updateAllTimeStats(oldCurrentPlayerState);
+            console.log(oldCurrentPlayerState.currentPlayerState);
+            await this.updateAllTimeStats(oldCurrentPlayerState.currentPlayerState);
         }
         
         await this.updateOrCreateDocument("currentPlayerState", "currentPlayerState", currentPlayerState);
