@@ -6,11 +6,7 @@
 
 Welcome to the 64-31-Web Project. This project was part of the 64-31-Web development class.
 
-This project had 3 main parts which are separated in 3 branches on the github repository.
-In each branch you will find the readme.md file that will explain the part of the project.
+This project is a JavaScript platform game that was first developed for a HES-SO project for the module 64-31-web-project in 2023.
 
-Here is the link to the branches:
-
-- [Game](https://github.com/davidmarsoni/64-31-web-project/tree/gamedev)
-- [React website](https://github.com/davidmarsoni/64-31-web-project/tree/ReactWebsite)
-- [Static Website](https://github.com/davidmarsoni/64-31-web-project/tree/dev-static-webiste)
+Here is the link to the main branches of the project : 
+- [Game](https://github.com/davidmarsoni/sir-slime/tree/gamedev)
