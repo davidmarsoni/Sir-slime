@@ -1,17 +1,17 @@
-# 64-31-web-project : gamedev
+# Sir-Slime
 
 ## Description
- 
-This part of the projec is the game itself. It's a platformer like game in pure javascript.
 
-This project have to goal to create a web game in pure javascript.
+This section of the project focuses on the game itself. It's a platformer game developed in pure JavaScript.
 
-For our project we have decided to create a platformer like game that have inspiration from the game Castelvania, kirby and mario.
+The goal of this project is to create a web-based game using only JavaScript.
+
+For our project, we have decided to create a platformer game inspired by Castlevania, Kirby, and Mario.
 
 ## Play the game
 
-If you want to try the game you can go to this link : https://web-project-64-31.web.app/
+If you want to try our game you can go to this link : https://sir-slime.web.app/
 
 Enjoy !
 
-![Alt text](assets/player-skin-preview-blue.png)
+![Sir-Slime](assets/player-skin-preview-blue.png)

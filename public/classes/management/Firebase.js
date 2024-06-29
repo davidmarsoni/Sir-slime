@@ -11,12 +11,13 @@ class Firebase {
      * peuvent être incluses dans le code ou dans les fichiers de configuration archivés.
      */
     static firebaseConfig = {
-        apiKey: "AIzaSyDzcNgBfMZPtKvcsvT233oy5aF7W5ZKldY",
-        authDomain: "web-project-64-31.firebaseapp.com",
-        projectId: "web-project-64-31",
-        storageBucket: "web-project-64-31.appspot.com",
-        messagingSenderId: "36041056853",
-        appId: "1:36041056853:web:71916a2d990cafea9eaadc"
+        apiKey: "AIzaSyB2uAx2XkBY1oOLSsrMJMgSOMHjNXkh7RE",
+        authDomain: "sir-slime.firebaseapp.com",
+        projectId: "sir-slime",
+        storageBucket: "sir-slime.appspot.com",
+        messagingSenderId: "52993456166",
+        appId: "1:52993456166:web:e92ed8c954223569634ee7",
+        measurementId: "G-25FVLFCF1B"
     };
 
     debug = false;
